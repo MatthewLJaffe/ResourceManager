@@ -11,6 +11,13 @@ Entity::Entity(float x, float y, SDL_Texture* tex)
     SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
 }
 
+Entity::Entity() {}
+
+void update()
+{
+
+}
+
 Entity::~Entity()
 {
     delete this->pos;

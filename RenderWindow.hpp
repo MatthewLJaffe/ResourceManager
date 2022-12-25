@@ -16,8 +16,8 @@ class RenderWindow
         void renderUnscaled(Entity& entity);
         void display();
         SDL_Texture* createFontTexture(SDL_Surface* textSurf);
-    private:
         SDL_Window* window;
         SDL_Renderer* renderer;
+    private:
         float pixelScalar = 4;
 };

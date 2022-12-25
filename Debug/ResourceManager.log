@@ -1,2 +1,11 @@
-﻿  main.cpp
+﻿  assets.cpp
+  main.cpp
+  renderwindow.cpp
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(41,27): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(42,27): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(43,19): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(44,19): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(51,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\renderwindow.cpp(52,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   ResourceManager.vcxproj -> C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\Debug\ResourceManager.exe

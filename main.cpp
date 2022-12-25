@@ -11,6 +11,7 @@
 #include "RenderWindow.hpp"
 #include "Vector2.hpp"
 #include "ResourceManager.hpp"
+#include "Assets.hpp"
 using namespace std;
 
 
@@ -78,17 +79,16 @@ int main (int argc, char* argv[])
     buildGraph(file);
     cout<< argv[1] << endl;
     RenderWindow window("Resource Manager", WIDTH, HEIGHT);
+    Assets::Instance().loadAssets(&window);
+
     //Text rendering
-    SDL_Texture* testTexture = window.loadTexture("Assets/images/TestSprite.png");
-    TTF_Font* font = TTF_OpenFont("Assets/fonts/pixel-bit-advanced.ttf", 30);
-    SDL_Surface* textSurf = TTF_RenderText_Solid(font, "Hello World", { 0,0,0 });
+    SDL_Surface* textSurf = TTF_RenderText_Solid(Assets::Instance().font_Test, "Hello World", { 0, 0, 0 });
     SDL_Texture* textTexture = window.createFontTexture(textSurf);
     SDL_Rect textRect = { 200, 200, textSurf->w, textSurf->h };
     SDL_FreeSurface(textSurf);
-    TTF_CloseFont(font);
 
 
-    Entity testEntity(0, 0, testTexture);
+    Entity testEntity(0, 0, Assets::Instance().img_Test);
     Entity textEntity(0, 0, textTexture);
     bool gameRunning = true;
     SDL_Event event;

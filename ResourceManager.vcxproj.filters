@@ -39,6 +39,9 @@
     <ClCompile Include="textentity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="assets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.hpp">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextEntity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
