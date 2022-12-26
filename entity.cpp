@@ -24,6 +24,13 @@ void Entity::init()
 
 }
 
+Entity::Entity() {}
+
+void update()
+{
+
+}
+
 Entity::~Entity()
 {
     delete this->pos;
