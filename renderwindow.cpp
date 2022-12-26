@@ -38,10 +38,10 @@ void RenderWindow::render(Entity& entity)
     src.h = entity.currentFrame.h;
 
     SDL_Rect dst;
-    dst.x = entity.pos->x * pixelScalar;
-    dst.y = entity.pos->y * pixelScalar;
-    dst.w = src.w * pixelScalar;
-    dst.h = src.h * pixelScalar;
+    dst.x = entity.pos->x * entity.scale;
+    dst.y = entity.pos->y * entity.scale;
+    dst.w = src.w * entity.scale;
+    dst.h = src.h * entity.scale;
     SDL_RenderCopy(renderer, entity.tex, &src, &dst);
 }
 

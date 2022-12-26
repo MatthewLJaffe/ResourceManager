@@ -11,6 +11,8 @@
 #include "RenderWindow.hpp"
 #include "Vector2.hpp"
 #include "ResourceManager.hpp"
+#include "Assets.hpp"
+#include "TextEntity.hpp"
 using namespace std;
 
 
@@ -79,17 +81,10 @@ int main (int argc, char* argv[])
     cout<< argv[1] << endl;
     RenderWindow window("Resource Manager", WIDTH, HEIGHT);
     //Text rendering
-    SDL_Texture* testTexture = window.loadTexture("Assets/images/TestSprite.png");
-    TTF_Font* font = TTF_OpenFont("Assets/fonts/pixel-bit-advanced.ttf", 30);
-    SDL_Surface* textSurf = TTF_RenderText_Solid(font, "Hello World", { 0,0,0 });
-    SDL_Texture* textTexture = window.createFontTexture(textSurf);
-    SDL_Rect textRect = { 200, 200, textSurf->w, textSurf->h };
-    SDL_FreeSurface(textSurf);
-    TTF_CloseFont(font);
-
-
-    Entity testEntity(0, 0, testTexture);
-    Entity textEntity(0, 0, textTexture);
+    Assets::Instance().loadAssets(&window);
+    std::vector<Entity*> entities;
+    entities.push_back(new Entity (0, 0, 4, Assets::Instance().img_Test));
+    entities.push_back(new TextEntity(200, 200, 1, "hello world", 30, { 0,0,0 }, Assets::Instance().font_Test, &window));
     bool gameRunning = true;
     SDL_Event event;
     utils::hireTimeInSeconds();
@@ -101,8 +96,11 @@ int main (int argc, char* argv[])
                 gameRunning = false;
         }
         window.clear();
-        window.render(testEntity);
-        window.renderUnscaled(textEntity);
+        for (int i = 0; i < entities.size(); i++)
+        {
+            entities[i]->update();
+            window.render(*entities[i]);
+        }
         window.display();
         string line;
         std::getline(std::cin, line);
@@ -142,6 +140,7 @@ int main (int argc, char* argv[])
             }
         }
     }
+    Assets::Instance().closeFonts();
     ResourceManager::Instance().outputGraph("OutResources.txt");
     window.cleanUp();
     IMG_Quit();

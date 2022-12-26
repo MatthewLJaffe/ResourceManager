@@ -74,8 +74,8 @@
     <IncludePath>C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\src\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\src\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\src\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\src\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\src\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,7 +87,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Matthew\OneDrive - Virginia Tech\Documents\GradSchool\Projects\ResourceManager\src\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\src\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="assets.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderwindow.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assets.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="RenderWindow.hpp" />
     <ClInclude Include="Resource.hpp" />
