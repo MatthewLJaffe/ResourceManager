@@ -14,6 +14,7 @@ public:
 	void loadFonts();
 	void closeFonts();
 	SDL_Texture* img_Test;
+	SDL_Texture* img_Background;
 	TTF_Font* font_Test;
 
 private:

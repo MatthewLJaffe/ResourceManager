@@ -1,5 +1,5 @@
 bombs ore
 bullets ore
 handgun bullets
+mug
 ore
-turret bullets

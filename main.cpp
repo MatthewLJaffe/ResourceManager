@@ -6,6 +6,8 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <future>
+#include <thread>
 #include <SDL_ttf.h>
 #include "Resource.hpp"
 #include "RenderWindow.hpp"
@@ -43,7 +45,7 @@ void operator delete(void* memory, size_t size)
 {
     s_AllocationMetrics.TotalFreed += size;
     free(memory);
-    PrintMemoryUsage();
+    //PrintMemoryUsage();
 }
 
 void buildGraph(ifstream& file)
@@ -55,7 +57,14 @@ void buildGraph(ifstream& file)
     }
 }
 
-const int WIDTH = 800, HEIGHT = 600;
+static std::string getInput()
+{
+    std::string answer;
+    getline(std::cin, answer);
+    return answer;
+}
+
+const int WIDTH = 1280, HEIGHT = 720;
 int main (int argc, char* argv[])
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) > 0)
@@ -83,11 +92,12 @@ int main (int argc, char* argv[])
     //Text rendering
     Assets::Instance().loadAssets(&window);
     std::vector<Entity*> entities;
-    entities.push_back(new Entity (0, 0, 4, Assets::Instance().img_Test));
-    entities.push_back(new TextEntity(200, 200, 1, "hello world", 30, { 0,0,0 }, Assets::Instance().font_Test, &window));
+    entities.push_back(new Entity (0, 0, 4, Assets::Instance().img_Background));
+    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, &window));
     bool gameRunning = true;
     SDL_Event event;
     utils::hireTimeInSeconds();
+    std::future<std::string> future = std::async(getInput);
     while (gameRunning)
     {
         if (SDL_PollEvent(&event))
@@ -103,7 +113,15 @@ int main (int argc, char* argv[])
         }
         window.display();
         string line;
-        std::getline(std::cin, line);
+        if (future._Is_ready())
+        {
+            line = future.get();
+            future = std::async(getInput);
+        }
+        else
+        {
+            continue;
+        }
         vector<string> command = utils::split(line, ' ');
         if (command.size() > 0)
         {

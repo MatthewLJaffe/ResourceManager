@@ -1,10 +1,3 @@
-﻿  renderwindow.cpp
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(41,27): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(42,27): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(43,19): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(44,19): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(51,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\renderwindow.cpp(52,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  textentity.cpp
-  Generating Code...
+﻿  main.cpp
+C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\main.cpp(109,27): warning C4018: '<': signed/unsigned mismatch
   ResourceManager.vcxproj -> C:\Users\mjaff\OneDrive - Virginia Tech\Documents\GitHub\ResourceManager\Debug\ResourceManager.exe

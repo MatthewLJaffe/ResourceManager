@@ -15,6 +15,7 @@ void Assets::loadAssets(RenderWindow* rw)
 void Assets::loadImages(RenderWindow* rw)
 {
     img_Test = rw->loadTexture("Assets/images/TestSprite.png");
+    img_Background = rw->loadTexture("Assets/images/ResourceManagerUI.png");
 }
 
 void Assets::loadFonts()

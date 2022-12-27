@@ -24,8 +24,6 @@ void Entity::init()
 
 }
 
-Entity::Entity() {}
-
 void update()
 {
 
