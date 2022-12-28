@@ -45,13 +45,13 @@ bool ResourceManager::isCraftable(Resource& resource)
 }
 
 
-void ResourceManager::deleteResource(string resource)
+void ResourceManager::deleteResource(string resource, std::vector<TextEntity*> &resourceList)
 {
     resourceMap.erase(resource);
-    displayGraph();
+    displayGraph(resourceList);
 }
 
-void ResourceManager::addNode(string node)
+void ResourceManager::addNode(string node, std::vector<TextEntity*> &resourceList)
 {
     if (resourceMap.count(node) == 0)
     {
@@ -61,10 +61,10 @@ void ResourceManager::addNode(string node)
     {
         cout << "Resource " << node << "already exists in graph\n";
     }
-    displayGraph();
+    displayGraph(resourceList);
 }
 
-void ResourceManager::addLink(string from, string to)
+void ResourceManager::addLink(string from, string to, std::vector<TextEntity*> &resourceList)
 {
     if (resourceMap.count(from) == 0)
     {
@@ -72,19 +72,33 @@ void ResourceManager::addLink(string from, string to)
         return;
     }
     resourceMap[from]->requiredResources.push_back(to);
-    displayGraph();
+    displayGraph(resourceList);
 }
 
-void ResourceManager::displayGraph()
+void ResourceManager::displayGraph(std::vector<TextEntity*> &resourceList)
 {
     cout << "Current Resource graph:" << endl;
+    size_t mapSize = resourceMap.size();
+    //TODO fix potential memory leak when resizing
+    resourceList.resize(mapSize);
+    int i = 0;
     for (auto const& pair : resourceMap)
     {
-        cout << pair.first;
+        std::string text = pair.first;
         if (isCraftable(*pair.second))
-            cout << " usable" << endl;
+            text += " usable";
         else
-            cout << " not usable" << endl;
+            text += " not usable";   
+        if (resourceList[i] != NULL) {
+            resourceList[i]->updateText(text);
+        }
+        else
+        {
+            float x = 10;
+            float y = 150 + float(i) * 40;
+            resourceList[i] = new TextEntity(x, y, 1, text, 25, { 0,0,0 }, Assets::Instance().font_Test);
+        }
+        i++;
     }
 }
 

@@ -8,7 +8,8 @@
 class RenderWindow
 {
     public:
-        RenderWindow(const char* title, int width, int height);
+        RenderWindow(const RenderWindow&) = delete;
+        static RenderWindow& Instance();
         SDL_Texture* loadTexture(const char* filePath);
         void cleanUp();
         void clear();
@@ -17,6 +18,7 @@ class RenderWindow
         void display();
         SDL_Texture* createFontTexture(SDL_Surface* textSurf);
     private:
+        RenderWindow();
         SDL_Window* window;
         SDL_Renderer* renderer;
 };

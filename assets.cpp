@@ -6,16 +6,16 @@ Assets& Assets::Instance()
     return assets;
 }
 
-void Assets::loadAssets(RenderWindow* rw)
+void Assets::loadAssets()
 {
-    loadImages(rw);
+    loadImages();
     loadFonts();
 }
 
-void Assets::loadImages(RenderWindow* rw)
+void Assets::loadImages()
 {
-    img_Test = rw->loadTexture("Assets/images/TestSprite.png");
-    img_Background = rw->loadTexture("Assets/images/ResourceManagerUI.png");
+    img_Test = RenderWindow::Instance().loadTexture("Assets/images/TestSprite.png");
+    img_Background = RenderWindow::Instance().loadTexture("Assets/images/ResourceManagerUI.png");
 }
 
 void Assets::loadFonts()

@@ -9,8 +9,8 @@ class Assets
 public:
 	Assets(const Assets&) = delete;
 	static Assets& Instance();
-	void loadAssets(RenderWindow* rw);
-	void loadImages(RenderWindow* rw);
+	void loadAssets();
+	void loadImages();
 	void loadFonts();
 	void closeFonts();
 	SDL_Texture* img_Test;

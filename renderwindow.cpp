@@ -1,9 +1,14 @@
 #include "RenderWindow.hpp"
 
-RenderWindow::RenderWindow(const char* title, int width, int height)
-:window(NULL), renderer(NULL)
+RenderWindow& RenderWindow::Instance()
 {
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
+    static RenderWindow renderWindow;
+    return renderWindow;
+}
+
+RenderWindow::RenderWindow()
+{
+    window = SDL_CreateWindow("Resource Manager", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
         std::cout << "Window failed to init. Error " << SDL_GetError() << std::endl;

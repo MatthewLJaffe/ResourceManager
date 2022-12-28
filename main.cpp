@@ -48,13 +48,14 @@ void operator delete(void* memory, size_t size)
     //PrintMemoryUsage();
 }
 
-void buildGraph(ifstream& file)
+void buildGraph(ifstream& file, std::vector<TextEntity*> &resourceList)
 {
     string line;
     while (getline(file, line))
     {
         ResourceManager::Instance().addResource(line);
     }
+    ResourceManager::Instance().displayGraph(resourceList);
 }
 
 static std::string getInput()
@@ -62,6 +63,45 @@ static std::string getInput()
     std::string answer;
     getline(std::cin, answer);
     return answer;
+}
+
+void processCommand(std::string line, std::vector<TextEntity*> &resourceList, bool& gameRunning)
+{
+    vector<string> command = utils::split(line, ' ');
+    if (command.size() > 0)
+    {
+        if (command[0] == "del")
+        {
+            if (command.size() == 2)
+            {
+                ResourceManager::Instance().deleteResource(command[1], resourceList);
+            }
+            else
+                cout << "Invocation: del [resource name]\n";
+        }
+        else if (command[0] == "add")
+        {
+            if (command.size() == 2)
+            {
+                ResourceManager::Instance().addNode(command[1], resourceList);
+            }
+            else
+                cout << "Invocation: add [resource name]\n";
+        }
+        else if (command[0] == "link")
+        {
+            if (command.size() == 3)
+            {
+                ResourceManager::Instance().addLink(command[1], command[2], resourceList);
+            }
+            else
+                cout << "Invocation: add [resource to craft] [required resource]\n";
+        }
+        else if (command[0] == "q")
+        {
+            gameRunning = false;
+        }
+    }
 }
 
 const int WIDTH = 1280, HEIGHT = 720;
@@ -73,7 +113,7 @@ int main (int argc, char* argv[])
         cout << "IMG_Init has failed" << SDL_GetError() << endl;
     if (TTF_Init() > 0)
         cout << "TTF_Init has failed" << SDL_GetError() << endl;
-
+    Assets::Instance().loadAssets();
     if (argc != 2)
     {
         cout << "Invocation: " << "./ResourceManager.exe {resourceFile}" << endl;
@@ -86,17 +126,15 @@ int main (int argc, char* argv[])
             << " make sure file is in same directory as executable\n";
         return 1;
     }
-    buildGraph(file);
+    std::vector<TextEntity*> resourceList;
+    buildGraph(file, resourceList);
     cout<< argv[1] << endl;
-    RenderWindow window("Resource Manager", WIDTH, HEIGHT);
     //Text rendering
-    Assets::Instance().loadAssets(&window);
     std::vector<Entity*> entities;
     entities.push_back(new Entity (0, 0, 4, Assets::Instance().img_Background));
-    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, &window));
+    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test));
     bool gameRunning = true;
     SDL_Event event;
-    utils::hireTimeInSeconds();
     std::future<std::string> future = std::async(getInput);
     while (gameRunning)
     {
@@ -105,62 +143,30 @@ int main (int argc, char* argv[])
             if (event.type == SDL_QUIT)
                 gameRunning = false;
         }
-        window.clear();
+        RenderWindow::Instance().clear();
         for (int i = 0; i < entities.size(); i++)
         {
             entities[i]->update();
-            window.render(*entities[i]);
+            RenderWindow::Instance().render(*entities[i]);
         }
-        window.display();
+        for (int i = 0; i < resourceList.size(); i++)
+        {
+            resourceList[i]->update();
+            RenderWindow::Instance().render(*resourceList[i]);
+        }
+        RenderWindow::Instance().display();
         string line;
         if (future._Is_ready())
         {
             line = future.get();
-            future = std::async(getInput);
-        }
-        else
-        {
-            continue;
-        }
-        vector<string> command = utils::split(line, ' ');
-        if (command.size() > 0)
-        {
-            if (command[0] == "del")
-            {
-                if (command.size() == 2)
-                {
-                    ResourceManager::Instance().deleteResource(command[1]);
-                }
-                else
-                    cout << "Invocation: del [resource name]\n";
-            }
-            else if (command[0] == "add")
-            {
-                if (command.size() == 2)
-                {
-                    ResourceManager::Instance().addNode(command[1]);
-                }
-                else
-                    cout << "Invocation: add [resource name]\n";
-            }
-            else if (command[0] == "link")
-            {
-                if (command.size() == 3)
-                {
-                    ResourceManager::Instance().addLink(command[1], command[2]);
-                }
-                else
-                    cout << "Invocation: add [resource to craft] [required resource]\n";
-            }
-            else if (command[0] == "q")
-            {
-                gameRunning = false;
-            }
+            processCommand(line, resourceList, gameRunning);
+            if (gameRunning)
+                future = std::async(getInput);
         }
     }
     Assets::Instance().closeFonts();
     ResourceManager::Instance().outputGraph("OutResources.txt");
-    window.cleanUp();
+    RenderWindow::Instance().cleanUp();
     IMG_Quit();
     SDL_Quit();
     PrintMemoryUsage();
