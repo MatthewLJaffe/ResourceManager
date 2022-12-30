@@ -1,6 +1,7 @@
 #include "TextEntity.hpp"
-TextEntity::TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font)
+TextEntity::TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font, int sortOrder)
 {
+    this->sortOrder = sortOrder;
     this->size = fontSize;
     this->color = color;
     this->font = font;
@@ -11,6 +12,7 @@ TextEntity::TextEntity(float x, float y, float scale, std::string message, int f
     tex = RenderWindow::Instance().createFontTexture(textSurf);
     currentFrame = { 0, 0, textSurf->w, textSurf->h };
     SDL_FreeSurface(textSurf);
+    enabled = true;
 }
 
 void TextEntity::updateText(std::string message)
@@ -21,3 +23,5 @@ void TextEntity::updateText(std::string message)
     currentFrame = { 0, 0, textSurf->w, textSurf->h };
     SDL_FreeSurface(textSurf);
 }
+
+TextEntity::TextEntity() {}

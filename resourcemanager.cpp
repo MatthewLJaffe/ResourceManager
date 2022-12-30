@@ -1,9 +1,29 @@
 #include "ResourceManager.hpp"
 
+ScrollBarVariation::ScrollBarVariation(SDL_Texture* tex, int maxScrollHeight, int minNumberItems)
+{
+    this->texture = tex;
+    this->maxScrollHeight = maxScrollHeight;
+    this->minNumberItems = minNumberItems;
+}
+
+
 ResourceManager& ResourceManager::Instance()
 {
     static ResourceManager resourceManager;
     return resourceManager;
+}
+
+void ResourceManager::init(ScrollBar* scrollBar, Entity* scrollArea)
+{
+    scrollBar->enabled = false;
+    scrollArea->enabled = false;
+    this->scrollBar = scrollBar;
+    this->scrollArea = scrollArea;
+    scrollBarVariations[0].texture = Assets::Instance().img_ScrollBarSmall;
+    scrollBarVariations[1].texture = Assets::Instance().img_ScrollBarMed;
+    scrollBarVariations[2].texture = Assets::Instance().img_ScrollBarLarge;
+    displayGraph();
 }
 
 void ResourceManager::addResource(string line)
@@ -44,14 +64,13 @@ bool ResourceManager::isCraftable(Resource& resource)
     return true;
 }
 
-
-void ResourceManager::deleteResource(string resource, std::vector<TextEntity*> &resourceList)
+void ResourceManager::deleteResource(string resource)
 {
     resourceMap.erase(resource);
-    displayGraph(resourceList);
+    displayGraph();
 }
 
-void ResourceManager::addNode(string node, std::vector<TextEntity*> &resourceList)
+void ResourceManager::addNode(string node)
 {
     if (resourceMap.count(node) == 0)
     {
@@ -61,10 +80,10 @@ void ResourceManager::addNode(string node, std::vector<TextEntity*> &resourceLis
     {
         cout << "Resource " << node << "already exists in graph\n";
     }
-    displayGraph(resourceList);
+    displayGraph();
 }
 
-void ResourceManager::addLink(string from, string to, std::vector<TextEntity*> &resourceList)
+void ResourceManager::addLink(string from, string to)
 {
     if (resourceMap.count(from) == 0)
     {
@@ -72,15 +91,19 @@ void ResourceManager::addLink(string from, string to, std::vector<TextEntity*> &
         return;
     }
     resourceMap[from]->requiredResources.push_back(to);
-    displayGraph(resourceList);
+    displayGraph();
 }
 
-void ResourceManager::displayGraph(std::vector<TextEntity*> &resourceList)
+//TODO only rebuild display for delete
+void ResourceManager::displayGraph()
 {
-    cout << "Current Resource graph:" << endl;
+    for (int i = 0; i < listText.size(); i++)
+    {
+        Game::Instance().RemoveEntity(listText[i]);
+        delete listText[i];
+    }
     size_t mapSize = resourceMap.size();
-    //TODO fix potential memory leak when resizing
-    resourceList.resize(mapSize);
+    listText.resize(mapSize);
     int i = 0;
     for (auto const& pair : resourceMap)
     {
@@ -89,16 +112,24 @@ void ResourceManager::displayGraph(std::vector<TextEntity*> &resourceList)
             text += " usable";
         else
             text += " not usable";   
-        if (resourceList[i] != NULL) {
-            resourceList[i]->updateText(text);
-        }
-        else
-        {
-            float x = 10;
-            float y = 150 + float(i) * 40;
-            resourceList[i] = new TextEntity(x, y, 1, text, 25, { 0,0,0 }, Assets::Instance().font_Test);
-        }
+        float x = 10;
+        float y = 150 + float(i) * textHeight;
+        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 1);
+        Game::Instance().AddEntity(listText[i]);
         i++;
+    }
+    if (mapSize > maxNonScrollListItems)
+    {
+        scrollArea->enabled = true;
+        scrollBar->enabled = true;
+        for (int i = 0; i < 3; i++)
+        {
+            if (scrollBarVariations[i].minNumberItems <= mapSize)
+            {
+                scrollBar->ResizeScrollBar(scrollBarVariations[i].texture, scrollBarVariations[i].maxScrollHeight);
+                break;
+            }
+        }
     }
 }
 
@@ -120,6 +151,19 @@ void ResourceManager::outputGraph(string fileName)
         file << std::endl;
     }
     file.close();
+}
+
+float ResourceManager::getMaxTextOffset()
+{
+    return (resourceMap.size() - maxNonScrollListItems) * textHeight;
+}
+
+ResourceManager::~ResourceManager()
+{
+    for (auto const& pair : resourceMap)
+    {
+        delete pair.second;
+    }
 }
 
 map<string, Resource*> resourceMap;

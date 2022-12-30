@@ -34,31 +34,9 @@ void RenderWindow::clear()
     SDL_RenderClear(renderer);
 }
 
-void RenderWindow::render(Entity& entity)
+void RenderWindow::render(SDL_Texture* tex, SDL_Rect srcRect, SDL_Rect destRect)
 {
-    SDL_Rect src;
-    src.x = entity.currentFrame.x;
-    src.y = entity.currentFrame.y;
-    src.w = entity.currentFrame.w;
-    src.h = entity.currentFrame.h;
-
-    SDL_Rect dst;
-    dst.x = entity.pos->x * entity.scale;
-    dst.y = entity.pos->y * entity.scale;
-    dst.w = src.w * entity.scale;
-    dst.h = src.h * entity.scale;
-    SDL_RenderCopy(renderer, entity.tex, &src, &dst);
-}
-
-void RenderWindow::renderUnscaled(Entity& entity)
-{
-    SDL_Rect dst;
-    dst.x = entity.pos->x;
-    dst.y = entity.pos->y;
-    dst.w = entity.currentFrame.w;
-    dst.h = entity.currentFrame.h;
-    SDL_RenderCopy(renderer, entity.tex, NULL, &dst);
-
+    SDL_RenderCopy(renderer, tex, &srcRect, &destRect);
 }
 
 

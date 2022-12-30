@@ -14,8 +14,14 @@ void Assets::loadAssets()
 
 void Assets::loadImages()
 {
-    img_Test = RenderWindow::Instance().loadTexture("Assets/images/TestSprite.png");
-    img_Background = RenderWindow::Instance().loadTexture("Assets/images/ResourceManagerUI.png");
+    RenderWindow &rw = RenderWindow::Instance();
+    img_Test = rw.loadTexture("Assets/images/TestSprite.png");
+    img_Background = rw.loadTexture("Assets/images/ResourceManagerUI.png");
+    img_ScrollArea = rw.loadTexture("Assets/images/ScrollBarArea.png");
+    img_ScrollBarSmall = rw.loadTexture("Assets/images/ScrollBar.png");
+    img_OverList = rw.loadTexture("Assets/images/OverList.png");
+    img_ScrollBarMed = rw.loadTexture("Assets/images/ScrollBarMedium.png");;
+    img_ScrollBarLarge = rw.loadTexture("Assets/images/ScrollBarLarge.png");;
 }
 
 void Assets::loadFonts()

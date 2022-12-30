@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,10 +138,14 @@
   <ItemGroup>
     <ClCompile Include="assets.cpp" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="inputmanager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderwindow.cpp" />
     <ClCompile Include="resource.cpp" />
+    <ClCompile Include="ResourceListText.cpp" />
     <ClCompile Include="resourcemanager.cpp" />
+    <ClCompile Include="ScrollBar.cpp" />
     <ClCompile Include="textentity.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="vector2.cpp" />
@@ -149,9 +153,13 @@
   <ItemGroup>
     <ClInclude Include="Assets.hpp" />
     <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="RenderWindow.hpp" />
     <ClInclude Include="Resource.hpp" />
+    <ClInclude Include="ResourceListText.hpp" />
     <ClInclude Include="ResourceManager.hpp" />
+    <ClInclude Include="ScrollBar.hpp" />
     <ClInclude Include="TextEntity.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="Vector2.hpp" />

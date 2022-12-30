@@ -2,7 +2,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
-#include "Entity.hpp"
 
 
 class RenderWindow
@@ -13,8 +12,7 @@ class RenderWindow
         SDL_Texture* loadTexture(const char* filePath);
         void cleanUp();
         void clear();
-        void render(Entity& tex);
-        void renderUnscaled(Entity& entity);
+        void render(SDL_Texture* tex, SDL_Rect srcRect, SDL_Rect destRect);
         void display();
         SDL_Texture* createFontTexture(SDL_Surface* textSurf);
     private:

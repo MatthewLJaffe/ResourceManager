@@ -14,7 +14,8 @@
 #include "Vector2.hpp"
 #include "ResourceManager.hpp"
 #include "Assets.hpp"
-#include "TextEntity.hpp"
+#include "ResourceListText.hpp"
+#include "Game.hpp"
 using namespace std;
 
 
@@ -45,62 +46,15 @@ void operator delete(void* memory, size_t size)
 {
     s_AllocationMetrics.TotalFreed += size;
     free(memory);
-    //PrintMemoryUsage();
+    PrintMemoryUsage();
 }
 
-void buildGraph(ifstream& file, std::vector<TextEntity*> &resourceList)
+void buildGraph(ifstream& file)
 {
     string line;
     while (getline(file, line))
     {
         ResourceManager::Instance().addResource(line);
-    }
-    ResourceManager::Instance().displayGraph(resourceList);
-}
-
-static std::string getInput()
-{
-    std::string answer;
-    getline(std::cin, answer);
-    return answer;
-}
-
-void processCommand(std::string line, std::vector<TextEntity*> &resourceList, bool& gameRunning)
-{
-    vector<string> command = utils::split(line, ' ');
-    if (command.size() > 0)
-    {
-        if (command[0] == "del")
-        {
-            if (command.size() == 2)
-            {
-                ResourceManager::Instance().deleteResource(command[1], resourceList);
-            }
-            else
-                cout << "Invocation: del [resource name]\n";
-        }
-        else if (command[0] == "add")
-        {
-            if (command.size() == 2)
-            {
-                ResourceManager::Instance().addNode(command[1], resourceList);
-            }
-            else
-                cout << "Invocation: add [resource name]\n";
-        }
-        else if (command[0] == "link")
-        {
-            if (command.size() == 3)
-            {
-                ResourceManager::Instance().addLink(command[1], command[2], resourceList);
-            }
-            else
-                cout << "Invocation: add [resource to craft] [required resource]\n";
-        }
-        else if (command[0] == "q")
-        {
-            gameRunning = false;
-        }
     }
 }
 
@@ -126,44 +80,8 @@ int main (int argc, char* argv[])
             << " make sure file is in same directory as executable\n";
         return 1;
     }
-    std::vector<TextEntity*> resourceList;
-    buildGraph(file, resourceList);
-    cout<< argv[1] << endl;
-    //Text rendering
-    std::vector<Entity*> entities;
-    entities.push_back(new Entity (0, 0, 4, Assets::Instance().img_Background));
-    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test));
-    bool gameRunning = true;
-    SDL_Event event;
-    std::future<std::string> future = std::async(getInput);
-    while (gameRunning)
-    {
-        if (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-                gameRunning = false;
-        }
-        RenderWindow::Instance().clear();
-        for (int i = 0; i < entities.size(); i++)
-        {
-            entities[i]->update();
-            RenderWindow::Instance().render(*entities[i]);
-        }
-        for (int i = 0; i < resourceList.size(); i++)
-        {
-            resourceList[i]->update();
-            RenderWindow::Instance().render(*resourceList[i]);
-        }
-        RenderWindow::Instance().display();
-        string line;
-        if (future._Is_ready())
-        {
-            line = future.get();
-            processCommand(line, resourceList, gameRunning);
-            if (gameRunning)
-                future = std::async(getInput);
-        }
-    }
+    buildGraph(file);
+    Game::Instance().init();
     Assets::Instance().closeFonts();
     ResourceManager::Instance().outputGraph("OutResources.txt");
     RenderWindow::Instance().cleanUp();

@@ -11,9 +11,10 @@
 class TextEntity : public Entity
 {
 public:
-	TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font);
+	TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font, int sortOrder);
 	void updateText(std::string message);
 	TTF_Font* font;
 	int size;
 	SDL_Color color;
+	TextEntity();
 };

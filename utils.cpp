@@ -17,3 +17,13 @@ vector<string> utils::split(const string& s, char delim)
 	}
 	return elems;
 }
+
+bool utils::inRect(float p_x, float p_y, float r_x, float r_y, float r_w, float r_h)
+{
+	return p_x >= r_x && p_x <= r_x + r_w && p_y >= r_y && p_y <= r_y + r_h;
+}
+
+float utils::lerp(float a, float b, float t)
+{
+	return a * (1 - t) + b * t;
+}

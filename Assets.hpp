@@ -15,6 +15,12 @@ public:
 	void closeFonts();
 	SDL_Texture* img_Test;
 	SDL_Texture* img_Background;
+	SDL_Texture* img_ScrollArea;
+	SDL_Texture* img_ScrollBarSmall;
+	SDL_Texture* img_ScrollBarMed;
+	SDL_Texture* img_ScrollBarLarge;
+	SDL_Texture* img_OverList;
+
 	TTF_Font* font_Test;
 
 private:
