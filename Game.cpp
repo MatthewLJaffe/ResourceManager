@@ -3,6 +3,8 @@
 #include "ScrollBar.hpp"
 #include "ResourceManager.hpp"
 #include "InputManager.hpp"
+#include "ArrowEntity.hpp"
+#include "DisplayNode.hpp"
 
 static std::string getInput()
 {
@@ -57,14 +59,13 @@ bool compareEntities(Entity* e1, Entity* e2)
 
 void Game::init()
 {
-    entities.resize(0);
-    ScrollBar* scrollBar = new ScrollBar(90, 33, 4, Assets::Instance().img_ScrollBarSmall, 3);
-    Entity* scrollArea = new Entity(90, 33, 4, Assets::Instance().img_ScrollArea, 2);
+    ScrollBar* scrollBar = new ScrollBar(90, 33, 4, Assets::Instance().img_ScrollBarSmall, 5);
+    Entity* scrollArea = new Entity(90, 33, 4, Assets::Instance().img_ScrollArea, 4);
     ResourceManager::Instance().init(scrollBar, scrollArea);
-    //Text rendering
     entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_Background, 0));
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_OverList, 2));
-    //entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 2));
+    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphView, 1));
+    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_OverList, 4));
+    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 5));
     entities.push_back(scrollArea);
     entities.push_back(scrollBar);
     sort(entities.begin(), entities.end(), compareEntities);
@@ -91,6 +92,7 @@ void Game::update()
             entities[i]->update();
             entities[i]->render();
         }
+
         RenderWindow::Instance().display();
         if (inputFuture._Is_ready())
         {

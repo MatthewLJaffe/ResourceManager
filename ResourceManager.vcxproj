@@ -136,7 +136,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="arrowentity.cpp" />
     <ClCompile Include="assets.cpp" />
+    <ClCompile Include="displaynode.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="inputmanager.cpp" />
@@ -151,7 +153,9 @@
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrowEntity.hpp" />
     <ClInclude Include="Assets.hpp" />
+    <ClInclude Include="DisplayNode.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="InputManager.hpp" />

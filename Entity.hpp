@@ -13,6 +13,7 @@ public:
     Vector2* pos;
     bool enabled;
     float scale;
+    double angle = 0;
     int sortOrder;
     SDL_Rect currentFrame;
     SDL_Texture* tex;

@@ -1,15 +1,5 @@
-a
-b
 bombs ore
 bullets ore
-c
-d
-e
-f
-g
-h
 handgun bullets
-i
-k
 ore
 turret bullets

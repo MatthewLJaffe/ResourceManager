@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 
 class Vector2
 {
@@ -15,7 +16,10 @@ public:
 
     Vector2();
     Vector2(float x, float y);
-
+    float mag();
+    float distance(Vector2 otherV);
+    void normalize();
+    float angleBetween(Vector2 otherV);
     friend Vector2& operator+(Vector2& v1, const Vector2& v2);
     friend Vector2& operator-(Vector2& v1, const Vector2& v2);
     friend Vector2& operator*(Vector2& v1, const Vector2& v2);

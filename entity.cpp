@@ -23,7 +23,7 @@ void Entity::render()
 {
     if (!enabled) return;
     SDL_Rect destRect = { pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale };
-    RenderWindow::Instance().render(tex, currentFrame, destRect);
+    RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
 
 Entity::~Entity()

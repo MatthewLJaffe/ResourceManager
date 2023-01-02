@@ -7,6 +7,7 @@
 #include "Assets.hpp"
 #include "ScrollBar.hpp"
 #include "Game.hpp"
+#include "DisplayNode.hpp"
 class ScrollBar;
 
 struct ScrollBarVariation
@@ -31,15 +32,20 @@ public:
 	void deleteResource(std::string resource);
 	void addNode(std::string node);
 	void addLink(std::string from, string to);
+	void addNewDisplayNode(std::string name);
+	void addNewDisplayNodeFrom(std::string from, std::string name);
+	void addDisplayNodeConnection(std::string from, std::string to);
 	bool isCraftable(Resource& resource);
 	void displayGraph();
 	float getMaxTextOffset();
 	void outputGraph(std::string name);
 private:
-	//small medium large 
+	//small medium large
+	bool noOverlap(Vector2 pos);
 	ScrollBarVariation scrollBarVariations[3] = { {NULL, 161, 21}, {NULL, 113, 18}, {NULL, 49, 15}};
 	ResourceManager();
-	map<string, Resource*> resourceMap;
+	std::map<string, Resource*> resourceMap;
+	std::map<string, DisplayNode*> displayMap;
 	std::vector<ResourceListText*> listText;
 	~ResourceManager();
 

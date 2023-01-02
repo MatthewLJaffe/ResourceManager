@@ -96,3 +96,25 @@ std::ostream& operator<<(std::ostream& stream, const Vector2& vec)
 {
     return stream << "(" << vec.x << "," << vec.y << ")";
 }
+
+float Vector2::mag()
+{
+    return sqrtf(this->x * this->x + this->y * this->y);
+}
+
+void Vector2::normalize()
+{
+    float mag = this->mag();
+    this->x /= mag;
+    this->y /= mag;
+}
+
+float Vector2::angleBetween(Vector2 otherV)
+{
+    return 180 / 3.141592653 * (atan2f(otherV.y, otherV.x) - atan2f(this->y, this->x));
+}
+
+float Vector2::distance(Vector2 otherV)
+{
+    return sqrt(powf(this->x - otherV.x, 2) + powf(this->y - otherV.y, 2));
+}

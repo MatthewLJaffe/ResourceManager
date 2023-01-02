@@ -34,15 +34,29 @@ void RenderWindow::clear()
     SDL_RenderClear(renderer);
 }
 
-void RenderWindow::render(SDL_Texture* tex, SDL_Rect srcRect, SDL_Rect destRect)
+void RenderWindow::render(SDL_Texture* tex, SDL_Rect srcRect, SDL_Rect destRect, double angle)
 {
-    SDL_RenderCopy(renderer, tex, &srcRect, &destRect);
+    SDL_Point rotPoint;
+    rotPoint.x = destRect.x + destRect.w/2;
+    rotPoint.y = destRect.y + destRect.h/2;
+    SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, angle, &rotPoint, SDL_FLIP_NONE);
 }
+
+void RenderWindow::drawLine(int x1, int y1, int x2, int y2)
+{
+    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+}
+
 
 
 SDL_Texture* RenderWindow::createFontTexture(SDL_Surface* textSurf)
 {
     return SDL_CreateTextureFromSurface(renderer, textSurf);
+}
+
+void RenderWindow::setScale(float x, float y)
+{
+    SDL_RenderSetScale(renderer, x, y);
 }
 
 

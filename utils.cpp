@@ -27,3 +27,8 @@ float utils::lerp(float a, float b, float t)
 {
 	return a * (1 - t) + b * t;
 }
+
+float utils::randomFloat(float lower, float upper)
+{
+	return lower + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (upper - lower)));
+}

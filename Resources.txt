@@ -2,13 +2,3 @@ handgun bullets
 bullets ore
 bombs ore
 turret bullets
-a
-b
-c
-d
-e
-f
-g
-h
-i
-k
