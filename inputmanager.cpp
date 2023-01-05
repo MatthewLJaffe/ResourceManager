@@ -21,17 +21,19 @@ bool InputManager::getMousePressed()
 	return mousePressed;
 }
 
-
-
 InputManager::~InputManager()
 {
 	delete mousePos;
 }
 
+float InputManager::getMouseWheelY()
+{
+	return mouseWheelY;
+}
+
 void InputManager::handleInput(SDL_Event event)
 {
-	if (mousePressed)
-		mousePressed = false;
+	mousePressed = false;
 	switch (event.type)
 	{
 	case SDL_MOUSEMOTION:
@@ -56,6 +58,13 @@ void InputManager::handleInput(SDL_Event event)
 			mousePressed = false;
 			mouseDown = false;
 		}
+		break;
+	case SDL_MOUSEWHEEL:
+		mouseWheelY += event.wheel.y;
+		if (mouseWheelY > maxWheel)
+			mouseWheelY = maxWheel;
+		if (mouseWheelY < minWheel)
+			mouseWheelY = minWheel;
 		break;
 	default:
 		break;

@@ -58,7 +58,6 @@ void buildGraph(ifstream& file)
     }
 }
 
-const int WIDTH = 1280, HEIGHT = 720;
 int main (int argc, char* argv[])
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) > 0)

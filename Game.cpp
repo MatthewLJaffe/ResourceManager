@@ -52,6 +52,32 @@ void processCommand(std::string line, bool& gameRunning)
     }
 }
 
+void handleDragInput()
+{
+    GameTransformer::Instance().pushTransformState();
+    static Vector2 lastMousePos = Vector2(0, 0);
+    static Vector2 dragOffset = Vector2(0, 0);
+    int mouseWheelY = InputManager::Instance().getMouseWheelY();
+    if (mouseWheelY == 0)
+        GameTransformer::Instance().setScale(Vector2(1, 1));
+    if (mouseWheelY == -1)
+        GameTransformer::Instance().setScale(Vector2(.5, .5));
+    if (mouseWheelY == -2)
+        GameTransformer::Instance().setScale(Vector2(.25, .25));
+    Vector2 mousePos = InputManager::Instance().getMousePos() / 4;
+    if (InputManager::Instance().getMouseDown())
+    {
+        DisplayNode* selected = ResourceManager::Instance().getSelectedDisplayNode(mousePos);
+        Vector2 dragDir = InputManager::Instance().getMousePos() - lastMousePos;
+        if (selected != NULL)
+            *selected->pos += dragDir / selected->scale;
+        else
+            dragOffset += dragDir;
+    }
+    lastMousePos = InputManager::Instance().getMousePos();
+    GameTransformer::Instance().translate(dragOffset);
+}
+
 bool compareEntities(Entity* e1, Entity* e2)
 {
     return e1->sortOrder < e2->sortOrder;
@@ -59,12 +85,13 @@ bool compareEntities(Entity* e1, Entity* e2)
 
 void Game::init()
 {
-    ScrollBar* scrollBar = new ScrollBar(90, 33, 4, Assets::Instance().img_ScrollBarSmall, 5);
-    Entity* scrollArea = new Entity(90, 33, 4, Assets::Instance().img_ScrollArea, 4);
+    ScrollBar* scrollBar = new ScrollBar(90, 33, 4, Assets::Instance().img_ScrollBarSmall, 6);
+    Entity* scrollArea = new Entity(90, 33, 4, Assets::Instance().img_ScrollArea, 5);
     ResourceManager::Instance().init(scrollBar, scrollArea);
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_Background, 0));
+    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_ListView, 3));
     entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphView, 1));
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_OverList, 4));
+    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphBorders, 3));
+    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_ListBorders, 5));
     entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 5));
     entities.push_back(scrollArea);
     entities.push_back(scrollBar);
@@ -80,20 +107,21 @@ void Game::update()
     SDL_Event event;
     while (gameRunning)
     {
-        if (SDL_PollEvent(&event))
+        while (SDL_PollEvent(&event))
         {
             InputManager::Instance().handleInput(event);
             if (event.type == SDL_QUIT)
                 gameRunning = false;
         }
+        handleDragInput();
         RenderWindow::Instance().clear();
         for (int i = 0; i < entities.size(); i++)
         {
             entities[i]->update();
             entities[i]->render();
         }
-
         RenderWindow::Instance().display();
+        GameTransformer::Instance().resetGameTransformations();
         if (inputFuture._Is_ready())
         {
             line = inputFuture.get();

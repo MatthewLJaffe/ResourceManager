@@ -8,7 +8,9 @@
 #include "ScrollBar.hpp"
 #include "Game.hpp"
 #include "DisplayNode.hpp"
+
 class ScrollBar;
+class DisplayNode;
 
 struct ScrollBarVariation
 {
@@ -27,6 +29,7 @@ public:
 	int textHeight = 40;
 	ScrollBar* scrollBar;
 	Entity* scrollArea;
+	DisplayNode* getSelectedDisplayNode(Vector2 mousePos);
 	void init(ScrollBar* scrollBar, Entity* scrollArea);
 	void addResource(std::string line);
 	void deleteResource(std::string resource);
@@ -39,13 +42,13 @@ public:
 	void displayGraph();
 	float getMaxTextOffset();
 	void outputGraph(std::string name);
+	std::map<string, DisplayNode*> displayMap;
 private:
 	//small medium large
 	bool noOverlap(Vector2 pos);
 	ScrollBarVariation scrollBarVariations[3] = { {NULL, 161, 21}, {NULL, 113, 18}, {NULL, 49, 15}};
 	ResourceManager();
 	std::map<string, Resource*> resourceMap;
-	std::map<string, DisplayNode*> displayMap;
 	std::vector<ResourceListText*> listText;
 	~ResourceManager();
 

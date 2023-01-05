@@ -70,7 +70,17 @@ bool ResourceManager::isCraftable(Resource& resource)
 
 void ResourceManager::deleteResource(string resource)
 {
+    if (resourceMap.count(resource) == 0)
+    {
+        std::cout << "Resource: " << resource << " does not exist in the graph" << std::endl;
+        return;
+    }
     resourceMap.erase(resource);
+    DisplayNode* removedNode = displayMap[resource];
+    for (int i = 0; i < removedNode->outgoingArrows.size(); i++)
+        Game::Instance().RemoveEntity(removedNode->outgoingArrows[i]->arrow);
+    Game::Instance().RemoveEntity(removedNode);
+    displayMap.erase(resource);
     displayGraph();
 }
 
@@ -79,6 +89,7 @@ void ResourceManager::addNode(string node)
     if (resourceMap.count(node) == 0)
     {
         resourceMap[node] = new Resource(node);
+        addNewDisplayNode(node);
     }
     else
     {
@@ -95,6 +106,10 @@ void ResourceManager::addLink(string from, string to)
         return;
     }
     resourceMap[from]->requiredResources.push_back(to);
+    if (displayMap.count(to) == 0)
+        addNewDisplayNodeFrom(from, to);
+    else
+        addDisplayNodeConnection(from, to);
     displayGraph();
 }
 
@@ -118,7 +133,7 @@ void ResourceManager::displayGraph()
             text += " not usable";   
         float x = 10;
         float y = 150 + float(i) * textHeight;
-        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 3);
+        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 4);
         Game::Instance().AddEntity(listText[i]);
         i++;
     }
@@ -172,22 +187,17 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::addNewDisplayNode(std::string name)
 {
-    std::cout << name << std::endl;
-    Vector2 center(208 - 24, 90 - 24);
-    Vector2 newPos(center.x, center.y);
+    Vector2 newPos(-24, -24);
+    //make newpos opposite to average pos
     if (displayMap.size() > 0)
     {
         newPos.x = 0;
         newPos.y = 0;
         for (auto const& pair : displayMap)
         {
-            newPos.x += pair.second->pos->x - center.x;
-            newPos.y += pair.second->pos->y - center.y;
+            newPos += *pair.second->pos;
         }
-        newPos.x /= -float(displayMap.size());
-        newPos.y /= -float(displayMap.size());
-        newPos.x += center.x;
-        newPos.y += center.y;
+        newPos /= -float(displayMap.size());
         Vector2 minOffset(-48, -24);
         Vector2 maxOffset(48, 24);
         int tries = 0;
@@ -224,13 +234,10 @@ void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
     {
         for (int i = 0; i < fromNode->points.size(); i++)
         {
-            newPos.x += fromNode->points[i].x;
-            newPos.y += fromNode->points[i].y;
+            newPos += fromNode->points[i];
         }
-        newPos.x /= -float(fromNode->points.size());
-        newPos.y /= -float(fromNode->points.size());
-        newPos.x += fromNode->pos->x;
-        newPos.y += fromNode->pos->y;
+        newPos /= -float(fromNode->points.size());
+        newPos += *fromNode->pos;
     }
     else
     {
@@ -267,16 +274,16 @@ void ResourceManager::addDisplayNodeConnection(std::string from, std::string to)
     if (displayMap.count(from) == 0 || displayMap.count(to) == 0) return;
     DisplayNode* fromNode = displayMap[from];
     DisplayNode* toNode = displayMap[to];
-    Vector2 fromPos(fromNode->pos->x + 24, fromNode->pos->y + 24);
-    Vector2 toPos(toNode->pos->x + 24, toNode->pos->y + 24);
-    Vector2 dir(toPos.x - fromPos.x, toPos.y - fromPos.y);
+    Vector2 fromPos = fromNode->getCenterPos();
+    Vector2 toPos = toNode->getCenterPos();
+    Vector2 dir = toPos - fromPos;
     dir.normalize();
     Vector2* fromOffset = new Vector2(dir.x * 24, dir.y * 24);
     Vector2* toOffset= new Vector2(-dir.x * 24, -dir.y * 24);
-    Vector2* arrowStart = new Vector2(fromPos.x + fromOffset->x,fromPos.y + fromOffset->y);
+    Vector2* arrowStart = new Vector2(fromPos.x + fromOffset->x, fromPos.y + fromOffset->y);
     Vector2* arrowEnd = new Vector2(toPos.x + toOffset->x, toPos.y + toOffset->y);
     ArrowEntity* arrow = new ArrowEntity(arrowStart, arrowEnd, 4, NULL, 2);
-    fromNode->outgoingArrows.push_back(new OutgoingArrow(toNode, toOffset, fromOffset, arrow));
+    fromNode->outgoingArrows.push_back(new OutgoingArrow(to, arrow));
     fromNode->points.push_back(*fromOffset);
     toNode->points.push_back(*toOffset);
     Game::Instance().AddEntity(arrow);
@@ -292,7 +299,16 @@ bool ResourceManager::noOverlap(Vector2 pos)
     return true;
 }
 
-
+DisplayNode* ResourceManager::getSelectedDisplayNode(Vector2 mousePos)
+{
+    for (auto const& pair : displayMap)
+    {
+        Vector2 nodeScreenPos = pair.second->getCenterPos() * pair.second->scale / 4 + pair.second->viewportCenter;
+        if (nodeScreenPos.distance(mousePos) < pair.second->size.x/2 * pair.second->scale/4)
+            return pair.second;
+    }
+    return NULL;
+}
 
 map<string, Resource*> resourceMap;
 ResourceManager::ResourceManager() {}

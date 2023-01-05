@@ -18,7 +18,9 @@ void Assets::loadImages()
     img_Test = rw.loadTexture("Assets/images/TestSprite.png");
     img_Background = rw.loadTexture("Assets/images/ResourceManagerBackground.png");
     img_GraphView = rw.loadTexture("Assets/images/GraphView.png");
-    img_OverList = rw.loadTexture("Assets/images/OverList.png");
+    img_ListView = rw.loadTexture("Assets/images/ListView.png");
+    img_GraphBorders = rw.loadTexture("Assets/images/GraphBorders.png");
+    img_ListBorders = rw.loadTexture("Assets/images/OverList.png");
     img_ScrollArea = rw.loadTexture("Assets/images/ScrollBarArea.png");
     img_ScrollBarSmall = rw.loadTexture("Assets/images/ScrollBar.png");
     img_ScrollBarMed = rw.loadTexture("Assets/images/ScrollBarMedium.png");

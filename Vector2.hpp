@@ -4,12 +4,6 @@
 
 class Vector2
 {
-private:
-    Vector2& add(const Vector2& v);
-    Vector2& subtract(const Vector2& v);
-    Vector2& multiply(const Vector2& v);
-    Vector2& divide(const Vector2& v);
-
 public:
     float x;
     float y;
@@ -20,15 +14,21 @@ public:
     float distance(Vector2 otherV);
     void normalize();
     float angleBetween(Vector2 otherV);
-    friend Vector2& operator+(Vector2& v1, const Vector2& v2);
-    friend Vector2& operator-(Vector2& v1, const Vector2& v2);
-    friend Vector2& operator*(Vector2& v1, const Vector2& v2);
-    friend Vector2& operator/(Vector2& v1, const Vector2& v2);
+    friend Vector2 operator+(const Vector2& v1, const Vector2& v2);
+    friend Vector2 operator-(const Vector2& v1, const Vector2& v2);
+    friend Vector2 operator*(const Vector2& v1, const Vector2& v2);
+    friend Vector2 operator*(const Vector2& v1, const float scalar);
+    friend Vector2 operator/(const Vector2& v1, const Vector2& v2);
+    friend Vector2 operator/(const Vector2& v1, const float scalar);
+
 
     Vector2& operator+=(const Vector2& v);
     Vector2& operator-=(const Vector2& v);
     Vector2& operator*=(const Vector2& v);
+    Vector2& operator*=(const float scalar);
     Vector2& operator/=(const Vector2& v);
+    Vector2& operator/=(const float scalar);
+
 
     friend std::ostream& operator<<(std::ostream& stream, const Vector2& vec);
 };

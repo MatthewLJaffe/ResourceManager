@@ -15,10 +15,13 @@ ArrowEntity::ArrowEntity(Vector2* from, Vector2* to, float scale, SDL_Texture* t
 
 void ArrowEntity::render()
 {
+	if (!enabled) return;
 	RenderWindow::Instance().setScale(scale, scale);
-	RenderWindow::Instance().drawLine(from->x, from->y, to->x, to->y);
+	float scaleConst = 4 / scale;
+	RenderWindow::Instance().drawLine(from->x + 208 * scaleConst, from->y + 90 * scaleConst, to->x + 208 * scaleConst, to->y + 90 * scaleConst);
 
-	Vector2 dir(to->x - from->x, to->y - from->y);
+	Vector2 dir = *to - *from;
+	dir.normalize();
 	Vector2 right(1, 0);
 	angle = double(right.angleBetween(dir));
 	if (angle < 0)
@@ -40,13 +43,24 @@ void ArrowEntity::render()
 	else if (angle > 292.5 && angle < 337.5)
 		tex = Assets::Instance().img_ArrowTopRight;
 	SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
-	RenderWindow::Instance().render(tex, currentFrame, { int(to->x - currentFrame.w/2), int(to->y - currentFrame.h/2), int(currentFrame.w), int(currentFrame.h) }, 0);
+	Vector2 arrowPos;
+	arrowPos.x = to->x + 208 * scaleConst - currentFrame.w / 2;
+	arrowPos.y = to->y + 90 * scaleConst - currentFrame.h / 2;
+	arrowPos -= dir * currentFrame.w / 2;
+	RenderWindow::Instance().render(tex, currentFrame, { int(arrowPos.x), int(arrowPos.y), int(currentFrame.w), int(currentFrame.h) }, 0);
 	RenderWindow::Instance().setScale(1, 1);
 }
 
 void ArrowEntity::update()
 {
+	if (!enabled) return;
+	updateTransformState();
+}
 
+void ArrowEntity::updateTransformState()
+{
+	transformState = GameTransformer::Instance().getTransformState();
+	this->scale = 4.0f * transformState.scale.x;
 }
 
 ArrowEntity::~ArrowEntity()

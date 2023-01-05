@@ -8,7 +8,7 @@ RenderWindow& RenderWindow::Instance()
 
 RenderWindow::RenderWindow()
 {
-    window = SDL_CreateWindow("Resource Manager", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Resource Manager", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
         std::cout << "Window failed to init. Error " << SDL_GetError() << std::endl;

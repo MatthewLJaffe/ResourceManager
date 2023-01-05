@@ -10,11 +10,15 @@ public:
 	void handleInput(SDL_Event event);
 	Vector2 getMousePos();
 	bool getMouseDown();
+	float getMouseWheelY();
 	bool getMousePressed();
+	const int maxWheel = 0;
+	const int minWheel = -2;
 
 private:
 	InputManager();
 	~InputManager();
+	int mouseWheelY;
 	Vector2* mousePos;
 	bool mouseDown = 0;
 	bool mousePressed = 0;

@@ -15,8 +15,10 @@ public:
 	void closeFonts();
 	SDL_Texture* img_Test;
 	SDL_Texture* img_Background;
+	SDL_Texture* img_GraphBorders;
 	SDL_Texture* img_GraphView;
-	SDL_Texture* img_OverList;
+	SDL_Texture* img_ListView;
+	SDL_Texture* img_ListBorders;
 	SDL_Texture* img_ScrollArea;
 	SDL_Texture* img_ScrollBarSmall;
 	SDL_Texture* img_ScrollBarMed;
