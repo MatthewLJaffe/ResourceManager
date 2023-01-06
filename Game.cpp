@@ -43,6 +43,24 @@ void processCommand(std::string line, bool& gameRunning)
                 ResourceManager::Instance().addLink(command[1], command[2]);
             }
             else
+                cout << "Invocation: link [resource to craft] [required resource]\n";
+        }
+        else if (command[0] == "erase")
+        {
+            if (command.size() == 2)
+            {
+                ResourceManager::Instance().erase(command[1]);
+            }
+            else
+                cout << "Invocation: erase [resource to erase]\n";
+        }
+        else if (command[0] == "unlink")
+        {
+            if (command.size() == 3)
+            {
+                ResourceManager::Instance().unLink(command[1], command[2]);
+            }
+            else
                 cout << "Invocation: add [resource to craft] [required resource]\n";
         }
         else if (command[0] == "q")
@@ -65,7 +83,8 @@ void handleDragInput()
     if (mouseWheelY == -2)
         GameTransformer::Instance().setScale(Vector2(.25, .25));
     Vector2 mousePos = InputManager::Instance().getMousePos() / 4;
-    if (InputManager::Instance().getMouseDown())
+    //mouse is down and inside viewport
+    if (InputManager::Instance().getMouseDown() && mousePos.x > 97)
     {
         DisplayNode* selected = ResourceManager::Instance().getSelectedDisplayNode(mousePos);
         Vector2 dragDir = InputManager::Instance().getMousePos() - lastMousePos;
@@ -135,6 +154,7 @@ void Game::update()
 void Game::RemoveEntity(Entity* entity)
 {
     remove(entities.begin(), entities.end(), entity);
+    entities.resize(entities.size() - 1);
 }
 
 
@@ -156,6 +176,7 @@ Game::~Game()
 {
     for (int i = 0; i < entities.size(); i++)
     {
+        std::cout << i << std::endl;
         if (entities[i] != NULL)
             delete entities[i];
     }

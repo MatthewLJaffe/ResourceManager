@@ -84,8 +84,8 @@ int main (int argc, char* argv[])
     Assets::Instance().closeFonts();
     ResourceManager::Instance().outputGraph("OutResources.txt");
     RenderWindow::Instance().cleanUp();
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-    PrintMemoryUsage();
     return EXIT_SUCCESS;
 }

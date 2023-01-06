@@ -15,5 +15,4 @@ private:
 	int textHeight = 40;
 	float minScrollY;
 	float maxScrollY;
-	~ScrollBar();
 };

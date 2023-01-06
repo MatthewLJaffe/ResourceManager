@@ -27,6 +27,7 @@ SDL_Texture* RenderWindow::loadTexture(const char* filePath)
 void RenderWindow::cleanUp()
 {
     SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
 }
 
 void RenderWindow::clear()

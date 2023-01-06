@@ -56,7 +56,19 @@ void DisplayNode::update()
     updateTransformState();
     for (size_t i = 0; i < outgoingArrows.size(); i++)
     {
+        //if resource was erased remove outgoing arrow to it since it no longer exists
         if (ResourceManager::Instance().displayMap.count(outgoingArrows[i]->target) == 0)
+        {
+            Game::Instance().RemoveEntity(outgoingArrows[i]->arrow);
+            delete outgoingArrows[i]->arrow;
+            OutgoingArrow* outgoingArrow = outgoingArrows[i];
+            outgoingArrows.erase(outgoingArrows.begin() + i);
+            delete outgoingArrow;
+            i--;
+            continue;
+        }
+        //if resource was deleted disable outgoing arrow since resource still exists in graph
+        if (!ResourceManager::Instance().displayMap[outgoingArrows[i]->target]->enabled)
         {
             outgoingArrows[i]->arrow->enabled = false;
             continue;
@@ -83,5 +95,11 @@ Vector2 DisplayNode::getCenterPos()
 Vector2 DisplayNode::screenSpaceSize()
 {
     return size * scale;
+}
+
+DisplayNode::~DisplayNode()
+{
+    for (int i = 0; i < outgoingArrows.size(); i++)
+        delete outgoingArrows[i];
 }
 

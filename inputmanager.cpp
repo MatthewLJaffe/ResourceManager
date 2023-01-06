@@ -21,11 +21,6 @@ bool InputManager::getMousePressed()
 	return mousePressed;
 }
 
-InputManager::~InputManager()
-{
-	delete mousePos;
-}
-
 float InputManager::getMouseWheelY()
 {
 	return mouseWheelY;
@@ -74,4 +69,10 @@ void InputManager::handleInput(SDL_Event event)
 InputManager::InputManager()
 {
 	mousePos = new Vector2(0, 0);
+	mouseWheelY = 0;
+}
+
+InputManager::~InputManager()
+{
+	delete mousePos;
 }

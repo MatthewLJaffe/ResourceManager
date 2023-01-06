@@ -6,6 +6,7 @@ ArrowEntity::ArrowEntity(Vector2* from, Vector2* to, float scale, SDL_Texture* t
 	this->to = to;
 	this->scale = scale;
 	this->tex = tex;
+	this->pos = new Vector2(0, 0);
 	this->sortOrder = sortOrder;
 	currentFrame.x = 0;
 	currentFrame.y = 0;

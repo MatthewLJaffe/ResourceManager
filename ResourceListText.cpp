@@ -24,4 +24,3 @@ void ResourceListText::render()
     SDL_Rect destRect = { pos->x * scale, (pos->y + verticalOffset) * scale, currentFrame.w * scale, currentFrame.h * scale };
     RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
-

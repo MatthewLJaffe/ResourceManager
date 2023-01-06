@@ -11,7 +11,6 @@ struct OutgoingArrow
 {
 	OutgoingArrow(std::string target, ArrowEntity* arrow);
 	std::string target;
-	Vector2* originOffset;
 	ArrowEntity* arrow;
 };
 
@@ -25,6 +24,7 @@ public:
 	Vector2 getScreenPos(Vector2 viewportPos);
 	Vector2 screenSpaceSize();
 	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name);
+	~DisplayNode();
 	std::vector<OutgoingArrow*> outgoingArrows;
 	std::vector<Vector2> points;
 	std::string name;

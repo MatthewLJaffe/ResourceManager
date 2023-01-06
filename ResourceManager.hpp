@@ -35,10 +35,12 @@ public:
 	void deleteResource(std::string resource);
 	void addNode(std::string node);
 	void addLink(std::string from, string to);
+	void unLink(std::string from, string to);
+	void erase(std::string resource);
 	void addNewDisplayNode(std::string name);
 	void addNewDisplayNodeFrom(std::string from, std::string name);
 	void addDisplayNodeConnection(std::string from, std::string to);
-	bool isCraftable(Resource& resource);
+	bool isCraftable(Resource& resource, std::map<string, bool> visitedMap);
 	void displayGraph();
 	float getMaxTextOffset();
 	void outputGraph(std::string name);

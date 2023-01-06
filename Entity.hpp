@@ -9,7 +9,7 @@ class Entity
 {
 public:
     Entity(float x, float y, float scale, SDL_Texture* tex, int sortOrder);
-    ~Entity();
+    virtual ~Entity();
     Vector2* pos;
     bool enabled;
     float scale;

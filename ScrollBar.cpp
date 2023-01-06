@@ -11,11 +11,13 @@ ScrollBar::ScrollBar(float x, float y, float scale, SDL_Texture* tex, int sortOr
 void ScrollBar::update()
 {
 	if (!enabled) return;
+	Vector2 mousePos = InputManager::Instance().getMousePos();
+	//mouse is outside of resource list 
+	if (mousePos.x / 4 > 97) return;
 	bool pressedLastFrame = scrollBarPressed;
 	if (!InputManager::Instance().getMouseDown()) {
 		scrollBarPressed = false;
 	}
-	Vector2 mousePos = InputManager::Instance().getMousePos();
 	if (InputManager::Instance().getMousePressed() && utils::inRect(mousePos.x, mousePos.y, pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale))
 	{
 		scrollBarPressed = true;
@@ -44,9 +46,4 @@ void ScrollBar::ResizeScrollBar(SDL_Texture* tex, int newMaxScrollY)
 	SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
 	if (this->pos->y > maxScrollY)
 		this->pos->y = maxScrollY;
-}
-
-ScrollBar::~ScrollBar()
-{
-	delete this->pos;
 }
