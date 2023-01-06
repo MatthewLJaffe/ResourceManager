@@ -8,9 +8,25 @@
 #include "ScrollBar.hpp"
 #include "Game.hpp"
 #include "DisplayNode.hpp"
+#include <stack>
 
 class ScrollBar;
 class DisplayNode;
+
+enum UsabilityState
+{
+	USABLE,
+	UNUSABLE,
+	UNKNOWN
+};
+
+struct TraversalInfo
+{
+	UsabilityState usabilityState;
+	bool visited;
+	TraversalInfo();
+};
+
 
 struct ScrollBarVariation
 {
@@ -40,7 +56,7 @@ public:
 	void addNewDisplayNode(std::string name);
 	void addNewDisplayNodeFrom(std::string from, std::string name);
 	void addDisplayNodeConnection(std::string from, std::string to);
-	bool isCraftable(Resource& resource, std::map<string, bool> visitedMap);
+	bool isCraftable(Resource& resource, std::map<string, TraversalInfo>& visitedMap);
 	void displayGraph();
 	float getMaxTextOffset();
 	void outputGraph(std::string name);

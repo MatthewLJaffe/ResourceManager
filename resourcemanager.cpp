@@ -1,5 +1,11 @@
 #include "ResourceManager.hpp"
-#include "Utils.hpp"
+
+TraversalInfo::TraversalInfo()
+{
+    usabilityState = UNKNOWN;
+    visited = false;
+}
+
 
 ScrollBarVariation::ScrollBarVariation(SDL_Texture* tex, int maxScrollHeight, int minNumberItems)
 {
@@ -58,25 +64,48 @@ void ResourceManager::addResource(string line)
     }
 }
 
-bool ResourceManager::isCraftable(Resource& resource, std::map<string, bool> visitedMap)
+bool ResourceManager::isCraftable(Resource& resource, std::map<string, TraversalInfo>& traversalMap)
 {
-    if (visitedMap.count(resource.name) > 0)
+    stack<Resource*> resourceStack;
+    resourceStack.push(&resource);
+    while (!resourceStack.empty())
     {
-        return true;
-    }
-    visitedMap[resource.name] = true;
-    for (size_t i = 0; i < resource.requiredResources.size(); i++)
-    {
-        //if erase was called on resource remove it from required resources since it no longer exists
-        if (resourceMap.count(resource.requiredResources[i]) == 0)
+        Resource* topResource = resourceStack.top();
+        resourceStack.pop();
+        if (traversalMap.count(topResource->name) > 0)
         {
-            resource.requiredResources.erase(resource.requiredResources.begin() + i);
-            i--;
-            continue;
+            if (traversalMap[topResource->name].usabilityState == UNUSABLE)
+                return false;
+            if (traversalMap[topResource->name].visited || traversalMap[topResource->name].usabilityState == USABLE)
+                continue;
         }
-        if (!resourceMap[resource.requiredResources[i]]->active ||
-            !isCraftable(*resourceMap[resource.requiredResources[i]], visitedMap))
-            return false;
+        TraversalInfo currInfo;
+        currInfo.visited = true;
+        traversalMap[topResource->name] = currInfo;
+        for (size_t i = 0; i < topResource->requiredResources.size(); i++)
+        {
+            //if erase was called on resource remove it from required resources since it no longer exists
+            if (resourceMap.count(topResource->requiredResources[i]) == 0)
+            {
+                topResource->requiredResources.erase(topResource->requiredResources.begin() + i);
+                i--;
+                continue;
+            }
+            if (!resourceMap[topResource->requiredResources[i]]->active)
+            {
+                TraversalInfo unusableInfo;
+                unusableInfo.usabilityState = UNUSABLE;
+                traversalMap[resourceMap[topResource->requiredResources[i]]->name] = unusableInfo;
+                return false;
+            }
+            resourceStack.push(resourceMap[topResource->requiredResources[i]]);
+        }
+    }
+    //resource is craftable so all visited resources must also be craftable
+    for (auto& pair : traversalMap)
+    {
+        if (pair.second.visited)
+            pair.second.usabilityState = USABLE;
     }
     return true;
 }
@@ -195,6 +224,8 @@ void ResourceManager::addLink(string from, string to)
 }
 
 //TODO only rebuild display for delete
+//get rid of reset visited flags
+//
 void ResourceManager::displayGraph()
 {
     for (int i = 0; i < listText.size(); i++)
@@ -205,12 +236,15 @@ void ResourceManager::displayGraph()
     size_t mapSize = resourceMap.size();
     listText.resize(mapSize);
     int i = 0;
-    std::map<string, bool> visitedMap;
+    std::map<string, TraversalInfo> traversalMap;
     for (auto const& pair : resourceMap)
     {
-        visitedMap.clear();
+        for (auto& kv : traversalMap)
+        {
+            kv.second.visited = false;
+        }
         std::string text = pair.first;
-        if (isCraftable(*pair.second, visitedMap))
+        if (isCraftable(*pair.second, traversalMap))
             text += " usable";
         else
             text += " not usable";   

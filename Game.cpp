@@ -176,7 +176,6 @@ Game::~Game()
 {
     for (int i = 0; i < entities.size(); i++)
     {
-        std::cout << i << std::endl;
         if (entities[i] != NULL)
             delete entities[i];
     }
