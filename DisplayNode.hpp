@@ -23,11 +23,13 @@ public:
 	Vector2 size = Vector2(48, 48);
 	Vector2 getScreenPos(Vector2 viewportPos);
 	Vector2 screenSpaceSize();
-	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name);
+	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int maxChars);
 	~DisplayNode();
 	std::vector<OutgoingArrow*> outgoingArrows;
 	std::vector<Vector2> points;
 	std::string name;
+	std::string displayName;
+	int maxChars;
 	SDL_Texture* textImg;
 	Vector2 getCenterPos();
 	void updateTransformState() override;

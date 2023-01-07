@@ -72,6 +72,7 @@ void processCommand(std::string line, bool& gameRunning)
 
 void handleDragInput()
 {
+    static DisplayNode* previouslySelected = NULL;
     GameTransformer::Instance().pushTransformState();
     static Vector2 lastMousePos = Vector2(0, 0);
     static Vector2 dragOffset = Vector2(0, 0);
@@ -86,13 +87,22 @@ void handleDragInput()
     //mouse is down and inside viewport
     if (InputManager::Instance().getMouseDown() && mousePos.x > 97)
     {
-        DisplayNode* selected = ResourceManager::Instance().getSelectedDisplayNode(mousePos);
+        DisplayNode* selected;
+        if (previouslySelected == NULL)
+        {
+            selected = ResourceManager::Instance().getSelectedDisplayNode(mousePos);
+        }
+        else
+            selected = previouslySelected;
         Vector2 dragDir = InputManager::Instance().getMousePos() - lastMousePos;
         if (selected != NULL)
             *selected->pos += dragDir / selected->scale;
         else
             dragOffset += dragDir;
+        previouslySelected = selected;
     }
+    else
+        previouslySelected = NULL;
     lastMousePos = InputManager::Instance().getMousePos();
     GameTransformer::Instance().translate(dragOffset);
 }
@@ -111,7 +121,7 @@ void Game::init()
     entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphView, 1));
     entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphBorders, 3));
     entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_ListBorders, 5));
-    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 5));
+    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 30, 5));
     entities.push_back(scrollArea);
     entities.push_back(scrollBar);
     sort(entities.begin(), entities.end(), compareEntities);

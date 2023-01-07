@@ -6,7 +6,7 @@ OutgoingArrow::OutgoingArrow(std::string target, ArrowEntity* arrow)
 	this->arrow = arrow;
 }
 
-DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name)
+DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int maxChars)
 {
     this->sortOrder = sortOrder;
     this->scale = scale;
@@ -15,9 +15,13 @@ DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int so
     currentFrame.x = 0;
     currentFrame.y = 0;
     this->name = name;
+    if (this->name.size() > maxChars)
+        this->displayName = this->name.substr(0, maxChars - 3) + "...";
+    else
+        this->displayName = this->name;
     SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
     TTF_SetFontSize(Assets::Instance().font_Body, 20);
-    SDL_Surface* textSurf = TTF_RenderText_Solid(Assets::Instance().font_Body, name.c_str(), {255,255,255});
+    SDL_Surface* textSurf = TTF_RenderText_Solid(Assets::Instance().font_Body, displayName.c_str(), {255,255,255});
     textImg = RenderWindow::Instance().createFontTexture(textSurf);
     SDL_FreeSurface(textSurf);
     enabled = true;

@@ -250,7 +250,7 @@ void ResourceManager::displayGraph()
             text += " not usable";   
         float x = 10;
         float y = 150 + float(i) * textHeight;
-        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 4);
+        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 18, 4);
         Game::Instance().AddEntity(listText[i]);
         i++;
     }
@@ -336,7 +336,7 @@ void ResourceManager::addNewDisplayNode(std::string name)
             tries++;
         }
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name);
+    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 15);
     displayMap[name] = displayNode;
     Game::Instance().AddEntity(displayNode);
 }
@@ -380,7 +380,7 @@ void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
             placed = true;
         tries++;
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name);
+    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 15);
     displayMap[name] = displayNode;
     Game::Instance().AddEntity(displayNode);
     addDisplayNodeConnection(from, name);

@@ -46,7 +46,7 @@ void operator delete(void* memory, size_t size)
 {
     s_AllocationMetrics.TotalFreed += size;
     free(memory);
-    //PrintMemoryUsage();
+        PrintMemoryUsage();
 }
 
 void buildGraph(ifstream& file)
