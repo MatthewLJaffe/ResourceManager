@@ -1,8 +1,11 @@
 #include "ResourceManager.hpp"
 
+map<string, Resource*> resourceMap;
+
 TraversalInfo::TraversalInfo()
 {
-    usabilityState = UNKNOWN;
+    //-1 denotes not sure how many are craftable yet
+    amountObtainable = -1;
     visited = false;
 }
 
@@ -44,70 +47,41 @@ void ResourceManager::addResource(string line)
     else {
         resource = new Resource(resources[0]);
         resourceMap[resource->name] = resource;
-        addNewDisplayNode(resources[0]);
+        //addNewDisplayNode(resources[0], 0);
     }
-    resource->requiredResources = vector<string>();
+    resource->requiredResources = vector<ResourceAmount>();
     for (size_t i = 1; i < resources.size(); i++)
     {
+        size_t leftBracketPos = resources[i].find('[');
+        size_t rightBracketPos = resources[i].find(']');
+        int amount = 1;
+        if (leftBracketPos != std::string::npos && rightBracketPos != std::string::npos && rightBracketPos > leftBracketPos)
+        {
+            string amountStr = resources[i].substr(leftBracketPos, rightBracketPos - leftBracketPos);
+            std::cout << "amount " << amountStr << std::endl;
+            try
+            {
+                amount = std::stoi(amountStr);
+            }
+            catch (std::invalid_argument& e) 
+            {
+                std::cout << "invalid amount " << amountStr << std::endl;
+                amount = 1;
+            }
+        }
         if (resourceMap.count(resources[i]))
         {
-            resource->requiredResources.push_back(resources[i]);
-            addDisplayNodeConnection(resources[0], resources[i]);
+            resource->requiredResources.push_back(ResourceAmount(resources[i], amount));
+            //addDisplayNodeConnection(resources[0], resources[i]);
         }
         else
         {
             Resource* reqResource = new Resource(resources[i]);
-            resource->requiredResources.push_back(resources[i]);
+            resource->requiredResources.push_back(ResourceAmount(resources[i], amount));
             resourceMap[reqResource->name] = reqResource;
-            addNewDisplayNodeFrom(resource->name, reqResource->name);
+            //addNewDisplayNodeFrom(resource->name, reqResource->name);
         }
     }
-}
-
-bool ResourceManager::isCraftable(Resource& resource, std::map<string, TraversalInfo>& traversalMap)
-{
-    stack<Resource*> resourceStack;
-    resourceStack.push(&resource);
-    while (!resourceStack.empty())
-    {
-        Resource* topResource = resourceStack.top();
-        resourceStack.pop();
-        if (traversalMap.count(topResource->name) > 0)
-        {
-            if (traversalMap[topResource->name].usabilityState == UNUSABLE)
-                return false;
-            if (traversalMap[topResource->name].visited || traversalMap[topResource->name].usabilityState == USABLE)
-                continue;
-        }
-        TraversalInfo currInfo;
-        currInfo.visited = true;
-        traversalMap[topResource->name] = currInfo;
-        for (size_t i = 0; i < topResource->requiredResources.size(); i++)
-        {
-            //if erase was called on resource remove it from required resources since it no longer exists
-            if (resourceMap.count(topResource->requiredResources[i]) == 0)
-            {
-                topResource->requiredResources.erase(topResource->requiredResources.begin() + i);
-                i--;
-                continue;
-            }
-            if (!resourceMap[topResource->requiredResources[i]]->active)
-            {
-                TraversalInfo unusableInfo;
-                unusableInfo.usabilityState = UNUSABLE;
-                traversalMap[resourceMap[topResource->requiredResources[i]]->name] = unusableInfo;
-                return false;
-            }
-            resourceStack.push(resourceMap[topResource->requiredResources[i]]);
-        }
-    }
-    //resource is craftable so all visited resources must also be craftable
-    for (auto& pair : traversalMap)
-    {
-        if (pair.second.visited)
-            pair.second.usabilityState = USABLE;
-    }
-    return true;
 }
 
 void ResourceManager::deleteResource(string resource)
@@ -117,11 +91,8 @@ void ResourceManager::deleteResource(string resource)
         std::cout << "Resource: " << resource << " does not exist in the graph" << std::endl;
         return;
     }
-    resourceMap[resource]->active = false;
-    DisplayNode* removedNode = displayMap[resource];
-    for (int i = 0; i < removedNode->outgoingArrows.size(); i++)
-        removedNode->outgoingArrows[i]->arrow->enabled = false;
-    removedNode->enabled = false;
+    if (resourceMap[resource]->amount > 0)
+        setResourceAmount(resource, resourceMap[resource]->amount - 1);
     displayGraph();
 }
 
@@ -136,14 +107,15 @@ void ResourceManager::erase(std::string resourceName)
     resourceMap.erase(resourceName);
     delete resourceObj;
     DisplayNode* removedNode = displayMap[resourceName];
-    for (int i = 0; i < removedNode->outgoingArrows.size(); i++)
+    for (auto& pair : removedNode->outgoingArrows)
     {
-        Game::Instance().RemoveEntity(removedNode->outgoingArrows[i]->arrow);
-        delete removedNode->outgoingArrows[i]->arrow;
+        Game::Instance().RemoveEntity(pair.second, "ResourceMenuState");
+        delete pair.second;
     }
-    Game::Instance().RemoveEntity(removedNode);
+    Game::Instance().RemoveEntity(removedNode, "ResourceMenuState");
     delete removedNode;
     displayMap.erase(resourceName);
+    //required resource refrences to erased resource are cleaned up in display graph
     displayGraph();
 }
 
@@ -161,42 +133,16 @@ void ResourceManager::unLink(std::string from, std::string to)
     }
     for (int i = 0; i < resourceMap[from]->requiredResources.size(); i++)
     {
-        if (resourceMap[from]->requiredResources[i] == to)
+        if (resourceMap[from]->requiredResources[i].resource == to)
         {
             resourceMap[from]->requiredResources.erase(resourceMap[from]->requiredResources.begin() + i);
             break;
         }
     }
-    for (int i = 0; i < displayMap[from]->outgoingArrows.size(); i++)
-    {
-        if (displayMap[from]->outgoingArrows[i]->target == to)
-        {
-            Game::Instance().RemoveEntity(displayMap[from]->outgoingArrows[i]->arrow);
-            displayMap[from]->outgoingArrows.erase(displayMap[from]->outgoingArrows.begin() + i);
-            break;
-        }
-    }
-}
-
-void ResourceManager::addNode(string node)
-{
-    if (resourceMap.count(node) == 0)
-    {
-        resourceMap[node] = new Resource(node);
-        addNewDisplayNode(node);
-    }
-    else if (!resourceMap[node]->active)
-    {
-        resourceMap[node]->active = true;
-        DisplayNode* removedNode = displayMap[node];
-        for (int i = 0; i < removedNode->outgoingArrows.size(); i++)
-            removedNode->outgoingArrows[i]->arrow->enabled = true;
-        removedNode->enabled = true;
-    }
-    else
-    {
-        cout << "Resource " << node << "already exists in graph\n";
-    }
+    ArrowEntity* removedArrow = displayMap[from]->outgoingArrows[to];
+    Game::Instance().RemoveEntity(removedArrow, "ResourceMenuState");
+    displayMap[from]->outgoingArrows.erase(to);
+    delete removedArrow;
     displayGraph();
 }
 
@@ -207,35 +153,97 @@ void ResourceManager::addLink(string from, string to)
         cout << "Resource " << from << " does not exist in graph\n";
         return;
     }
-    if (!resourceMap[from]->active)
-    {
-        cout << "Resource " << from << " must be active in graph to create link\n";
-        return;
-    }
-    resourceMap[from]->requiredResources.push_back(to);
-    if (displayMap.count(to) == 0)
+    resourceMap[from]->requiredResources.push_back(ResourceAmount(to, 1));
+    if (resourceMap.count(to) == 0)
     {
         resourceMap[to] = new Resource(to);
-        addNewDisplayNodeFrom(from, to);
+    }
+    displayGraph();
+}
+
+void ResourceManager::addNode(string node)
+{
+    if (resourceMap.count(node) == 0)
+    {
+        resourceMap[node] = new Resource(node);
+        resourceMap[node]->amount = 1;
     }
     else
-        addDisplayNodeConnection(from, to);
+    {
+        setResourceAmount(node, resourceMap[node]->amount + 1);
+    }
+    displayGraph();
+}
+
+void ResourceManager::setResourceAmount(std::string resource, int amount)
+{
+    resourceMap[resource]->amount = amount;
+    displayMap[resource]->setDisplayAmount(amount);
+}
+
+void ResourceManager::checkCraftButtonPressed(Vector2 mousePos)
+{
+    for (auto& pair : displayMap)
+    {
+        if (pair.second->posInCraftButton(mousePos))
+        {
+            craftResource(pair.first);
+        }
+    }
+}
+
+void ResourceManager::craftResource(std::string resourceName)
+{
+    if (resourceMap.count(resourceName) == 0) return;
+    Resource* resource = resourceMap[resourceName];
+    for (int i = 0; i < resource->requiredResources.size(); i++)
+    {
+        if (resourceMap[resource->requiredResources[i].resource]->amount < resource->requiredResources[i].amount)
+            return;
+    }
+    for (int i = 0; i < resource->requiredResources.size(); i++)
+    {
+        setResourceAmount(resource->requiredResources[i].resource, resourceMap[resource->requiredResources[i].resource]->amount - resource->requiredResources[i].amount);
+    }
+    setResourceAmount(resourceName, resource->amount + 1);
     displayGraph();
 }
 
 //TODO only rebuild display for delete
-//get rid of reset visited flags
-//
 void ResourceManager::displayGraph()
 {
+    //rebuild display from backend graph
+    for (auto& pair : resourceMap)
+    {
+        if (displayMap.count(pair.first) == 0)
+        {
+            addNewDisplayNode(pair.first, pair.second->amount);
+        }
+        for (size_t i = 0; i < resourceMap[pair.first]->requiredResources.size(); i++)
+        {
+            ResourceAmount requiredResource = resourceMap[pair.first]->requiredResources[i];
+            //resource was erased and no longer exists in graph
+            if (resourceMap.count(requiredResource.resource) == 0)
+            {
+                resourceMap[pair.first]->requiredResources.erase(resourceMap[pair.first]->requiredResources.begin() + i);
+                i--;
+            }
+            else if (displayMap.count(requiredResource.resource) == 0)
+                addNewDisplayNodeFrom(pair.first, requiredResource.resource);
+            else if (displayMap[pair.first]->outgoingArrows.count(requiredResource.resource) == 0)
+            {
+                addDisplayNodeConnection(pair.first, requiredResource.resource);
+            }
+        }
+    }
     for (int i = 0; i < listText.size(); i++)
     {
-        Game::Instance().RemoveEntity(listText[i]);
+        Game::Instance().RemoveEntity(listText[i], "ResourceMenuState");
         delete listText[i];
     }
     size_t mapSize = resourceMap.size();
-    listText.resize(mapSize);
-    int i = 0;
+    listText.resize(0);
+    listLines = 0;
     std::map<string, TraversalInfo> traversalMap;
     for (auto const& pair : resourceMap)
     {
@@ -243,28 +251,297 @@ void ResourceManager::displayGraph()
         {
             kv.second.visited = false;
         }
-        std::string text = pair.first;
-        if (isCraftable(*pair.second, traversalMap))
-            text += " usable";
-        else
-            text += " not usable";   
-        float x = 10;
-        float y = 150 + float(i) * textHeight;
-        listText[i] = new ResourceListText(x, y, 1, text, 25, {0,0,0}, Assets::Instance().font_Test, 18, 4);
-        Game::Instance().AddEntity(listText[i]);
-        i++;
+        createNewListText(pair.first, pair.second, traversalMap);
     }
-    if (mapSize > maxNonScrollListItems)
+    if (listLines > maxNonScrollListLines)
     {
         scrollArea->enabled = true;
         scrollBar->enabled = true;
         for (int i = 0; i < 3; i++)
         {
-            if (scrollBarVariations[i].minNumberItems <= mapSize)
+            if (scrollBarVariations[i].minNumberItems <= listLines)
             {
                 scrollBar->ResizeScrollBar(scrollBarVariations[i].texture, scrollBarVariations[i].maxScrollHeight);
                 break;
             }
+        }
+    }
+}
+
+void ResourceManager::createNewListText(std::string name, Resource* resource, std::map<string, TraversalInfo>& traversalMap)
+{
+    int maxNameSize = 12;
+    std::string nameText = name;
+    float x = 10;
+    float y = 150 + float(listLines) * textHeight;
+    int nameWidth = 140;
+    int amountWidth = 60;
+    SDL_Color textColor = {0, 0, 0};
+    bool selected = displayMap[name]->selected;
+    if (selected)
+    {
+        textColor = { 255, 255, 255 };
+    }
+    addResourceListText(new ResourceListText(x, y, 1, nameText, resource->name, 23, textColor, Assets::Instance().font_Body, 10, 4, false, selected));
+    listLines++;
+    int maxAmountSize = 4;
+    std::string amountText = "x" + std::to_string(resource->amount);
+    if (amountText.size() > maxAmountSize)
+    {
+        amountText = "99+";
+    }
+    addResourceListText(new ResourceListText(x + nameWidth, y, 1, amountText, resource->name, 23, textColor, Assets::Instance().font_Body, 4, 4, false, selected));
+    DisplayNode* currNode = displayMap[name];
+    bool craftable = false;
+    bool visible = false;
+    determineResourceStatus(*resource, traversalMap, visible, craftable);
+    if (visible)
+    {
+        for (auto& targetArrow : currNode->outgoingArrows)
+        {
+            targetArrow.second->enabled = true;
+        }
+        currNode->enabled = true;
+    }
+    else
+    {
+        for (auto& targetArrow : currNode->outgoingArrows)
+        {
+            targetArrow.second->enabled = false;
+        }
+        currNode->enabled = false;
+    }
+    currNode->displayCraftButton = craftable;
+    std::string craftText;
+    if (craftable)
+    {
+        craftText = "craftable";
+    }
+    else
+    {
+        craftText = "can't craft";
+    }
+    addResourceListText(new ResourceListText(x + nameWidth + amountWidth, y, 1, craftText, resource->name, 23, textColor, Assets::Instance().font_Body, 11, 4, false, selected));
+    y = 150 + float(listLines) * textHeight;
+    if (displayMap[name]->selected)
+    {
+        if (resource->requiredResources.size() > 0)
+        {
+            addResourceListText(new ResourceListText(x, y, 1, "Requires:", resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
+            for (int i = 0; i < resource->requiredResources.size(); i++)
+            {
+                y += textHeight;
+                listLines++;
+                std::string text = resource->requiredResources[i].resource + " x" + std::to_string(resource->requiredResources[i].amount);
+                addResourceListText(new ResourceListText(x, y, 1, text, resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
+            }
+            listLines++;
+        }
+    }
+}
+
+void ResourceManager::addResourceListText(ResourceListText* text)
+{
+    Game::Instance().AddEntity(text, "ResourceMenuState");
+    listText.push_back(text);
+}
+
+//a resource is visible in the visual graph if there is one or more of it OR if it is craftable
+void ResourceManager::determineResourceStatus(Resource& resource, std::map<string, TraversalInfo>& traversalMap, bool& visible, bool& craftable)
+{
+    //More than one of resource in graph
+    if (resource.amount > 0)
+    {
+        visible = true;
+    }
+    craftable = isImmediatelyCraftable(resource);
+    if (!visible)
+        visible = isCraftable(resource, traversalMap);
+}
+
+struct ResourcePath
+{
+    ResourceAmount resourceAmount;
+    std::vector<std::string> path;
+
+    ResourcePath(std::string resource, int amount)
+    {
+        this->resourceAmount = ResourceAmount(resource, amount);
+    }
+
+    ResourcePath(std::string resource, int amount, std::vector<string> path)
+    {
+        this->path = path;
+        this->resourceAmount = ResourceAmount(resource, amount);
+    }
+};
+
+bool ResourceManager::isImmediatelyCraftable(Resource& resource)
+{
+    if (resource.requiredResources.size() == 0) return false;
+    for (size_t i = 0; i < resource.requiredResources.size(); i++)
+    {
+        if (resource.requiredResources[i].amount > resourceMap[resource.requiredResources[i].resource]->amount)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+//TODO this algorithm is slow make it not slow
+//a resource is craftable if all of its required resources exist in the resource map or can be crafted
+bool ResourceManager::isCraftable(Resource& resource, std::map<string, TraversalInfo>& traversalMap)
+{
+    if (resource.requiredResources.size() == 0) return false;
+    //need copy of resourceMap to modify amount of resources
+    std::map<string, Resource> currResourceMap;
+    for (auto& kv : resourceMap)
+    {
+        currResourceMap[kv.first] = *kv.second;
+    }
+    stack<ResourcePath> resourceStack;
+    for (int i = 0; i < resource.requiredResources.size(); i++)
+    {
+        resourceStack.push(ResourcePath(resource.requiredResources[i].resource, 1));
+    }
+    while (!resourceStack.empty())
+    {
+        ResourcePath topResourcePath = resourceStack.top();
+        Resource topResource = currResourceMap[topResourcePath.resourceAmount.resource];
+        resourceStack.pop();
+        //enough of required resource
+        if (topResource.amount >= topResourcePath.resourceAmount.amount)
+        {
+            continue;
+        }
+        //check to see if amount obtainable is known and sufficient
+        //and check to see if cycle exists
+        if (traversalMap[topResource.name].amountObtainable != -1
+            && traversalMap[topResource.name].amountObtainable < topResourcePath.resourceAmount.amount)
+        {
+            return false;
+        }
+        if (traversalMap[topResource.name].amountObtainable >= topResourcePath.resourceAmount.amount)
+            continue;
+        for (int i = 0; i < topResourcePath.path.size(); i++)
+        {
+            if (topResourcePath.path[i] == topResource.name)
+            {
+                return false;
+            }
+        }
+        if (topResource.requiredResources.size() == 0)
+        {
+            traversalMap[resource.name].amountObtainable = 0;
+            return false;
+        }
+        for (size_t i = 0; i < topResource.requiredResources.size(); i++)
+        {
+            //if erase was called on resource remove it from required resources since it no longer exists
+            if (currResourceMap.count(topResource.requiredResources[i].resource) == 0)
+            {
+                resourceMap[topResource.name]->requiredResources.erase(topResource.requiredResources.begin() + i);
+                currResourceMap[topResource.name].requiredResources.erase(topResource.requiredResources.begin() + i);
+                i--;
+                continue;
+            }
+            //only push resource on to stack if there aren't enough of it currently
+            int amountNeeded = topResource.requiredResources[i].amount * topResourcePath.resourceAmount.amount;
+            int amountCurrent = currResourceMap[topResource.requiredResources[i].resource].amount;
+            //not enough of required resource on hand see if required resource can be crafted
+            if (amountNeeded > amountCurrent)
+            {
+                currResourceMap[topResource.requiredResources[i].resource].amount = 0;
+                std::vector<std::string> newPath = topResourcePath.path;
+                newPath.push_back(topResource.name);
+                resourceStack.push(ResourcePath(topResource.requiredResources[i].resource, amountNeeded - amountCurrent, newPath));
+            }
+            //enough of required resource on hand deduct amount of required resource currently held since it is being used to craft top resource
+            else
+            {
+                currResourceMap[topResource.requiredResources[i].resource].amount -= amountNeeded;
+            }
+        }
+    }
+    return true;
+}
+
+void ResourceManager::updateSelectedText()
+{
+    //remove old selected text
+    int linesDeleted = 0;
+    for (int i = 0; i < listText.size(); i++)
+    {
+        //text corresponds to previously selected node
+        if (listText[i]->selected && !displayMap[listText[i]->name]->selected)
+        {
+            //remove text
+            if (listText[i]->requirment)
+            {
+                linesDeleted++;
+                listLines--;
+                ResourceListText* deleted = listText[i];
+                Game::Instance().RemoveEntity(deleted, "ResourceMenuState");
+                listText.erase(listText.begin() + i);
+                delete deleted;
+                i--;
+            }
+            //change text color
+            else
+            {
+                listText[i]->updateColor({ 0, 0 ,0 });
+                listText[i]->selected = false;
+            }
+        }
+        //text should move up by number of lines deleted
+        else
+        {
+            listText[i]->pos->y -= linesDeleted * textHeight;
+        }
+    }
+    int linesAdded = 0;
+    //add new selected text
+    for (int i = 0; i < listText.size(); i++)
+    {
+        //text corresponds to previously selected node
+        if (!listText[i]->selected && displayMap[listText[i]->name]->selected)
+        {
+            listText[i]->selected = true;
+            listText[i]->updateColor({ 255, 255 ,255 });
+            float y = listText[i]->pos->y;
+            float x = listText[i]->pos->x;
+            if (linesAdded == 0 )
+            {
+                scrollBar->scrollTo(y/4);
+                if (resourceMap[listText[i]->name]->requiredResources.size() > 0)
+                {
+                    linesAdded++;
+                    y += textHeight;
+                    listLines++;
+                    std::string text = "Requires:";
+                    ResourceListText* requirementText = new ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
+                    listText.emplace(listText.begin() + i, requirementText);
+                    Game::Instance().AddEntity(requirementText, "ResourceMenuState");
+                    i++;
+                    for (auto& entry : resourceMap[listText[i]->name]->requiredResources)
+                    {
+                        linesAdded++;
+                        y += textHeight;
+                        listLines++;
+                        std::string text = entry.resource + " x" + std::to_string(entry.amount);
+                        ResourceListText* requirementText = new ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
+                        listText.emplace(listText.begin() + i, requirementText);
+                        Game::Instance().AddEntity(requirementText, "ResourceMenuState");
+                        i++;
+                    }
+                }
+            }
+        }
+        //text should move up by number of lines deleted
+        else
+        {
+            listText[i]->pos->y += linesAdded * textHeight;
         }
     }
 }
@@ -282,7 +559,7 @@ void ResourceManager::outputGraph(string fileName)
         file << pair.first;
         for (size_t i = 0; i < pair.second->requiredResources.size(); i++)
         {
-            file << " " + pair.second->requiredResources[i];
+            file << " " + pair.second->requiredResources[i].resource;
         }
         file << std::endl;
     }
@@ -291,18 +568,10 @@ void ResourceManager::outputGraph(string fileName)
 
 float ResourceManager::getMaxTextOffset()
 {
-    return (resourceMap.size() - maxNonScrollListItems) * textHeight;
+    return (listLines - maxNonScrollListLines) * textHeight;
 }
 
-ResourceManager::~ResourceManager()
-{
-    for (auto const& pair : resourceMap)
-    {
-        delete pair.second;
-    }
-}
-
-void ResourceManager::addNewDisplayNode(std::string name)
+void ResourceManager::addNewDisplayNode(std::string name, int amount)
 {
     Vector2 newPos(-24, -24);
     //make newpos opposite to average pos
@@ -336,9 +605,9 @@ void ResourceManager::addNewDisplayNode(std::string name)
             tries++;
         }
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 15);
+    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, amount, 15);
     displayMap[name] = displayNode;
-    Game::Instance().AddEntity(displayNode);
+    Game::Instance().AddEntity(displayNode, "ResourceMenuState");
 }
 
 void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
@@ -380,9 +649,9 @@ void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
             placed = true;
         tries++;
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 15);
+    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 0, 15);
     displayMap[name] = displayNode;
-    Game::Instance().AddEntity(displayNode);
+    Game::Instance().AddEntity(displayNode, "ResourceMenuState");
     addDisplayNodeConnection(from, name);
 }
 
@@ -401,10 +670,11 @@ void ResourceManager::addDisplayNodeConnection(std::string from, std::string to)
     Vector2* arrowStart = new Vector2(fromPos.x + fromOffset.x, fromPos.y + fromOffset.y);
     Vector2* arrowEnd = new Vector2(toPos.x + toOffset.x, toPos.y + toOffset.y);
     ArrowEntity* arrow = new ArrowEntity(arrowStart, arrowEnd, 4, NULL, 2);
-    fromNode->outgoingArrows.push_back(new OutgoingArrow(to, arrow));
+    //fromNode->outgoingArrows.push_back(new OutgoingArrow(to, arrow));
+    fromNode->outgoingArrows[to] = arrow;
     fromNode->points.push_back(fromOffset);
     toNode->points.push_back(toOffset);
-    Game::Instance().AddEntity(arrow);
+    Game::Instance().AddEntity(arrow, "ResourceMenuState");
 }
 
 bool ResourceManager::noOverlap(Vector2 pos)
@@ -419,14 +689,27 @@ bool ResourceManager::noOverlap(Vector2 pos)
 
 DisplayNode* ResourceManager::getSelectedDisplayNode(Vector2 mousePos)
 {
+    DisplayNode* selected = NULL;
     for (auto const& pair : displayMap)
     {
+        pair.second->selected = false;
+        if (!pair.second->enabled) continue;
         Vector2 nodeScreenPos = pair.second->getCenterPos() * pair.second->scale / 4 + pair.second->viewportCenter;
-        if (nodeScreenPos.distance(mousePos) < pair.second->size.x/2 * pair.second->scale/4)
-            return pair.second;
+        if (nodeScreenPos.distance(mousePos) < pair.second->size.x / 2 * pair.second->scale / 4 && !pair.second->posInCraftButton(mousePos))
+        {
+            selected = pair.second;
+            pair.second->selected = true;
+        }
     }
-    return NULL;
+    return selected;
 }
 
-map<string, Resource*> resourceMap;
+ResourceManager::~ResourceManager()
+{
+    for (auto const& pair : resourceMap)
+    {
+        delete pair.second;
+    }
+}
+
 ResourceManager::ResourceManager() {}

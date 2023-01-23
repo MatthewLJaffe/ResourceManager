@@ -18,4 +18,7 @@ public:
 	int size;
 	SDL_Color color;
 	TextEntity();
+	~TextEntity();
+protected:
+	std::string text;
 };

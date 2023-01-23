@@ -27,15 +27,21 @@ void ScrollBar::update()
 	if (pressedLastFrame)
 	{
 		float yOffset = (mousePos.y - lastMousePos.y)/4;
-		pos->y += yOffset;
-		if (pos->y > maxScrollY)
-			pos->y = maxScrollY;
-		if (pos->y < minScrollY)
-			pos->y = minScrollY;
+		scrollTo(pos->y + yOffset);
 	}
 	lastMousePos = mousePos;
+}
+
+void ScrollBar::scrollTo(float yPos)
+{
+	if (!enabled) return;
+	pos->y = yPos;
+	if (pos->y > maxScrollY)
+		pos->y = maxScrollY;
+	if (pos->y < minScrollY)
+		pos->y = minScrollY;
 	//scroll text by computing offset
-	ResourceListText::verticalOffset = 
+	ResourceListText::verticalOffset =
 		-utils::lerp(0, ResourceManager::Instance().getMaxTextOffset(), (pos->y - minScrollY) / (maxScrollY - minScrollY));
 }
 

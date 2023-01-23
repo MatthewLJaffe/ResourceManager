@@ -9,6 +9,7 @@ public:
 	ScrollBar(float x, float y, float scale, SDL_Texture* tex, int sortOrder);
 	void ResizeScrollBar(SDL_Texture* tex, int newMaxScrollY);
 	void update() override;
+	void scrollTo(float yPos);
 private:
 	bool scrollBarPressed = false;
 	Vector2 lastMousePos;

@@ -1,10 +1,5 @@
 #include "Game.hpp"
-#include "ResourceListText.hpp"
-#include "ScrollBar.hpp"
-#include "ResourceManager.hpp"
-#include "InputManager.hpp"
-#include "ArrowEntity.hpp"
-#include "DisplayNode.hpp"
+
 
 static std::string getInput()
 {
@@ -94,15 +89,23 @@ void handleDragInput()
         }
         else
             selected = previouslySelected;
+        ResourceManager::Instance().updateSelectedText();
         Vector2 dragDir = InputManager::Instance().getMousePos() - lastMousePos;
         if (selected != NULL)
+        {
             *selected->pos += dragDir / selected->scale;
+        }
         else
             dragOffset += dragDir;
+
         previouslySelected = selected;
     }
     else
         previouslySelected = NULL;
+    if (InputManager::Instance().getMouseReleased())
+    {
+        ResourceManager::Instance().checkCraftButtonPressed(mousePos);
+    }
     lastMousePos = InputManager::Instance().getMousePos();
     GameTransformer::Instance().translate(dragOffset);
 }
@@ -114,17 +117,17 @@ bool compareEntities(Entity* e1, Entity* e2)
 
 void Game::init()
 {
-    ScrollBar* scrollBar = new ScrollBar(90, 33, 4, Assets::Instance().img_ScrollBarSmall, 6);
-    Entity* scrollArea = new Entity(90, 33, 4, Assets::Instance().img_ScrollArea, 5);
-    ResourceManager::Instance().init(scrollBar, scrollArea);
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_ListView, 3));
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphView, 1));
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GraphBorders, 3));
-    entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_ListBorders, 5));
-    entities.push_back(new TextEntity(16, 40, 1, "Resource List", 32, { 0,0,0 }, Assets::Instance().font_Test, 30, 5));
-    entities.push_back(scrollArea);
-    entities.push_back(scrollBar);
-    sort(entities.begin(), entities.end(), compareEntities);
+    player = new PlayerEntity(0, 0, 4, Assets::Instance().img_PlayerRight, 3, 10, 22);
+    currState = "StartMenuState";
+    gameStateMap["ResourceMenuState"] = new ResourceMenuState("ResourceMenuState");
+    gameStateMap["StartMenuState"] = new StartMenuState("StartMenuState");
+    gameStateMap["MainGameState"] = new MainGameState("MainGameState", player, -1600, 1600);
+
+    for (auto& pair : gameStateMap)
+    {
+        pair.second->start();
+        sort(pair.second->entities.begin(), pair.second->entities.end(), compareEntities);
+    }
     gameRunning = true;
     inputFuture = std::async(getInput);
     update();
@@ -144,13 +147,16 @@ void Game::update()
         }
         handleDragInput();
         RenderWindow::Instance().clear();
-        for (int i = 0; i < entities.size(); i++)
+        //execute game state
+        currState = gameStateMap[currState]->execute();
+        //render
+        for (int i = 0; i < gameStateMap[currState]->entities.size(); i++)
         {
-            entities[i]->update();
-            entities[i]->render();
+            gameStateMap[currState]->entities[i]->render();
         }
         RenderWindow::Instance().display();
         GameTransformer::Instance().resetGameTransformations();
+        InputManager::Instance().resetSingleFrameEvents();
         if (inputFuture._Is_ready())
         {
             line = inputFuture.get();
@@ -163,15 +169,33 @@ void Game::update()
 
 void Game::RemoveEntity(Entity* entity)
 {
-    remove(entities.begin(), entities.end(), entity);
-    entities.resize(entities.size() - 1);
+    remove(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), entity);
+    gameStateMap[currState]->entities.resize(gameStateMap[currState]->entities.size() - 1);
 }
 
+void Game::RemoveEntity(Entity* entity, std::string gameState)
+{
+    remove(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), entity);
+    gameStateMap[gameState]->entities.resize(gameStateMap[gameState]->entities.size() - 1);
+}
+
+void Game::RemoveAndDeleteEntity(Entity* entity)
+{
+    remove(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), entity);
+    gameStateMap[currState]->entities.resize(gameStateMap[currState]->entities.size() - 1);
+    delete entity;
+}
 
 void Game::AddEntity(Entity* entity)
 {
-    entities.push_back(entity);
-    sort(entities.begin(), entities.end(), compareEntities);
+    gameStateMap[currState]->entities.push_back(entity);
+    sort(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), compareEntities);
+}
+
+void Game::AddEntity(Entity* entity, std::string gameState)
+{
+    gameStateMap[gameState]->entities.push_back(entity);
+    sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
 }
 
 Game& Game::Instance()
@@ -184,9 +208,8 @@ Game::Game() {}
 
 Game::~Game()
 {
-    for (int i = 0; i < entities.size(); i++)
+    for (auto& pair : gameStateMap)
     {
-        if (entities[i] != NULL)
-            delete entities[i];
+        delete pair.second;
     }
 }

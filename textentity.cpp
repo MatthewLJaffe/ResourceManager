@@ -8,6 +8,7 @@ TextEntity::TextEntity(float x, float y, float scale, std::string message, int f
     this->font = font;
 	this->pos = new Vector2(x, y);
     this->scale = scale;
+    this->text = message;
     TTF_SetFontSize(font, fontSize);
     if (message.size() > maxChars) {
         message = message.substr(0, maxChars - 3) + "...";
@@ -21,6 +22,7 @@ TextEntity::TextEntity(float x, float y, float scale, std::string message, int f
 
 void TextEntity::updateText(std::string message)
 {
+    this->text = message;
     if (message.size() > maxChars) {
         message = message.substr(0, maxChars - 3) + "...";
     }
@@ -32,3 +34,8 @@ void TextEntity::updateText(std::string message)
 }
 
 TextEntity::TextEntity() {}
+
+TextEntity::~TextEntity() 
+{
+    SDL_DestroyTexture(this->tex);
+}

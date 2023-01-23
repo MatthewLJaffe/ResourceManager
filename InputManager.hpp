@@ -12,6 +12,11 @@ public:
 	bool getMouseDown();
 	float getMouseWheelY();
 	bool getMousePressed();
+	bool getMouseReleased();
+	bool getIPressed();
+	bool getADown();
+	bool getDDown();
+	void resetSingleFrameEvents();
 	const int maxWheel = 0;
 	const int minWheel = -2;
 
@@ -20,6 +25,11 @@ private:
 	~InputManager();
 	int mouseWheelY;
 	Vector2* mousePos;
-	bool mouseDown = 0;
-	bool mousePressed = 0;
+	bool mouseDown = false;
+	bool mousePressed = false;
+	bool mouseReleased = false;
+	bool aDown;
+	bool dDown;
+	bool iPressed;
+	bool iDown;
 };

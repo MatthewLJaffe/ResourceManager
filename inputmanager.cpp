@@ -21,14 +21,40 @@ bool InputManager::getMousePressed()
 	return mousePressed;
 }
 
+bool InputManager::getMouseReleased()
+{
+	return mouseReleased;
+}
+
+bool InputManager::getIPressed()
+{
+	return iPressed;
+}
+
+bool InputManager::getADown()
+{
+	return aDown;
+}
+
+bool InputManager::getDDown()
+{
+	return dDown;
+}
+
 float InputManager::getMouseWheelY()
 {
 	return mouseWheelY;
 }
 
-void InputManager::handleInput(SDL_Event event)
+void InputManager::resetSingleFrameEvents()
 {
 	mousePressed = false;
+	mouseReleased = false;
+	iPressed = false;
+}
+
+void InputManager::handleInput(SDL_Event event)
+{
 	switch (event.type)
 	{
 	case SDL_MOUSEMOTION:
@@ -52,6 +78,7 @@ void InputManager::handleInput(SDL_Event event)
 		{
 			mousePressed = false;
 			mouseDown = false;
+			mouseReleased = true;
 		}
 		break;
 	case SDL_MOUSEWHEEL:
@@ -60,6 +87,37 @@ void InputManager::handleInput(SDL_Event event)
 			mouseWheelY = maxWheel;
 		if (mouseWheelY < minWheel)
 			mouseWheelY = minWheel;
+		break;
+	case SDL_KEYDOWN:
+		if (event.key.keysym.sym == SDLK_i)
+		{
+			if (!iDown)
+				iPressed = true;
+			iDown = true;
+		}
+		if (event.key.keysym.sym == SDLK_a)
+		{
+			aDown = true;
+		}
+		if (event.key.keysym.sym == SDLK_d)
+		{
+			dDown = true;
+		}
+		break;
+	case SDL_KEYUP:
+		if (event.key.keysym.sym == SDLK_i)
+		{
+			iPressed = false;
+			iDown = false;
+		}
+		if (event.key.keysym.sym == SDLK_a)
+		{
+			aDown = false;
+		}
+		if (event.key.keysym.sym == SDLK_d)
+		{
+			dDown = false;
+		}
 		break;
 	default:
 		break;
