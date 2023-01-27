@@ -49,17 +49,107 @@ void Assets::loadImages()
     img_Ore = rw.loadTexture("Assets/images/Ore.png");
     img_PlayerRight = rw.loadTexture("Assets/images/characters/WelderRight.png");
     img_PlayerLeft = rw.loadTexture("Assets/images/characters/WelderLeft.png");
-    std::string fileEnd(".png");
+    img_InventoryUI = rw.loadTexture("Assets/images/InventoryUI.png");
+    img_Yellow = rw.loadTexture("Assets/images/Yellow.png");
+    img_White = rw.loadTexture("Assets/images/White.png");
+    img_SpikesUI = rw.loadTexture("Assets/images/SpikesUI.png");
+    img_GunUI = rw.loadTexture("Assets/images/GunUI.png");
+    img_TurretUI = rw.loadTexture("Assets/images/TurretUI.png");
+    img_BombUI = rw.loadTexture("Assets/images/BombUI.png");
+    img_HandCannonUI = rw.loadTexture("Assets/images/HandCannonUI.png");
+    img_CannonUI = rw.loadTexture("Assets/images/CannonUI.png");
+    img_TransparentTurretRight = rw.loadTexture("Assets/images/TransparentTurretRight.png");
+    img_TransparentTurretLeft = rw.loadTexture("Assets/images/TransparentTurretLeft.png");
+    img_ScrapPileTransparent = rw.loadTexture("Assets/images/ScrapPileTransparent.png");
+    img_ScrapPile = rw.loadTexture("Assets/images/ScrapPile.png");
+    img_GunPowder = rw.loadTexture("Assets/images/GunPowder.png");
+    img_BombPreview = rw.loadTexture("Assets/images/BombPreview.png");
+    img_CannonPreviewRight = rw.loadTexture("Assets/images/CannonPreviewRight.png");
+    img_CannonPreviewLeft = rw.loadTexture("Assets/images/CannonPreviewLeft.png");
+    img_GameOverBackground = rw.loadTexture("Assets/images/EndMenu.png");
+    img_ContinueButton = rw.loadTexture("Assets/images/ContinueButton1.png");
+    img_ContinueButtonPressed = rw.loadTexture("Assets/images/ContinueButton2.png");
+
+    for (int i = 1; i <= 4; i++)
+    {
+        std::string bulletLeftPath = "Assets/images/BulletLeft" + std::to_string(i) + ".png";
+        std::string bulletRightPath = "Assets/images/BulletRight" + std::to_string(i) + ".png";
+        imgs_bulletDestroyLeft.push_back(rw.loadTexture(bulletLeftPath.c_str()));
+        imgs_bulletDestroyRight.push_back(rw.loadTexture(bulletRightPath.c_str()));
+    }
+
+    for (int i = 1; i <= 5; i++)
+    {
+        std::string turretDestroyLeftPath = "Assets/images/TurretDestroyLeft" + std::to_string(i) + ".png";
+        std::string turretDestroyRightPath = "Assets/images/TurretDestroyRight" + std::to_string(i) + ".png";
+        imgs_TurretDestroyLeft.push_back(rw.loadTexture(turretDestroyLeftPath.c_str()));
+        imgs_TurretDestroyRight.push_back(rw.loadTexture(turretDestroyRightPath.c_str()));
+    }
+
+    for (int i = 1; i <= 6; i++)
+    {
+        std::string missileTurretLeftPath = "Assets/images/MissileTurretLeft" + std::to_string(i) + ".png";
+        std::string missileTurretRightPath = "Assets/images/MissileTurretRight" + std::to_string(i) + ".png";
+        std::string turretLeftPath = "Assets/images/TurretLeft" + std::to_string(i) + ".png";
+        std::string turretRightPath = "Assets/images/TurretRight" + std::to_string(i) + ".png";
+        std::string alienDieLeftPath = "Assets/images/characters/AlienDieLeft" + std::to_string(i) + ".png";
+        std::string alienDieRightPath = "Assets/images/characters/AlienDieRight" + std::to_string(i) + ".png";
+        std::string playerDieLeftPath = "Assets/images/characters/WelderDieLeft" + std::to_string(i) + ".png";
+        std::string playerDieRightPath = "Assets/images/characters/WelderDieRight" + std::to_string(i) + ".png";
+        std::string missileTurretDestroyRightPath = "Assets/images/MissileTurretDestroyRight" + std::to_string(i) + ".png";
+        std::string missileTurretDestroyLeftPath = "Assets/images/MissileTurretDestroyLeft" + std::to_string(i) + ".png";
+        imgs_turretRight.push_back(rw.loadTexture(turretRightPath.c_str()));
+        imgs_turretLeft.push_back(rw.loadTexture(turretLeftPath.c_str()));
+        imgs_CannonLeft.push_back(rw.loadTexture(missileTurretLeftPath.c_str()));
+        imgs_CannonRight.push_back(rw.loadTexture(missileTurretRightPath.c_str()));
+        imgs_PlayerDieRight.push_back(rw.loadTexture(playerDieRightPath.c_str()));
+        imgs_PlayerDieLeft.push_back(rw.loadTexture(playerDieLeftPath.c_str()));
+        imgs_AlienDieRight.push_back(rw.loadTexture(alienDieRightPath.c_str()));
+        imgs_AlienDieLeft.push_back(rw.loadTexture(alienDieLeftPath.c_str()));
+        imgs_MissileTurretDestroyLeft.push_back(rw.loadTexture(missileTurretDestroyLeftPath.c_str()));
+        imgs_MissileTurretDestroyRight.push_back(rw.loadTexture(missileTurretDestroyRightPath.c_str()));
+    }
+
+    for (int i = 1; i <= 7; i++)
+    {
+        std::string alienAttackRightPath = "Assets/images/characters/AlienAttackRight" + std::to_string(i) + ".png";
+        std::string alienAttackLeftPath = "Assets/images/characters/AlienAttackLeft" + std::to_string(i) + ".png";
+        std::string alienAttackRightDamagePath = "Assets/images/characters/AlienAttackRightDamage" + std::to_string(i) + ".png";
+        std::string alienAttackLeftDamagePath = "Assets/images/characters/AlienAttackLeftDamage" + std::to_string(i) + ".png";
+        imgs_AlienAttackRightDamage.push_back(rw.loadTexture(alienAttackRightDamagePath.c_str()));
+        imgs_AlienAttackLeftDamage.push_back(rw.loadTexture(alienAttackLeftDamagePath.c_str()));
+        imgs_AlienAttackRight.push_back(rw.loadTexture(alienAttackRightPath.c_str()));
+        imgs_AlienAttackLeft.push_back(rw.loadTexture(alienAttackLeftPath.c_str()));
+    }
+
     for (int i = 1; i <= 8; i++)
     {
         std::string playerWalkLeftPath = "Assets/images/characters/WelderWalkLeft" + std::to_string(i) + ".png";
         std::string playerWalkRightPath = "Assets/images/characters/WelderWalkRight" + std::to_string(i) + ".png";
-        img_PlayerWalkLeft[i-1] = rw.loadTexture(playerWalkLeftPath.c_str());
-        img_PlayerWalkRight[i-1] = rw.loadTexture(playerWalkRightPath.c_str());
+        imgs_PlayerWalkLeft.push_back(rw.loadTexture(playerWalkLeftPath.c_str()));
+        imgs_PlayerWalkRight.push_back(rw.loadTexture(playerWalkRightPath.c_str()));
         std::string enemyWalkLeftPath = "Assets/images/characters/AlienWalkLeft" + std::to_string(i) + ".png";
         std::string enemyWalkRightPath = "Assets/images/characters/AlienWalkRight" + std::to_string(i) + ".png";
-        img_EnemyWalkLeft[i-1] = rw.loadTexture(enemyWalkLeftPath.c_str());
-        img_EnemyWalkRight[i-1] = rw.loadTexture(enemyWalkRightPath.c_str());
+        imgs_EnemyWalkLeft.push_back(rw.loadTexture(enemyWalkLeftPath.c_str()));
+        imgs_EnemyWalkRight.push_back(rw.loadTexture(enemyWalkRightPath.c_str()));
+        std::string alienWalkLeftDamagePath = "Assets/images/characters/AlienWalkLeftDamage" + std::to_string(i) + ".png";
+        std::string alienWalkRightDamagePath = "Assets/images/characters/AlienWalkRightDamage" + std::to_string(i) + ".png";
+        imgs_AlienWalkLeftDamage.push_back(rw.loadTexture(alienWalkLeftDamagePath.c_str()));
+        imgs_AlienWalkRightDamage.push_back(rw.loadTexture(alienWalkRightDamagePath.c_str()));
+    }
+
+    for (int i = 1; i <= 9; i++)
+    {
+        std::string bigBulletLeftPath = "Assets/images/BigBulletLeft" + std::to_string(i) + ".png";
+        std::string bigBulletRightPath = "Assets/images/BigBulletRight" + std::to_string(i) + ".png";
+        imgs_missileDestroyLeft.push_back(rw.loadTexture(bigBulletLeftPath.c_str()));
+        imgs_missileDestroyRight.push_back(rw.loadTexture(bigBulletRightPath.c_str()));
+    }
+
+    for (int i = 1; i <= 19; i++)
+    {
+        std::string bombPath = "Assets/images/Bomb" + std::to_string(i) + ".png";
+        imgs_bomb.push_back(rw.loadTexture(bombPath.c_str()));
     }
 }
 

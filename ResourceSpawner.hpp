@@ -14,7 +14,7 @@ struct DistanceChance
 class ResourceSpawner
 {
 public:
-	ResourceSpawner(std::string resourceName, float spawnRate, float spawnIncreaseRate, float replacementChance, int startResources, int maxResource);
+	ResourceSpawner(std::string resourceName, float spawnRate, float spawnIncreaseRate, float replacementChance, int startResources, int maxResource, float spawnDelay, float maxX);
 	void start();
 	void update();
 	void spawnResource();
@@ -28,7 +28,14 @@ private:
 	float resourceSpawnRate;
 	float spawnIncreaseRate;
 	float replacementChance;
+	float spawnDelay;
 	int maxResources;
 	int initialMaxResources;
 	float initialResourceSpawnRate;
+	float maxDistance;
+	float spawnElapsedTime;
+	float increaseElapsedTime;
+	float delayElapsedTime;
+	bool spawning = false;
+	Uint32 lastUpdateTime;
 };

@@ -13,7 +13,8 @@
 #include "ResourceMenuState.hpp"
 #include "StartMenuState.hpp"
 #include "MainGameState.hpp"
-#include "PlayerEntity.hpp"
+
+class MainGameState;
 
 class Game
 {
@@ -26,9 +27,9 @@ public:
 	void RemoveEntity(Entity* entity, std::string gameState);
 	void AddEntity(Entity* entity);
 	void AddEntity(Entity* entity, std::string gameState);
-	float minX = -1600.0f;
-	float maxX = 1600.0f;
-	PlayerEntity* player;
+	void ResetGame();
+	MainGameState* GetMainGameState();
+	Uint32 GetGameTime();
 private:
 	void update();
 	std::map<std::string, GameState*> gameStateMap;

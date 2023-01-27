@@ -16,6 +16,12 @@ public:
 	bool getIPressed();
 	bool getADown();
 	bool getDDown();
+	bool get1Down();
+	bool get2Down();
+	bool get3Down();
+	bool get4Down();
+	bool get5Down();
+	bool get6Down();
 	void resetSingleFrameEvents();
 	const int maxWheel = 0;
 	const int minWheel = -2;
@@ -32,4 +38,10 @@ private:
 	bool dDown;
 	bool iPressed;
 	bool iDown;
+	bool alpha_1Down;
+	bool alpha_2Down;
+	bool alpha_3Down;
+	bool alpha_4Down;
+	bool alpha_5Down;
+	bool alpha_6Down;
 };

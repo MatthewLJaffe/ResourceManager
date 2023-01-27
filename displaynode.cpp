@@ -1,5 +1,6 @@
 #include "DisplayNode.hpp"
 
+
 OutgoingArrow::OutgoingArrow(std::string target, ArrowEntity* arrow)
 {
 	this->target = target;

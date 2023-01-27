@@ -115,13 +115,25 @@ bool compareEntities(Entity* e1, Entity* e2)
     return e1->sortOrder < e2->sortOrder;
 }
 
+MainGameState* Game::GetMainGameState()
+{
+    return dynamic_cast<MainGameState*>(gameStateMap["MainGameState"]);
+}
+
+Uint32 Game::GetGameTime()
+{
+    if (gameStateMap.count("MainGameState") > 0)
+        return dynamic_cast<MainGameState*>(gameStateMap["MainGameState"])->getGameTime();
+    std::cout << "could not get game time" << std::endl;
+    return 0;
+}
+
 void Game::init()
 {
-    player = new PlayerEntity(0, 0, 4, Assets::Instance().img_PlayerRight, 3, 10, 22);
     currState = "StartMenuState";
     gameStateMap["ResourceMenuState"] = new ResourceMenuState("ResourceMenuState");
     gameStateMap["StartMenuState"] = new StartMenuState("StartMenuState");
-    gameStateMap["MainGameState"] = new MainGameState("MainGameState", player, -1600, 1600);
+    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
 
     for (auto& pair : gameStateMap)
     {
@@ -148,7 +160,13 @@ void Game::update()
         handleDragInput();
         RenderWindow::Instance().clear();
         //execute game state
+        std::string prevGameState = currState;
         currState = gameStateMap[currState]->execute();
+        if (!currState._Equal(prevGameState))
+        {
+            gameStateMap[prevGameState]->onDeactivate();
+            gameStateMap[currState]->onActivate();
+        }
         //render
         for (int i = 0; i < gameStateMap[currState]->entities.size(); i++)
         {
@@ -196,6 +214,15 @@ void Game::AddEntity(Entity* entity, std::string gameState)
 {
     gameStateMap[gameState]->entities.push_back(entity);
     sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
+}
+
+void Game::ResetGame()
+{
+    delete gameStateMap["MainGameState"];
+    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
+    gameStateMap["MainGameState"]->start();
+    sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
+    ResourceManager::Instance().resetResources();
 }
 
 Game& Game::Instance()

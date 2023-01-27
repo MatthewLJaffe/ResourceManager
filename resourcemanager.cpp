@@ -55,10 +55,11 @@ void ResourceManager::addResource(string line)
         size_t leftBracketPos = resources[i].find('[');
         size_t rightBracketPos = resources[i].find(']');
         int amount = 1;
+        std::string resourceStr = resources[i];
         if (leftBracketPos != std::string::npos && rightBracketPos != std::string::npos && rightBracketPos > leftBracketPos)
         {
-            string amountStr = resources[i].substr(leftBracketPos, rightBracketPos - leftBracketPos);
-            std::cout << "amount " << amountStr << std::endl;
+            string amountStr = resources[i].substr(leftBracketPos + 1, rightBracketPos - 1 - leftBracketPos);
+            resourceStr = resources[i].substr(0, leftBracketPos);
             try
             {
                 amount = std::stoi(amountStr);
@@ -69,17 +70,15 @@ void ResourceManager::addResource(string line)
                 amount = 1;
             }
         }
-        if (resourceMap.count(resources[i]))
+        if (resourceMap.count(resourceStr))
         {
-            resource->requiredResources.push_back(ResourceAmount(resources[i], amount));
-            //addDisplayNodeConnection(resources[0], resources[i]);
+            resource->requiredResources.push_back(ResourceAmount(resourceStr, amount));
         }
         else
         {
-            Resource* reqResource = new Resource(resources[i]);
-            resource->requiredResources.push_back(ResourceAmount(resources[i], amount));
+            Resource* reqResource = new Resource(resourceStr);
+            resource->requiredResources.push_back(ResourceAmount(resourceStr, amount));
             resourceMap[reqResource->name] = reqResource;
-            //addNewDisplayNodeFrom(resource->name, reqResource->name);
         }
     }
 }
@@ -116,6 +115,15 @@ void ResourceManager::erase(std::string resourceName)
     delete removedNode;
     displayMap.erase(resourceName);
     //required resource refrences to erased resource are cleaned up in display graph
+    displayGraph();
+}
+
+void ResourceManager::resetResources()
+{
+    for (auto& pair : resourceMap)
+    {
+        pair.second->amount = 0;
+    }
     displayGraph();
 }
 

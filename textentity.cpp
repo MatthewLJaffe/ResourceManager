@@ -28,6 +28,7 @@ void TextEntity::updateText(std::string message)
     }
     TTF_SetFontSize(font, size);
     SDL_Surface* textSurf = TTF_RenderText_Solid(font, message.c_str(), color);
+    SDL_DestroyTexture(tex);
     tex = RenderWindow::Instance().createFontTexture(textSurf);
     currentFrame = { 0, 0, textSurf->w, textSurf->h };
     SDL_FreeSurface(textSurf);

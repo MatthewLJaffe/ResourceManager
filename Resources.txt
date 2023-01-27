@@ -1,4 +1,7 @@
-handgun bullets
+handgun bullets[2] ore[3]
 bullets ore
-bombs ore
-turret bullets handgun
+bomb ore gunpowder
+spikes ore[2]
+turret bullets[3] ore[2]
+cannon gunpowder turret
+handcannon gunpowder handgun

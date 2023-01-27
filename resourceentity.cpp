@@ -17,7 +17,7 @@ void ResourceEntity::update()
 
 void ResourceEntity::detectCollision()
 {
-	PlayerEntity* player = Game::Instance().player;
+	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
 	if (utils::boxCollision(pos->x, pos->y, width, height, player->pos->x, player->pos->y, player->width, player->height))
 	{
 		ResourceManager::Instance().addNode(resourceName);

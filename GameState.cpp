@@ -21,7 +21,7 @@ std::string GameState::execute()
 
 void GameState::start()
 {
-	std::cout << "start " << this->name << std::endl;
+
 }
 
 void GameState::onActivate()

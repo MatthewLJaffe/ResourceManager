@@ -11,11 +11,12 @@ ParallaxEntity::ParallaxEntity(float x, float y, float scale, SDL_Texture* tex, 
 
 void ParallaxEntity::update()
 {
+	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
 	if (!enabled) return;
-	this->pos->x -= Game::Instance().player->pos->x * scrollSpeed - lastOffset;
-	this->leftPos.x -= Game::Instance().player->pos->x * scrollSpeed - lastOffset;
-	this->rightPos.x -= Game::Instance().player->pos->x * scrollSpeed - lastOffset;
-	lastOffset = Game::Instance().player->pos->x * scrollSpeed;
+	this->pos->x -= player->pos->x * scrollSpeed - lastOffset;
+	this->leftPos.x -= player->pos->x * scrollSpeed - lastOffset;
+	this->rightPos.x -= player->pos->x * scrollSpeed - lastOffset;
+	lastOffset = player->pos->x * scrollSpeed;
 
 	if (leftPos.x < minX)
 	{
@@ -23,7 +24,6 @@ void ParallaxEntity::update()
 		pos->x = rightPos.x;
 		rightPos.x = maxX;
 	}
-
 	if (rightPos.x > maxX)
 	{
 		rightPos.x = this->pos->x;

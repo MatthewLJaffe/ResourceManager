@@ -41,6 +41,36 @@ bool InputManager::getDDown()
 	return dDown;
 }
 
+bool InputManager::get1Down()
+{
+	return alpha_1Down;
+}
+
+bool InputManager::get2Down()
+{
+	return alpha_2Down;
+}
+
+bool InputManager::get3Down()
+{
+	return alpha_3Down;
+}
+
+bool InputManager::get4Down()
+{
+	return alpha_4Down;
+}
+
+bool InputManager::get5Down()
+{
+	return alpha_5Down;
+}
+
+bool InputManager::get6Down()
+{
+	return alpha_6Down;
+}
+
 float InputManager::getMouseWheelY()
 {
 	return mouseWheelY;
@@ -103,6 +133,30 @@ void InputManager::handleInput(SDL_Event event)
 		{
 			dDown = true;
 		}
+		if (event.key.keysym.sym == SDLK_1)
+		{
+			alpha_1Down = true;
+		}
+		if (event.key.keysym.sym == SDLK_2)
+		{
+			alpha_2Down = true;
+		}
+		if (event.key.keysym.sym == SDLK_3)
+		{
+			alpha_3Down = true;
+		}
+		if (event.key.keysym.sym == SDLK_4)
+		{
+			alpha_4Down = true;
+		}
+		if (event.key.keysym.sym == SDLK_5)
+		{
+			alpha_5Down = true;
+		}
+		if (event.key.keysym.sym == SDLK_6)
+		{
+			alpha_6Down = true;
+		}
 		break;
 	case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_i)
@@ -117,6 +171,30 @@ void InputManager::handleInput(SDL_Event event)
 		if (event.key.keysym.sym == SDLK_d)
 		{
 			dDown = false;
+		}
+		if (event.key.keysym.sym == SDLK_1)
+		{
+			alpha_1Down = false;
+		}
+		if (event.key.keysym.sym == SDLK_2)
+		{
+			alpha_2Down = false;
+		}
+		if (event.key.keysym.sym == SDLK_3)
+		{
+			alpha_3Down = false;
+		}
+		if (event.key.keysym.sym == SDLK_4)
+		{
+			alpha_4Down = false;
+		}
+		if (event.key.keysym.sym == SDLK_5)
+		{
+			alpha_5Down = false;
+		}
+		if (event.key.keysym.sym == SDLK_6)
+		{
+			alpha_6Down = false;
 		}
 		break;
 	default:
