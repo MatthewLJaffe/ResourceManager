@@ -11,9 +11,10 @@ PlayerEntity::PlayerEntity(float x, float y, float scale, SDL_Texture* tex, int 
 	lastHandcannonUpdate = 0;
 	lastHandcannonUpdate = 0;
 	this->health = 100;
+	this->maxHealth = 100;
 	lastUpdate = Game::Instance().GetGameTime();
 	std::string healthText = "Health: " + std::to_string(static_cast<int>(this->health));
-	this->playerHealthDisplay = new TextEntity(16, 4, 4, healthText, 6, {0, 0, 0}, Assets::Instance().font_Body, 50, 20);
+	this->playerHealthDisplay = new TextEntity(8, 4, 4, healthText, 6, {0, 0, 0}, Assets::Instance().font_Body, 50, 20);
 	Game::Instance().AddEntity(playerHealthDisplay, "MainGameState");
 }
 
@@ -145,7 +146,7 @@ void PlayerEntity::updateAnimation(float dT)
 void PlayerEntity::updateGunFire(float dT)
 {
 	lastHandgunUpdate += dT;
-	float rate = baseHangunFireRate * handgunsEquipped;
+	float rate = baseHangunFireRate * (handgunsEquipped - 1) + startHandgunFireRate;
 	float bulletsUnrounded = rate * lastHandgunUpdate;
 	int bulletsToFire = floor(bulletsUnrounded);
 	if (bulletsToFire > 0)
@@ -261,7 +262,7 @@ void PlayerEntity::incrementHandguns()
 void PlayerEntity::incrementHandcannons()
 {
 	if (handcannonsEquipped == 0)
-		lastHandcannonUpdate = Game::Instance().GetGameTime();
+		lastHandcannonUpdate = 0;
 	handcannonsEquipped++;
 }
 
@@ -273,4 +274,13 @@ int PlayerEntity::getHandguns()
 int PlayerEntity::getHandcannons()
 {
 	return handcannonsEquipped;
+}
+
+void PlayerEntity::addHealth(float amount)
+{
+	health += amount;
+	if (health > maxHealth)
+		health = maxHealth;
+	std::string displayText = "Health: " + std::to_string(static_cast<int>(health));
+	playerHealthDisplay->updateText(displayText);
 }

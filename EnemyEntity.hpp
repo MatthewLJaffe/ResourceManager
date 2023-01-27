@@ -19,7 +19,6 @@ public:
 private:
 	void checkForAttack();
 	void updatePosition();
-	void updateCollision();
 	void updateAnimation();
 	void destroyEntity();
 	void damageTurret();

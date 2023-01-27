@@ -148,6 +148,8 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="gametransformer.cpp" />
+    <ClCompile Include="HealthSpawner.cpp" />
+    <ClCompile Include="HeartEntity.cpp" />
     <ClCompile Include="inputmanager.cpp" />
     <ClCompile Include="InventoryDisplay.cpp" />
     <ClCompile Include="main.cpp" />
@@ -185,6 +187,8 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameState.hpp" />
     <ClInclude Include="GameTransformer.hpp" />
+    <ClInclude Include="HealthSpawner.hpp" />
+    <ClInclude Include="HeartEntity.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="InventoryDisplay.hpp" />
     <ClInclude Include="MainGameState.hpp" />

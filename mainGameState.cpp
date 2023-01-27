@@ -5,9 +5,9 @@ MainGameState::MainGameState(std::string name) : GameState(name)
 	this->player = player;
 	this->minX = minX;
 	this->maxX = maxX;
+	this->healthSpawner = new HealthSpawner(2, .15, 30);
 	oreSpawner = new ResourceSpawner("ore", .1, .001, .5, 20, 40, 0, maxX);
-	gunPowderSpawner = new ResourceSpawner("gunpowder", .1, .001, .5, 20, 40, 0, maxX);
-	enemySpawner = new EnemySpawner(.2f, .005f, 5, 60, 1.5, 360, maxX);
+	gunPowderSpawner = new ResourceSpawner("gunpowder", .1, .001, .5, 0, 40, 90, maxX);
 	inventoryDisplay = new InventoryDisplay(105, 0, 4, Assets::Instance().img_InventoryUI, 5);
 	gameTime = 0;
 	lastTime = 0;
@@ -16,7 +16,13 @@ MainGameState::MainGameState(std::string name) : GameState(name)
 void MainGameState::start()
 {
 	lastTime = SDL_GetTicks();
-	player = new PlayerEntity(0, 0, 4, Assets::Instance().img_PlayerRight, 3, 10, 22);
+
+	Entity* indicator = new Entity(242, 12, 4, Assets::Instance().img_WaveMarker, 9);
+	entities.push_back(indicator);
+	entities.push_back(new Entity(241, 12, 4, Assets::Instance().img_WaveBar, 8));
+	enemySpawner = new EnemySpawner(.1f, .003f, 6, 90, 1.5, 360, maxX, indicator, 242, 273);
+
+	player = new PlayerEntity(0, 0, 4, Assets::Instance().img_PlayerRight, 4, 10, 22);
 	oreSpawner->start();
 	gunPowderSpawner->start();
 	inventoryDisplay->start();
@@ -25,11 +31,18 @@ void MainGameState::start()
 	entities.push_back(new Entity(0, 0, 4, Assets::Instance().img_GameSky, 0));
 	entities.push_back(new ParallaxEntity(0, 0, 4, Assets::Instance().img_GameBackground, 1, .25));
 	entities.push_back(new ParallaxEntity(0, 0, 4, Assets::Instance().img_GameForeground, 2, .5));
+	entities.push_back(new ResourceEntity(40, 7, 4, Assets::Instance().img_Ore, 4, "ore", 9, 8, oreSpawner));
+	entities.push_back(new ResourceEntity(-40, 7, 4, Assets::Instance().img_Ore, 4, "ore", 9, 8, oreSpawner));
+	entities.push_back(new ResourceEntity(-50, 7, 4, Assets::Instance().img_Ore, 4, "ore", 9, 8, oreSpawner));
+	entities.push_back(new TurretEntity(32, 2, true, 10, 1, 23, 19, Assets::Instance().imgs_turretRight, 20, false));
+	entities.push_back(new TurretEntity(-32, 2, false, 10, 1, 23, 19, Assets::Instance().imgs_turretLeft, 20, false));
 	int tiles = static_cast<int>(floor((maxX - minX) / 16));
 	for (int i = 0; i < tiles; i++)
 	{
 		entities.push_back(new WorldSpaceEntity(i * 16 + minX + 8, 19, 4, Assets::Instance().img_FloorTile, 3));
 	}
+	entities.push_back(new WorldSpaceEntity(maxX - 17, -19, 4, Assets::Instance().img_CaveRight, 3));
+	entities.push_back(new WorldSpaceEntity(minX + 17, -19, 4, Assets::Instance().img_CaveLeft, 3));
 	gameOverMenuEntities.push_back(new Entity(84, 35, 4, Assets::Instance().img_GameOverBackground, 8));
 	survivedText = new TextEntity(104, 75, 4, "Time Survived: ", 6, { 255,255,255 }, Assets::Instance().font_Body, 30, 9);
 	gameOverMenuEntities.push_back(survivedText);
@@ -52,8 +65,14 @@ std::string MainGameState::execute()
 	oreSpawner->update();
 	gunPowderSpawner->update();
 	enemySpawner->update();
+	healthSpawner->update();
 	GameTransformer::Instance().popTransformState();
-	GameTransformer::Instance().translate(Vector2(player->pos->x * -1, 0));
+	Vector2 translatePos = Vector2(player->pos->x * -1, 0);
+	if (translatePos.x > maxX - 160)
+		translatePos.x = maxX - 160;
+	if (translatePos.x < minX + 160)
+		translatePos.x = minX + 160;
+	GameTransformer::Instance().translate(translatePos);
 	updateEntities();
 	gameTime += SDL_GetTicks() - lastTime;
 	lastTime = SDL_GetTicks();
@@ -96,6 +115,7 @@ void MainGameState::gameOver(float surviveTime)
 
 MainGameState::~MainGameState()
 {
+	//delete healthSpawner;
 	delete oreSpawner;
 	delete gunPowderSpawner;
 	delete enemySpawner;

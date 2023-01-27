@@ -26,12 +26,12 @@ void GameState::start()
 
 void GameState::onActivate()
 {
-	std::cout << "activate " << this->name << std::endl;
+
 }
 
 void GameState::onDeactivate()
 {
-	std::cout << "deactivate " << this->name << std::endl;
+
 }
 
 GameState::~GameState()

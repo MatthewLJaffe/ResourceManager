@@ -81,6 +81,8 @@ void ResourceSpawner::spawnResource()
 	if (currResources >= maxResources) return;
 	bool foundSpawn = false;
 	float spawnX = 0;
+	float minPlayerDistance = 600;
+	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
 	while (!foundSpawn)
 	{
 		DistanceChance spawnDistance = spawnDistribution[0];
@@ -101,7 +103,7 @@ void ResourceSpawner::spawnResource()
 		{
 			spawnX *= -1;
 		}
-		if (!Game::Instance().GetMainGameState()->player->posInView(Vector2(spawnX, 0)))
+		if (abs(player->pos->x - spawnX) > minPlayerDistance)
 		{
 			foundSpawn = true;
 		}

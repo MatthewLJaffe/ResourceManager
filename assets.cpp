@@ -69,6 +69,12 @@ void Assets::loadImages()
     img_GameOverBackground = rw.loadTexture("Assets/images/EndMenu.png");
     img_ContinueButton = rw.loadTexture("Assets/images/ContinueButton1.png");
     img_ContinueButtonPressed = rw.loadTexture("Assets/images/ContinueButton2.png");
+    img_CaveRight = rw.loadTexture("Assets/images/CaveRight.png");
+    img_CaveLeft = rw.loadTexture("Assets/images/CaveLeft.png");
+    img_WaveMarker = rw.loadTexture("Assets/images/WaveMarker.png");
+    img_WaveBar = rw.loadTexture("Assets/images/WaveBar.png");
+    img_Heart = rw.loadTexture("Assets/images/Heart.png");
+
 
     for (int i = 1; i <= 4; i++)
     {
@@ -162,6 +168,12 @@ void Assets::loadFonts()
 void Assets::closeFonts()
 {
     TTF_CloseFont(font_Test);
+    TTF_CloseFont(font_Body);
+}
+
+void Assets::closeTextures()
+{
+
 }
 
 Assets::Assets() {}

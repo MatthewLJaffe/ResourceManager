@@ -31,12 +31,12 @@ void InventoryDisplay::start()
 	inventorySquares.push_back(InventorySquare("cannon", Assets::Instance().img_CannonUI, 
 		new PreviewEntity(0, 0, 4, Assets::Instance().img_CannonPreviewLeft, Assets::Instance().img_CannonPreviewRight, 7, Vector2(12, 1))));
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
-	equippedHandgunsText = new TextEntity(1160, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
-	equippedHandcannonsText = new TextEntity(1160, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
+	equippedHandgunsText = new TextEntity(240, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
+	equippedHandcannonsText = new TextEntity(240, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
 	Game::Instance().AddEntity(equippedHandcannonsText, "MainGameState");
 	Game::Instance().AddEntity(equippedHandgunsText, "MainGameState");
-	Game::Instance().AddEntity(new Entity(304, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
-	Game::Instance().AddEntity(new Entity(304, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
+	Game::Instance().AddEntity(new Entity(72, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
+	Game::Instance().AddEntity(new Entity(72, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
 }
 
 void InventoryDisplay::updateInventoryDisplay()

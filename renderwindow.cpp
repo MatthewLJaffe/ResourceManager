@@ -19,6 +19,7 @@ SDL_Texture* RenderWindow::loadTexture(const char* filePath)
 {
     SDL_Texture* texture = NULL;
     texture = IMG_LoadTexture(renderer, filePath);
+    textures.push_back(texture);
     if (texture == NULL)
         std::cout << "Failed to load texture " << SDL_GetError() << std::endl;
     return texture;
@@ -26,6 +27,10 @@ SDL_Texture* RenderWindow::loadTexture(const char* filePath)
 
 void RenderWindow::cleanUp()
 {
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        SDL_DestroyTexture(textures[i]);
+    }
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 }

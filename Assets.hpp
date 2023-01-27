@@ -15,6 +15,7 @@ public:
 	void loadImages();
 	void loadFonts();
 	void closeFonts();
+	void closeTextures();
 	SDL_Texture* img_Test;
 	SDL_Texture* img_Background;
 	SDL_Texture* img_GraphBorders;
@@ -96,6 +97,12 @@ public:
 	SDL_Texture* img_GameOverBackground;
 	SDL_Texture* img_ContinueButton;
 	SDL_Texture* img_ContinueButtonPressed;
+	SDL_Texture* img_CaveLeft;
+	SDL_Texture* img_CaveRight;
+	SDL_Texture* img_WaveBar;
+	SDL_Texture* img_WaveMarker;
+	SDL_Texture* img_Heart;
+
 	TTF_Font* font_Test;
 	TTF_Font* font_Body;
 

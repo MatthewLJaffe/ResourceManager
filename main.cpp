@@ -1,3 +1,6 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 #include <SDL_image.h>
 #include <SDL.h>
 #include <iostream>
@@ -18,7 +21,15 @@
 #include "Game.hpp"
 using namespace std;
 
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 
+/*
 struct AllocationMetrics
 {
     uint32_t TotalAllocated = 0;
@@ -46,8 +57,9 @@ void operator delete(void* memory, size_t size)
 {
     s_AllocationMetrics.TotalFreed += size;
     free(memory);
-    PrintMemoryUsage();
+    //PrintMemoryUsage();
 }
+*/
 
 void buildGraph(ifstream& file)
 {
@@ -60,6 +72,7 @@ void buildGraph(ifstream& file)
 
 int main (int argc, char* argv[])
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     if (SDL_Init(SDL_INIT_EVERYTHING) > 0)
         cout << "SDL_Init HAS FAILED. ADL_ERROR: " << SDL_GetError() << endl;
     if (!IMG_Init(IMG_INIT_PNG))
@@ -87,5 +100,7 @@ int main (int argc, char* argv[])
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+    _CrtDumpMemoryLeaks();
     return EXIT_SUCCESS;
 }

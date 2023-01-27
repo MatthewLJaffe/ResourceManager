@@ -5,7 +5,7 @@ EnemyEntity::EnemyEntity(float x, float y, float scale, SDL_Texture* tex, int so
 {
 	this->width = width;
 	this->height = height;
-	this->damage = 5;
+	this->damage = 2;
 	velocity = Vector2(0, 0);
 	currAnimState = Assets::Instance().imgs_EnemyWalkRight;
 	lastAnimUpdate = Game::Instance().GetGameTime();
@@ -15,7 +15,6 @@ EnemyEntity::EnemyEntity(float x, float y, float scale, SDL_Texture* tex, int so
 	spikeDamageCooldown = 1;
 	currSpikeDamageTime = 0;
 	this->attackCooldown = 1;
-
 }
 
 void EnemyEntity::update()
@@ -30,7 +29,6 @@ void EnemyEntity::update()
 	if (health > 0)
 	{
 		updatePosition();
-		updateCollision();
 		checkForAttack();
 	}
 	updateAnimation();
@@ -65,14 +63,6 @@ void EnemyEntity::updatePosition()
 	*pos += velocity * dT;
 }
 
-void EnemyEntity::updateCollision()
-{
-	if (pos->x > 1600)
-		pos->x = 1600;
-	if (pos->x < -1600)
-		pos->x = -1600;
-}
-
 void EnemyEntity::updateAnimation()
 {
 	Uint32 current = Game::Instance().GetGameTime();
@@ -82,8 +72,23 @@ void EnemyEntity::updateAnimation()
 		currAnimIdx += framesToUpdate;
 		lastAnimUpdate = current;
 	}
+	//death animation
+	if (health <= 0)
+	{
+		if (facingRight)
+			currAnimState = Assets::Instance().imgs_AlienDieRight;
+		else
+			currAnimState = Assets::Instance().imgs_AlienDieLeft;
+		//destroy entity
+		if (currAnimIdx >= currAnimState.size())
+		{
+			destroy = true;
+			return;
+		}
+		tex = currAnimState[currAnimIdx];
+	}
 	//attack animation
-	if (attacking)
+	else if (attacking)
 	{
 		if (facingRight)
 			currAnimState = Assets::Instance().imgs_AlienAttackRight;
@@ -130,21 +135,6 @@ void EnemyEntity::updateAnimation()
 				currAnimState = Assets::Instance().imgs_AlienWalkLeftDamage;
 			else
 				currAnimState = Assets::Instance().imgs_EnemyWalkLeft;
-		}
-		tex = currAnimState[currAnimIdx];
-	}
-	//death animation
-	else if (health <= 0)
-	{
-		if (facingRight)
-			currAnimState = Assets::Instance().imgs_AlienDieRight;
-		else
-			currAnimState = Assets::Instance().imgs_AlienDieLeft;
-		//destroy entity
-		if (currAnimIdx >= currAnimState.size())
-		{
-			destroy = true;
-			return;
 		}
 		tex = currAnimState[currAnimIdx];
 	}

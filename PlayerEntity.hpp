@@ -27,6 +27,7 @@ public:
 	void incrementHandcannons();
 	int getHandguns();
 	int getHandcannons();
+	void addHealth(float amount);
 private:
 	Uint32 lastUpdate;
 	int handgunsEquipped = 1;
@@ -37,8 +38,10 @@ private:
 	float lastHandgunUpdate;
 	const float baseHangunFireRate = .25;
 	const float baseHandCannonFireRate = .25;
+	const float startHandgunFireRate = .4;
 	float animatedFPS = 12.0f;
 	float health;
+	float maxHealth;
 	const float damageTickCooldown = .1f;
 	float currDamageTickCooldown = 0;
 	float currAnimFrameTime = 0;

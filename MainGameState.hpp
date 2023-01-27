@@ -8,7 +8,9 @@
 #include "EnemySpawner.hpp"
 #include "InventoryDisplay.hpp"
 #include "vector"
+#include "HealthSpawner.hpp"
 
+class HealthSpawner;
 class ResourceSpawner;
 class EnemySpawner;
 class InventoryDisplay;
@@ -34,6 +36,7 @@ public:
 	ResourceSpawner* oreSpawner;
 	ResourceSpawner* gunPowderSpawner;
 	EnemySpawner* enemySpawner;
+	HealthSpawner* healthSpawner;
 	InventoryDisplay* inventoryDisplay;
 	TextEntity* survivedText;
 	std::vector<EnemyEntity*> enemies;

@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <vector>
 
 
 class RenderWindow
@@ -21,6 +22,7 @@ class RenderWindow
         SDL_Texture* createFontTexture(SDL_Surface* textSurf);
     private:
         RenderWindow();
+        std::vector<SDL_Texture*> textures;
         SDL_Window* window;
         SDL_Renderer* renderer;
 };
