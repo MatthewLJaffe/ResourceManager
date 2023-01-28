@@ -74,6 +74,8 @@ void Assets::loadImages()
     img_WaveMarker = rw.loadTexture("Assets/images/WaveMarker.png");
     img_WaveBar = rw.loadTexture("Assets/images/WaveBar.png");
     img_Heart = rw.loadTexture("Assets/images/Heart.png");
+    img_QuitButton = rw.loadTexture("Assets/images/QuitButton1.png");
+    img_QuitButtonPressed = rw.loadTexture("Assets/images/QuitButton2.png");
 
 
     for (int i = 1; i <= 4; i++)

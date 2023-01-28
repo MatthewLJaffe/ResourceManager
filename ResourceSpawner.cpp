@@ -11,13 +11,13 @@ ResourceSpawner::ResourceSpawner(std::string resourceName, float spawnRate, floa
 {
 	this->resourceName = resourceName;
 	this->resourceSpawnRate = spawnRate;
+	this->initialResourceSpawnRate = spawnRate;
 	this->replacementChance = replacementChance;
 	this->maxResources = maxResource;
 	this->spawnDelay = spawnDelay;
 	this->spawnIncreaseRate = spawnIncreaseRate;
 	this->startResources = startResources;
 	this->initialMaxResources = maxResource;
-	this->initialResourceSpawnRate = spawnRate;
 	this->maxDistance = maxX;
 	if (resourceName._Equal("ore"))
 	{

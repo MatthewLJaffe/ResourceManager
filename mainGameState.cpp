@@ -7,7 +7,7 @@ MainGameState::MainGameState(std::string name) : GameState(name)
 	this->maxX = maxX;
 	this->healthSpawner = DBG_NEW HealthSpawner(2, .15, 30);
 	oreSpawner = DBG_NEW ResourceSpawner("ore", .1, .001, .5, 20, 40, 0, maxX);
-	gunPowderSpawner = DBG_NEW ResourceSpawner("gunpowder", .1, .001, .5, 0, 40, 90, maxX);
+	gunPowderSpawner = DBG_NEW ResourceSpawner("gunpowder", .025, .001, .5, 0, 40, 90, maxX);
 	inventoryDisplay = DBG_NEW InventoryDisplay(105, 0, 4, Assets::Instance().img_InventoryUI, 5);
 	gameTime = 0;
 	lastTime = 0;

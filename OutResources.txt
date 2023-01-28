@@ -1,9 +1,7 @@
 bomb ore gunpowder
 bullets ore
 cannon gunpowder turret
-gunpowder
 handcannon gunpowder handgun
-handgun bullets ore
-ore
-spikes ore
-turret bullets ore
+handgun bullets[2] ore[2]
+spikes ore[2]
+turret bullets[3] ore[2]

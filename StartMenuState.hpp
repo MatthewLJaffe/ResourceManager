@@ -2,6 +2,7 @@
 #include "GameState.hpp"
 #include "Assets.hpp"
 #include "ButtonEntity.hpp"
+#include "Game.hpp"
 
 
 class StartMenuState : public GameState

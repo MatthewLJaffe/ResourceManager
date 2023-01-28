@@ -144,6 +144,11 @@ void Game::init()
     update();
 }
 
+void Game::QuitGame()
+{
+    gameRunning = false;
+}
+
 void Game::update()
 {
     string line;

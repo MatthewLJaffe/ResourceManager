@@ -55,10 +55,14 @@ void operator delete(void* memory, size_t size)
 
 void buildGraph(ifstream& file)
 {
+    bool startWithResources = true;
     string line;
     while (getline(file, line))
     {
-        ResourceManager::Instance().addResource(line);
+        if (line._Equal("start without"))
+            startWithResources = false;
+        else
+            ResourceManager::Instance().addResource(line, startWithResources);
     }
 }
 

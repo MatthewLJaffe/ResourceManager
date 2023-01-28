@@ -102,6 +102,9 @@ public:
 	SDL_Texture* img_WaveBar;
 	SDL_Texture* img_WaveMarker;
 	SDL_Texture* img_Heart;
+	SDL_Texture* img_QuitButton;
+	SDL_Texture* img_QuitButtonPressed;
+
 
 	TTF_Font* font_Test;
 	TTF_Font* font_Body;

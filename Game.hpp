@@ -36,6 +36,7 @@ public:
 	void AddEntity(Entity* entity);
 	void AddEntity(Entity* entity, std::string gameState);
 	void ResetGame();
+	void QuitGame();
 	MainGameState* GetMainGameState();
 	Uint32 GetGameTime();
 private:

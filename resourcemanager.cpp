@@ -36,7 +36,7 @@ void ResourceManager::init(ScrollBar* scrollBar, Entity* scrollArea)
     displayGraph();
 }
 
-void ResourceManager::addResource(string line)
+void ResourceManager::addResource(string line, bool startWithResource)
 {
     vector<string> resources = utils::split(line, ' ');
     if (resources.size() == 0) return;
@@ -46,8 +46,9 @@ void ResourceManager::addResource(string line)
     }
     else {
         resource = DBG_NEW Resource(resources[0]);
+        if (startWithResource)
+            resource->amount = 1;
         resourceMap[resource->name] = resource;
-        //addNewDisplayNode(resources[0], 0);
     }
     resource->requiredResources = vector<ResourceAmount>();
     for (size_t i = 1; i < resources.size(); i++)
@@ -77,6 +78,8 @@ void ResourceManager::addResource(string line)
         else
         {
             Resource* reqResource = DBG_NEW Resource(resourceStr);
+            if (startWithResource)
+                reqResource->amount = 1;
             resource->requiredResources.push_back(ResourceAmount(resourceStr, amount));
             resourceMap[reqResource->name] = reqResource;
         }
@@ -564,10 +567,18 @@ void ResourceManager::outputGraph(string fileName)
     }
     for (auto const& pair : resourceMap)
     {
+        if (pair.second->requiredResources.size() == 0) continue;
         file << pair.first;
         for (size_t i = 0; i < pair.second->requiredResources.size(); i++)
         {
-            file << " " + pair.second->requiredResources[i].resource;
+            if (pair.second->requiredResources[i].amount > 1)
+            {
+                file << " " + pair.second->requiredResources[i].resource << "[" << pair.second->requiredResources[i].amount << "]";
+            }
+            else
+            {
+                file << " " + pair.second->requiredResources[i].resource;
+            }
         }
         file << std::endl;
     }

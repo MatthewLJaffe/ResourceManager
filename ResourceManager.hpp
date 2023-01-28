@@ -44,7 +44,7 @@ public:
 	DisplayNode* getSelectedDisplayNode(Vector2 mousePos);
 	void init(ScrollBar* scrollBar, Entity* scrollArea);
 	void checkCraftButtonPressed(Vector2 mousePos);
-	void addResource(std::string line);
+	void addResource(std::string line, bool startWithResource);
 	void deleteResource(std::string resource);
 	void addNode(std::string node);
 	void addLink(std::string from, string to);
