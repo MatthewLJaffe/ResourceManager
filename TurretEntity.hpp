@@ -13,10 +13,10 @@ public:
 	void takeDamage(float amount);
 
 private:
-	float fireRate;
-	float damage;
-	bool facingRight;
-	bool cannon;
+	float fireRate = 0;
+	float damage = 0;
+	bool facingRight = false;
+	bool cannon = false;
 	std::vector<SDL_Texture*> turretFireAnim;
 	std::vector<SDL_Texture*> turretDestroyAnimation;
 	int bulletFireFrame;
@@ -25,10 +25,10 @@ private:
 	bool firing = false;
 	bool destroy = false;
 	float animatedFPS = 12;
-	float health;
-	Uint32 lastUpdateTime;
-	float currFireTime;
-	float currAnimFrameTime;
+	float health = 0;
+	Uint32 lastUpdateTime = 0;
+	float currFireTime= 0;
+	float currAnimFrameTime = 0;
 	Vector2 bulletPosOffset;
 	Vector2 missilePosOffset;
 	void fireBullet(float dT);

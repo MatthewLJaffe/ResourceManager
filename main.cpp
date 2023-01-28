@@ -21,14 +21,6 @@
 #include "Game.hpp"
 using namespace std;
 
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-// allocations to be of _CLIENT_BLOCK type
-#else
-#define DBG_NEW new
-#endif
-
 /*
 struct AllocationMetrics
 {
@@ -57,7 +49,7 @@ void operator delete(void* memory, size_t size)
 {
     s_AllocationMetrics.TotalFreed += size;
     free(memory);
-    //PrintMemoryUsage();
+    PrintMemoryUsage();
 }
 */
 
@@ -100,7 +92,7 @@ int main (int argc, char* argv[])
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-    _CrtDumpMemoryLeaks();
+    //_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+    //_CrtDumpMemoryLeaks();
     return EXIT_SUCCESS;
 }

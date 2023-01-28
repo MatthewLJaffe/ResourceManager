@@ -35,7 +35,7 @@ void HealthSpawner::update()
 				spawned = true;
 			}
 		}
-		Game::Instance().AddEntity(new HeartEntity(spawnPos.x, spawnPos.y, 20, this));
+		Game::Instance().AddEntity(DBG_NEW HeartEntity(spawnPos.x, spawnPos.y, 20, this));
 		currHealth++;
 	}
 }

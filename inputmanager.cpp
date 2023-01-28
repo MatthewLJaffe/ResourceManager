@@ -204,7 +204,7 @@ void InputManager::handleInput(SDL_Event event)
 
 InputManager::InputManager()
 {
-	mousePos = new Vector2(0, 0);
+	mousePos = DBG_NEW Vector2(0, 0);
 	mouseWheelY = 0;
 }
 

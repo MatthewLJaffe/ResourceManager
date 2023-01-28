@@ -11,7 +11,7 @@ DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int so
 {
     this->sortOrder = sortOrder;
     this->scale = scale;
-    this->pos = new Vector2(x, y);
+    this->pos = DBG_NEW Vector2(x, y);
     this->tex = tex;
     currentFrame.x = 0;
     currentFrame.y = 0;
@@ -35,6 +35,7 @@ DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int so
     buttonImg = Assets::Instance().img_craftButton;
     buttonDownImg = Assets::Instance().img_craftButtonPressed;
     enabled = true;
+    this->buttonState = buttonImg;
 }
 
 bool DisplayNode::posInCraftButton(Vector2 pos)

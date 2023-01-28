@@ -3,7 +3,7 @@
 Entity::Entity(float x, float y, float scale, SDL_Texture* tex, int sortOrder)
 {
     this->sortOrder = sortOrder;
-    this->pos = new Vector2(x, y);
+    this->pos = DBG_NEW Vector2(x, y);
     this->tex = tex;
     this->scale = scale;
     currentFrame.x = 0;

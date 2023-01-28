@@ -6,7 +6,7 @@ TextEntity::TextEntity(float x, float y, float scale, std::string message, int f
     this->size = fontSize;
     this->color = color;
     this->font = font;
-	this->pos = new Vector2(x, y);
+	this->pos = DBG_NEW Vector2(x, y);
     this->scale = scale;
     this->text = message;
     TTF_SetFontSize(font, fontSize);

@@ -1,5 +1,14 @@
 #include "InventoryDisplay.hpp"
 
+
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
+
 InventorySquare::InventorySquare(std::string name, SDL_Texture* itemImg, PreviewEntity* preview)
 {
 	this->itemName = name;
@@ -21,22 +30,22 @@ InventoryDisplay::InventoryDisplay(float x, float y, float scale, SDL_Texture* t
 void InventoryDisplay::start()
 {
 	inventorySquares.push_back(InventorySquare("spikes", Assets::Instance().img_SpikesUI, 
-		new PreviewEntity(0, 0, 4, Assets::Instance().img_ScrapPileTransparent, Assets::Instance().img_ScrapPileTransparent, 7, Vector2(12, -4))));
+		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_ScrapPileTransparent, Assets::Instance().img_ScrapPileTransparent, 7, Vector2(12, -4))));
 	inventorySquares.push_back(InventorySquare("handgun", Assets::Instance().img_GunUI, NULL));
 	inventorySquares.push_back(InventorySquare("turret", Assets::Instance().img_TurretUI, 
-		new PreviewEntity(0 ,0, 4, Assets::Instance().img_TransparentTurretLeft, Assets::Instance().img_TransparentTurretRight, 7, Vector2(12 ,1))));
+		 DBG_NEW PreviewEntity(0 ,0, 4, Assets::Instance().img_TransparentTurretLeft, Assets::Instance().img_TransparentTurretRight, 7, Vector2(12 ,1))));
 	inventorySquares.push_back(InventorySquare("bomb", Assets::Instance().img_BombUI, 
-		new PreviewEntity(0, 0, 4, Assets::Instance().img_BombPreview, Assets::Instance().img_BombPreview, 11, Vector2(6, -2))));
+		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_BombPreview, Assets::Instance().img_BombPreview, 11, Vector2(6, -2))));
 	inventorySquares.push_back(InventorySquare("handcannon", Assets::Instance().img_HandCannonUI, NULL));
 	inventorySquares.push_back(InventorySquare("cannon", Assets::Instance().img_CannonUI, 
-		new PreviewEntity(0, 0, 4, Assets::Instance().img_CannonPreviewLeft, Assets::Instance().img_CannonPreviewRight, 7, Vector2(12, 1))));
+		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_CannonPreviewLeft, Assets::Instance().img_CannonPreviewRight, 7, Vector2(12, 1))));
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
-	equippedHandgunsText = new TextEntity(240, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
-	equippedHandcannonsText = new TextEntity(240, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
+	equippedHandgunsText =  DBG_NEW  TextEntity(240, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
+	equippedHandcannonsText = DBG_NEW  TextEntity(240, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
 	Game::Instance().AddEntity(equippedHandcannonsText, "MainGameState");
 	Game::Instance().AddEntity(equippedHandgunsText, "MainGameState");
-	Game::Instance().AddEntity(new Entity(72, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
-	Game::Instance().AddEntity(new Entity(72, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
+	Game::Instance().AddEntity( DBG_NEW  Entity(72, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
+	Game::Instance().AddEntity( DBG_NEW  Entity(72, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
 }
 
 void InventoryDisplay::updateInventoryDisplay()

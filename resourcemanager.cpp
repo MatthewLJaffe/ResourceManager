@@ -45,7 +45,7 @@ void ResourceManager::addResource(string line)
         resource = resourceMap[resources[0]];
     }
     else {
-        resource = new Resource(resources[0]);
+        resource = DBG_NEW Resource(resources[0]);
         resourceMap[resource->name] = resource;
         //addNewDisplayNode(resources[0], 0);
     }
@@ -76,7 +76,7 @@ void ResourceManager::addResource(string line)
         }
         else
         {
-            Resource* reqResource = new Resource(resourceStr);
+            Resource* reqResource = DBG_NEW Resource(resourceStr);
             resource->requiredResources.push_back(ResourceAmount(resourceStr, amount));
             resourceMap[reqResource->name] = reqResource;
         }
@@ -164,7 +164,7 @@ void ResourceManager::addLink(string from, string to)
     resourceMap[from]->requiredResources.push_back(ResourceAmount(to, 1));
     if (resourceMap.count(to) == 0)
     {
-        resourceMap[to] = new Resource(to);
+        resourceMap[to] = DBG_NEW Resource(to);
     }
     displayGraph();
 }
@@ -173,7 +173,7 @@ void ResourceManager::addNode(string node)
 {
     if (resourceMap.count(node) == 0)
     {
-        resourceMap[node] = new Resource(node);
+        resourceMap[node] = DBG_NEW Resource(node);
         resourceMap[node]->amount = 1;
     }
     else
@@ -290,7 +290,7 @@ void ResourceManager::createNewListText(std::string name, Resource* resource, st
     {
         textColor = { 255, 255, 255 };
     }
-    addResourceListText(new ResourceListText(x, y, 1, nameText, resource->name, 23, textColor, Assets::Instance().font_Body, 10, 4, false, selected));
+    addResourceListText(DBG_NEW ResourceListText(x, y, 1, nameText, resource->name, 23, textColor, Assets::Instance().font_Body, 10, 4, false, selected));
     listLines++;
     int maxAmountSize = 4;
     std::string amountText = "x" + std::to_string(resource->amount);
@@ -298,7 +298,7 @@ void ResourceManager::createNewListText(std::string name, Resource* resource, st
     {
         amountText = "99+";
     }
-    addResourceListText(new ResourceListText(x + nameWidth, y, 1, amountText, resource->name, 23, textColor, Assets::Instance().font_Body, 4, 4, false, selected));
+    addResourceListText(DBG_NEW ResourceListText(x + nameWidth, y, 1, amountText, resource->name, 23, textColor, Assets::Instance().font_Body, 4, 4, false, selected));
     DisplayNode* currNode = displayMap[name];
     bool craftable = false;
     bool visible = false;
@@ -329,19 +329,19 @@ void ResourceManager::createNewListText(std::string name, Resource* resource, st
     {
         craftText = "can't craft";
     }
-    addResourceListText(new ResourceListText(x + nameWidth + amountWidth, y, 1, craftText, resource->name, 23, textColor, Assets::Instance().font_Body, 11, 4, false, selected));
+    addResourceListText(DBG_NEW ResourceListText(x + nameWidth + amountWidth, y, 1, craftText, resource->name, 23, textColor, Assets::Instance().font_Body, 11, 4, false, selected));
     y = 150 + float(listLines) * textHeight;
     if (displayMap[name]->selected)
     {
         if (resource->requiredResources.size() > 0)
         {
-            addResourceListText(new ResourceListText(x, y, 1, "Requires:", resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
+            addResourceListText(DBG_NEW ResourceListText(x, y, 1, "Requires:", resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
             for (int i = 0; i < resource->requiredResources.size(); i++)
             {
                 y += textHeight;
                 listLines++;
                 std::string text = resource->requiredResources[i].resource + " x" + std::to_string(resource->requiredResources[i].amount);
-                addResourceListText(new ResourceListText(x, y, 1, text, resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
+                addResourceListText(DBG_NEW ResourceListText(x, y, 1, text, resource->name, 23, textColor, Assets::Instance().font_Body, 25, 4, true, selected));
             }
             listLines++;
         }
@@ -509,7 +509,7 @@ void ResourceManager::updateSelectedText()
         }
     }
     int linesAdded = 0;
-    //add new selected text
+    //add DBG_NEW selected text
     for (int i = 0; i < listText.size(); i++)
     {
         //text corresponds to previously selected node
@@ -528,7 +528,7 @@ void ResourceManager::updateSelectedText()
                     y += textHeight;
                     listLines++;
                     std::string text = "Requires:";
-                    ResourceListText* requirementText = new ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
+                    ResourceListText* requirementText = DBG_NEW ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
                     listText.emplace(listText.begin() + i, requirementText);
                     Game::Instance().AddEntity(requirementText, "ResourceMenuState");
                     i++;
@@ -538,7 +538,7 @@ void ResourceManager::updateSelectedText()
                         y += textHeight;
                         listLines++;
                         std::string text = entry.resource + " x" + std::to_string(entry.amount);
-                        ResourceListText* requirementText = new ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
+                        ResourceListText* requirementText = DBG_NEW ResourceListText(x, y, 1, text, listText[i]->name, 23, { 255,255,255 }, Assets::Instance().font_Body, 25, 4, true, true);
                         listText.emplace(listText.begin() + i, requirementText);
                         Game::Instance().AddEntity(requirementText, "ResourceMenuState");
                         i++;
@@ -613,7 +613,7 @@ void ResourceManager::addNewDisplayNode(std::string name, int amount)
             tries++;
         }
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, amount, 15);
+    DisplayNode* displayNode = DBG_NEW DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, amount, 15);
     displayMap[name] = displayNode;
     Game::Instance().AddEntity(displayNode, "ResourceMenuState");
 }
@@ -657,7 +657,7 @@ void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
             placed = true;
         tries++;
     }
-    DisplayNode* displayNode = new DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 0, 15);
+    DisplayNode* displayNode = DBG_NEW DisplayNode(newPos.x, newPos.y, 4, Assets::Instance().img_circleNode, 2, name, 0, 15);
     displayMap[name] = displayNode;
     Game::Instance().AddEntity(displayNode, "ResourceMenuState");
     addDisplayNodeConnection(from, name);
@@ -675,10 +675,9 @@ void ResourceManager::addDisplayNodeConnection(std::string from, std::string to)
     
     Vector2 fromOffset = Vector2(dir.x * 24, dir.y * 24);
     Vector2 toOffset= Vector2(-dir.x * 24, -dir.y * 24);
-    Vector2* arrowStart = new Vector2(fromPos.x + fromOffset.x, fromPos.y + fromOffset.y);
-    Vector2* arrowEnd = new Vector2(toPos.x + toOffset.x, toPos.y + toOffset.y);
-    ArrowEntity* arrow = new ArrowEntity(arrowStart, arrowEnd, 4, NULL, 2);
-    //fromNode->outgoingArrows.push_back(new OutgoingArrow(to, arrow));
+    Vector2* arrowStart = DBG_NEW Vector2(fromPos.x + fromOffset.x, fromPos.y + fromOffset.y);
+    Vector2* arrowEnd = DBG_NEW Vector2(toPos.x + toOffset.x, toPos.y + toOffset.y);
+    ArrowEntity* arrow = DBG_NEW ArrowEntity(arrowStart, arrowEnd, 4, NULL, 2);
     fromNode->outgoingArrows[to] = arrow;
     fromNode->points.push_back(fromOffset);
     toNode->points.push_back(toOffset);

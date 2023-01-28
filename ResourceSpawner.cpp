@@ -110,12 +110,12 @@ void ResourceSpawner::spawnResource()
 	}
 	if (resourceName._Equal("ore"))
 	{
-		ResourceEntity* newResource = new ResourceEntity(spawnX, 7, 4, Assets::Instance().img_Ore, 4, resourceName, 9, 8, this);
+		ResourceEntity* newResource = DBG_NEW ResourceEntity(spawnX, 7, 4, Assets::Instance().img_Ore, 4, resourceName, 9, 8, this);
 		Game::Instance().AddEntity(newResource, "MainGameState");
 	}
 	else if (resourceName._Equal("gunpowder"))
 	{
-		ResourceEntity* newResource = new ResourceEntity(spawnX, 7, 4, Assets::Instance().img_GunPowder, 4, resourceName, 12, 10, this);
+		ResourceEntity* newResource = DBG_NEW ResourceEntity(spawnX, 7, 4, Assets::Instance().img_GunPowder, 4, resourceName, 12, 10, this);
 		Game::Instance().AddEntity(newResource, "MainGameState");
 	}
 	currResources++;

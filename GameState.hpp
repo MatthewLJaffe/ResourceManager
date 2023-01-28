@@ -8,7 +8,7 @@ class GameState
 {
 public:
 	GameState(std::string name);
-	~GameState();
+	virtual ~GameState();
 	std::string name;
 	virtual void start();
 	virtual void updateEntities();

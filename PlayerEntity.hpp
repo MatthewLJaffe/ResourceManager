@@ -34,8 +34,8 @@ private:
 	int handcannonsEquipped = 0;
 	std::vector<SDL_Texture*> currAnimState;
 	TextEntity* playerHealthDisplay;
-	float lastHandcannonUpdate;
-	float lastHandgunUpdate;
+	float lastHandcannonUpdate = 0;
+	float lastHandgunUpdate = 0;
 	const float baseHangunFireRate = .25;
 	const float baseHandCannonFireRate = .25;
 	const float startHandgunFireRate = .4;

@@ -124,16 +124,15 @@ Uint32 Game::GetGameTime()
 {
     if (gameStateMap.count("MainGameState") > 0)
         return dynamic_cast<MainGameState*>(gameStateMap["MainGameState"])->getGameTime();
-    std::cout << "could not get game time" << std::endl;
     return 0;
 }
 
 void Game::init()
 {
     currState = "StartMenuState";
-    gameStateMap["ResourceMenuState"] = new ResourceMenuState("ResourceMenuState");
-    gameStateMap["StartMenuState"] = new StartMenuState("StartMenuState");
-    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
+    gameStateMap["ResourceMenuState"] = DBG_NEW ResourceMenuState("ResourceMenuState");
+    gameStateMap["StartMenuState"] = DBG_NEW StartMenuState("StartMenuState");
+    gameStateMap["MainGameState"] = DBG_NEW MainGameState("MainGameState");
 
     for (auto& pair : gameStateMap)
     {
@@ -149,6 +148,7 @@ void Game::update()
 {
     string line;
     SDL_Event event;
+    std::string prevGameState;
     while (gameRunning)
     {
         while (SDL_PollEvent(&event))
@@ -160,7 +160,7 @@ void Game::update()
         handleDragInput();
         RenderWindow::Instance().clear();
         //execute game state
-        std::string prevGameState = currState;
+        prevGameState = currState;
         currState = gameStateMap[currState]->execute();
         if (!currState._Equal(prevGameState))
         {
@@ -219,7 +219,7 @@ void Game::AddEntity(Entity* entity, std::string gameState)
 void Game::ResetGame()
 {
     delete gameStateMap["MainGameState"];
-    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
+    gameStateMap["MainGameState"] = DBG_NEW MainGameState("MainGameState");
     gameStateMap["MainGameState"]->start();
     sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
     ResourceManager::Instance().resetResources();

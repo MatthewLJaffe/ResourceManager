@@ -4,7 +4,6 @@
 #include "Utils.hpp"
 #include "PlayerEntity.hpp"
 
-
 struct DistanceSpawnFactor
 {
 	DistanceSpawnFactor(float minX, float maxX, float spawnMultiplier);
