@@ -19,7 +19,7 @@ EnemySpawner::EnemySpawner(float baseSpawnRate, float spawnIncreaseRate, int bas
 	this->nextWaveIndicator = nextWaveIndicator;
 	this->minIndicatorX = minIndicatorX;
 	this->maxIndicatorX = maxIndicatorX;
-	waveText = DBG_NEW TextEntity(980, 12, 1, "Wave 0", 24, { 0, 0, 0 }, Assets::Instance().font_Body, 30, 9);
+	waveText = new TextEntity(980, 12, 1, "Wave 0", 24, { 0, 0, 0 }, Assets::Instance().font_Body, 30, 9);
 	Game::Instance().AddEntity(waveText, "MainGameState");
 	distanceSpawnRateDistribution.push_back(DistanceSpawnFactor(0, maxDistance*.25f, .75));
 	distanceSpawnRateDistribution.push_back(DistanceSpawnFactor(maxDistance *.25f, maxDistance *.5f, 1.0f));
@@ -31,7 +31,7 @@ void EnemySpawner::update()
 {
 	float spawnFactor = 1;
 	float playerDistance = abs(Game::Instance().GetMainGameState()->player->pos->x);
-	for (int i = 0; i < distanceSpawnRateDistribution.size(); i++)
+	for (size_t i = 0; i < distanceSpawnRateDistribution.size(); i++)
 	{
 		if (playerDistance > distanceSpawnRateDistribution[i].minDistance && playerDistance <= distanceSpawnRateDistribution[i].maxDistance)
 		{
@@ -65,7 +65,7 @@ void EnemySpawner::update()
 void EnemySpawner::spawnEnemy(float minX, float maxX)
 {
 	float spawnX = utils::randomFloat(minX, maxX);
-	Game::Instance().AddEntity(DBG_NEW EnemyEntity(spawnX, 0, 4, Assets::Instance().imgs_EnemyWalkRight[0], 5, 10.0f, 13, 23));
+	Game::Instance().AddEntity(new EnemyEntity(spawnX, 0, 4, Assets::Instance().imgs_EnemyWalkRight[0], 5, 10.0f, 13, 23));
 }
 
 
@@ -108,14 +108,14 @@ void EnemySpawner::spawnEnemy()
 		tries--;
 	}
 	if (tries == 0) return;
-	Game::Instance().AddEntity(DBG_NEW EnemyEntity(spawnX, 0, 4, Assets::Instance().imgs_EnemyWalkRight[0], 5, 10.0f, 13, 23));
+	Game::Instance().AddEntity(new EnemyEntity(spawnX, 0, 4, Assets::Instance().imgs_EnemyWalkRight[0], 5, 10.0f, 13, 23));
 }
 
 void EnemySpawner::spawnNextWave()
 {
 	currWave++;
 	waveText->updateText("Wave " + std::to_string(currWave));
-	waveAmount = static_cast<int>(floor(waveAmount * waveIncreaseFactor));
+	waveAmount = static_cast<int>(std::floor(waveAmount * waveIncreaseFactor));
 	float offsetX = 100 + waveAmount / 10;
 	MainGameState* game = Game::Instance().GetMainGameState();
 	float maxX = game->maxX;

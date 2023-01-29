@@ -27,7 +27,7 @@ public:
 	void setDisplayAmount(int newAmount);
 	bool posInCraftButton(Vector2 pos);
 	bool displayCraftButton = false;
-	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, int maxChars);
+	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, size_t maxChars);
 	~DisplayNode();
 	std::map<std::string, ArrowEntity*> outgoingArrows;
 	std::vector<Vector2> points;

@@ -70,7 +70,7 @@ void TurretEntity::fireBullet(float dT)
 	{
 		currAnimIdx++;
 		currAnimFrameTime = 0;
-		//shoot bullet on corret frame
+		//shoot bullet on correct frame
 		if (currAnimIdx >= bulletFireFrame && !fired)
 		{
 			fired = true;
@@ -86,7 +86,7 @@ void TurretEntity::fireBullet(float dT)
 				{
 					bulletTex = Assets::Instance().imgs_bulletDestroyLeft[0];
 				}
-				BulletEntity* bullet = DBG_NEW BulletEntity(bulletPos.x, bulletPos.y, bulletTex, 6, 10, 100, 1.5, Vector2(5, 3), Vector2(0, 0), facingRight, Assets::Instance().imgs_bulletDestroyRight, Assets::Instance().imgs_bulletDestroyLeft, 1);
+				BulletEntity* bullet = new BulletEntity(bulletPos.x, bulletPos.y, bulletTex, 6, 10, 100, 1.5, Vector2(5, 3), Vector2(0, 0), facingRight, Assets::Instance().imgs_bulletDestroyRight, Assets::Instance().imgs_bulletDestroyLeft, 1);
 				Game::Instance().AddEntity(bullet);
 				//update so render is correct for this frame
 				bullet->update();
@@ -105,7 +105,7 @@ void TurretEntity::fireBullet(float dT)
 				}
 				Vector2 missileSize(7, 5);
 				Vector2 explosionSize(16, 16);
-				BulletEntity* missile = DBG_NEW BulletEntity(bulletPos.x, bulletPos.y, missileTex, 8, 10, 150, 1, missileSize, explosionSize, facingRight, Assets::Instance().imgs_missileDestroyRight, Assets::Instance().imgs_missileDestroyLeft, 8);
+				BulletEntity* missile = new BulletEntity(bulletPos.x, bulletPos.y, missileTex, 8, 10, 150, 1, missileSize, explosionSize, facingRight, Assets::Instance().imgs_missileDestroyRight, Assets::Instance().imgs_missileDestroyLeft, 8);
 				Game::Instance().AddEntity(missile);
 				//update so render is correct for this frame
 				missile->update();

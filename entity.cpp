@@ -3,7 +3,7 @@
 Entity::Entity(float x, float y, float scale, SDL_Texture* tex, int sortOrder)
 {
     this->sortOrder = sortOrder;
-    this->pos = DBG_NEW Vector2(x, y);
+    this->pos = new Vector2(x, y);
     this->tex = tex;
     this->scale = scale;
     currentFrame.x = 0;
@@ -22,7 +22,7 @@ void Entity::init() { }
 void Entity::render()
 {
     if (!enabled) return;
-    SDL_Rect destRect = { pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale };
+    SDL_Rect destRect = { utils::roundFloat(pos->x * scale), utils::roundFloat(round(pos->y * scale)), utils::roundFloat(round(currentFrame.w * scale)), utils::roundFloat(currentFrame.h * scale) };
     RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
 

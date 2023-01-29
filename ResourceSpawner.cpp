@@ -19,14 +19,14 @@ ResourceSpawner::ResourceSpawner(std::string resourceName, float spawnRate, floa
 	this->startResources = startResources;
 	this->initialMaxResources = maxResource;
 	this->maxDistance = maxX;
-	if (resourceName._Equal("ore"))
+	if (resourceName == "ore")
 	{
 		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25, .1));
 		spawnDistribution.push_back(DistanceChance(maxDistance * .25, maxDistance * .5, .2));
 		spawnDistribution.push_back(DistanceChance(maxDistance * .5, maxDistance * .75, .3));
 		spawnDistribution.push_back(DistanceChance(maxDistance * .75, maxDistance * 1, .4));
 	}
-	if (resourceName._Equal("gunpowder"))
+	if (resourceName == "gunpowder")
 	{
 		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25, 0));
 		spawnDistribution.push_back(DistanceChance(maxDistance * .25, maxDistance * .5, .15));
@@ -64,7 +64,7 @@ void ResourceSpawner::update()
 		if (increaseElapsedTime > 1)
 		{
 			resourceSpawnRate += spawnIncreaseRate;
-			maxResources = static_cast<int>(initialMaxResources * floor(resourceSpawnRate / initialResourceSpawnRate));
+			maxResources = utils::roundFloat(initialMaxResources * floor(resourceSpawnRate / initialResourceSpawnRate));
 			increaseElapsedTime = 0;
 		}
 		if (spawnElapsedTime * resourceSpawnRate > 1)
@@ -87,7 +87,7 @@ void ResourceSpawner::spawnResource()
 	{
 		DistanceChance spawnDistance = spawnDistribution[0];
 		float rand = utils::randomFloat(0.0f, 1.0f);
-		for (int i = 0; i < spawnDistribution.size(); i++)
+		for (size_t i = 0; i < spawnDistribution.size(); i++)
 		{
 			if (spawnDistribution[i].spawnChance >= rand)
 			{
@@ -108,14 +108,14 @@ void ResourceSpawner::spawnResource()
 			foundSpawn = true;
 		}
 	}
-	if (resourceName._Equal("ore"))
+	if (resourceName == "ore")
 	{
-		ResourceEntity* newResource = DBG_NEW ResourceEntity(spawnX, 7, 4, Assets::Instance().img_Ore, 4, resourceName, 9, 8, this);
+		ResourceEntity* newResource = new ResourceEntity(spawnX, 7, 4, Assets::Instance().img_Ore, 4, resourceName, 9, 8, this);
 		Game::Instance().AddEntity(newResource, "MainGameState");
 	}
-	else if (resourceName._Equal("gunpowder"))
+	else if (resourceName == "gunpowder")
 	{
-		ResourceEntity* newResource = DBG_NEW ResourceEntity(spawnX, 7, 4, Assets::Instance().img_GunPowder, 4, resourceName, 12, 10, this);
+		ResourceEntity* newResource = new ResourceEntity(spawnX, 7, 4, Assets::Instance().img_GunPowder, 4, resourceName, 12, 10, this);
 		Game::Instance().AddEntity(newResource, "MainGameState");
 	}
 	currResources++;

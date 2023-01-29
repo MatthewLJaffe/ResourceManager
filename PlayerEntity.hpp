@@ -1,6 +1,6 @@
 #pragma once
 #include "BulletEntity.hpp"
-#include "WorldSpaceEntity.hpp";
+#include "WorldSpaceEntity.hpp"
 #include "Assets.hpp"
 #include "InputManager.hpp"
 #include <cmath>
@@ -48,7 +48,7 @@ private:
 	Vector2 bulletOffset;
 	Vector2 velocity;
 	float walkSpeed = 60.0f;
-	int currAnimIdx = 0;
+	size_t currAnimIdx = 0;
 	float timeSurvived = 0;
 	void render() override;
 	void updateGunFire(float dT);

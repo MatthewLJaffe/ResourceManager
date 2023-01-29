@@ -18,9 +18,9 @@ public:
 	float currAnimFrameTime = 0;
 	bool exploding = false;
 	bool animating = false;
-	int damageStartFrame;
-	int currAnimIdx = 0;
-	int damageEndFrame;
+	size_t damageStartFrame;
+	size_t currAnimIdx = 0;
+	size_t damageEndFrame;
 	float damage;
 	float width;
 	float height;

@@ -130,9 +130,9 @@ Uint32 Game::GetGameTime()
 void Game::init()
 {
     currState = "StartMenuState";
-    gameStateMap["ResourceMenuState"] = DBG_NEW ResourceMenuState("ResourceMenuState");
-    gameStateMap["StartMenuState"] = DBG_NEW StartMenuState("StartMenuState");
-    gameStateMap["MainGameState"] = DBG_NEW MainGameState("MainGameState");
+    gameStateMap["ResourceMenuState"] = new ResourceMenuState("ResourceMenuState");
+    gameStateMap["StartMenuState"] = new StartMenuState("StartMenuState");
+    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
 
     for (auto& pair : gameStateMap)
     {
@@ -167,26 +167,28 @@ void Game::update()
         //execute game state
         prevGameState = currState;
         currState = gameStateMap[currState]->execute();
-        if (!currState._Equal(prevGameState))
+        if (currState != prevGameState)
         {
             gameStateMap[prevGameState]->onDeactivate();
             gameStateMap[currState]->onActivate();
         }
         //render
-        for (int i = 0; i < gameStateMap[currState]->entities.size(); i++)
+        for (size_t i = 0; i < gameStateMap[currState]->entities.size(); i++)
         {
             gameStateMap[currState]->entities[i]->render();
         }
         RenderWindow::Instance().display();
         GameTransformer::Instance().resetGameTransformations();
         InputManager::Instance().resetSingleFrameEvents();
-        if (inputFuture._Is_ready())
+        
+        if (inputFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         {
             line = inputFuture.get();
             processCommand(line, gameRunning);
             if (gameRunning)
                 inputFuture = std::async(getInput);
         }
+        
     }
 }
 
@@ -212,21 +214,21 @@ void Game::RemoveAndDeleteEntity(Entity* entity)
 void Game::AddEntity(Entity* entity)
 {
     gameStateMap[currState]->entities.push_back(entity);
-    sort(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), compareEntities);
+    std::stable_sort(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), compareEntities);
 }
 
 void Game::AddEntity(Entity* entity, std::string gameState)
 {
     gameStateMap[gameState]->entities.push_back(entity);
-    sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
+     std::stable_sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
 }
 
 void Game::ResetGame()
 {
     delete gameStateMap["MainGameState"];
-    gameStateMap["MainGameState"] = DBG_NEW MainGameState("MainGameState");
+    gameStateMap["MainGameState"] = new MainGameState("MainGameState");
     gameStateMap["MainGameState"]->start();
-    sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
+     std::stable_sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
     ResourceManager::Instance().resetResources();
 }
 

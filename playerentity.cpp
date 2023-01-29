@@ -13,8 +13,8 @@ PlayerEntity::PlayerEntity(float x, float y, float scale, SDL_Texture* tex, int 
 	this->health = 100;
 	this->maxHealth = 100;
 	lastUpdate = Game::Instance().GetGameTime();
-	std::string healthText = "Health: " + std::to_string(static_cast<int>(this->health));
-	this->playerHealthDisplay = DBG_NEW TextEntity(8, 4, 4, healthText, 6, {0, 0, 0}, Assets::Instance().font_Body, 50, 20);
+	std::string healthText = "Health: " + std::to_string(utils::roundFloat(this->health));
+	this->playerHealthDisplay = new TextEntity(8, 4, 4, healthText, 6, {0, 0, 0}, Assets::Instance().font_Body, 50, 20);
 	Game::Instance().AddEntity(playerHealthDisplay, "MainGameState");
 }
 
@@ -64,7 +64,7 @@ void PlayerEntity::updateCollision()
 	if (pos->x < -1600)
 		pos->x = -1600;
 	std::vector<EnemyEntity*> enemies = Game::Instance().GetMainGameState()->enemies;
-	for (int i = 0; i < enemies.size(); i++)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		if (utils::boxCollision(pos->x, pos->y, width, height, enemies[i]->pos->x, enemies[i]->pos->y, enemies[i]->width, enemies[i]->height))
 		{
@@ -82,7 +82,7 @@ void PlayerEntity::takeDamage(float amount)
 {
 	if (health < 0 || currDamageTickCooldown > 0) return;
 	health -= amount;
-	std::string displayText = "Health: " + std::to_string(static_cast<int>(health));
+	std::string displayText = "Health: " + std::to_string(utils::roundFloat(health));
 	currDamageTickCooldown = damageTickCooldown;
 	if (health <= 0)
 	{
@@ -165,7 +165,7 @@ void PlayerEntity::updateGunFire(float dT)
 				bulletPos.x = this->pos->x - bulletOffset.x;
 				bulletTex = Assets::Instance().imgs_bulletDestroyLeft[0];
 			}
-			Game::Instance().AddEntity(DBG_NEW BulletEntity(bulletPos.x, bulletPos.y, bulletTex, 6, 5, 100, 1.5, Vector2(5,3 ), Vector2(0, 0), facingRight, Assets::Instance().imgs_bulletDestroyRight, Assets::Instance().imgs_bulletDestroyLeft, 1));
+			Game::Instance().AddEntity(new BulletEntity(bulletPos.x, bulletPos.y, bulletTex, 6, 5, 100, 1.5, Vector2(5,3 ), Vector2(0, 0), facingRight, Assets::Instance().imgs_bulletDestroyRight, Assets::Instance().imgs_bulletDestroyLeft, 1));
 		}
 	}
 	lastHandcannonUpdate += dT;
@@ -192,7 +192,7 @@ void PlayerEntity::updateGunFire(float dT)
 			}
 			Vector2 missileSize(7, 5);
 			Vector2 explosionSize(16, 16);
-			Game::Instance().AddEntity(DBG_NEW BulletEntity(bulletPos.x, bulletPos.y , bulletTex, 8, 10, 150, 1, missileSize, explosionSize, facingRight, Assets::Instance().imgs_missileDestroyRight, Assets::Instance().imgs_missileDestroyLeft, 5));
+			Game::Instance().AddEntity(new BulletEntity(bulletPos.x, bulletPos.y , bulletTex, 8, 10, 150, 1, missileSize, explosionSize, facingRight, Assets::Instance().imgs_missileDestroyRight, Assets::Instance().imgs_missileDestroyLeft, 5));
 		}
 	}
 }
@@ -208,7 +208,7 @@ void PlayerEntity::spawnTurret()
 		turretImages = Assets::Instance().imgs_turretLeft;
 	}
 	Vector2 turretPos = turretPosOffset + *this->pos;
-	TurretEntity* turret = DBG_NEW TurretEntity(turretPos.x, turretPos.y, facingRight, 10, 1, 23, 19, turretImages, 20, false);
+	TurretEntity* turret = new TurretEntity(turretPos.x, turretPos.y, facingRight, 10, 1, 23, 19, turretImages, 20, false);
 	Game::Instance().AddEntity(turret);
 }
 
@@ -222,7 +222,7 @@ void PlayerEntity::spawnCannon()
 		cannonImages = Assets::Instance().imgs_CannonLeft;
 	}
 	Vector2 cannonPos = cannonPosOffset + *this->pos;
-	TurretEntity* turret = DBG_NEW TurretEntity(cannonPos.x, cannonPos.y, facingRight, 10, 1, 23, 19, cannonImages, 40, true);
+	TurretEntity* turret = new TurretEntity(cannonPos.x, cannonPos.y, facingRight, 10, 1, 23, 19, cannonImages, 40, true);
 	Game::Instance().AddEntity(turret);
 }
 
@@ -234,7 +234,7 @@ void PlayerEntity::spawnSpikes()
 		spikesPosOffset.x *= -1;
 	}
 	Vector2 spikesPos = spikesPosOffset + *this->pos;
-	SpikesEntity* spikes = DBG_NEW SpikesEntity(spikesPos.x, spikesPos.y, 32, 14, 8, 5, 20);
+	SpikesEntity* spikes = new SpikesEntity(spikesPos.x, spikesPos.y, 32, 14, 8, 5, 20);
 	Game::Instance().AddEntity(spikes);
 }
 
@@ -246,7 +246,7 @@ void PlayerEntity::spawnBomb()
 		bombPosOffset.x *= -1;
 	}
 	Vector2 bombPos = bombPosOffset + *pos;
-	BombEntity* bomb = DBG_NEW BombEntity(bombPos.x, bombPos.y, 96, 64, 10, 100);
+	BombEntity* bomb = new BombEntity(bombPos.x, bombPos.y, 96, 64, 10, 100);
 	Game::Instance().AddEntity(bomb);
 }
 
@@ -279,6 +279,6 @@ void PlayerEntity::addHealth(float amount)
 	health += amount;
 	if (health > maxHealth)
 		health = maxHealth;
-	std::string displayText = "Health: " + std::to_string(static_cast<int>(health));
+	std::string displayText = "Health: " + std::to_string(utils::roundFloat(health));
 	playerHealthDisplay->updateText(displayText);
 }

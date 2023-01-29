@@ -1,12 +1,12 @@
 #include "TextEntity.hpp"
-TextEntity::TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font, int maxChars, int sortOrder)
+TextEntity::TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font, size_t maxChars, int sortOrder)
 {
     this->maxChars = maxChars;
     this->sortOrder = sortOrder;
     this->size = fontSize;
     this->color = color;
     this->font = font;
-	this->pos = DBG_NEW Vector2(x, y);
+	this->pos = new Vector2(x, y);
     this->scale = scale;
     this->text = message;
     TTF_SetFontSize(font, fontSize);

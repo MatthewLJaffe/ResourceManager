@@ -62,7 +62,7 @@ void BombEntity::updateAnimation(float dT)
 void BombEntity::updateCollision()
 {
 	std::vector<EnemyEntity*> enemies = Game::Instance().GetMainGameState()->enemies;
-	for (int i = 0; i < enemies.size(); i++)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		if (utils::boxCollision(enemies[i]->pos->x, enemies[i]->pos->y, enemies[i]->width, enemies[i]->height, this->pos->x, this->pos->y, width, height))
 			enemies[i]->takeDamage(damage);

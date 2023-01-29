@@ -19,8 +19,8 @@ private:
 	bool cannon = false;
 	std::vector<SDL_Texture*> turretFireAnim;
 	std::vector<SDL_Texture*> turretDestroyAnimation;
-	int bulletFireFrame;
-	int currAnimIdx = 0;
+	size_t bulletFireFrame = 3;
+	size_t currAnimIdx = 0;
 	bool fired = false;
 	bool firing = false;
 	bool destroy = false;

@@ -29,7 +29,7 @@ private:
 	float currAttackCooldown = 0;
 	bool attacking = false;
 	bool dealtDamage = false;
-	const int attackDamageFrame = 6;
+	const size_t attackDamageFrame = 6;
 	vector<SDL_Texture*> currAnimState;
 	float health;
 	const float damageEffectTime = .2f;
@@ -38,5 +38,5 @@ private:
 	float currSpikeDamageTime;
 	float walkSpeed = 25.0f;
 	Vector2 velocity;
-	int currAnimIdx = 0;
+	size_t currAnimIdx = 0;
 };

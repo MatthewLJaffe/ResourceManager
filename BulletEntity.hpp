@@ -19,7 +19,7 @@ public:
 	Vector2 velocity;
 	float animatedFPS = 12;
 	float travelTime;
-	int currAnimIndex;
+	size_t currAnimIndex;
 	int enemiesDamageable;
 	void update() override;
 	void updatePosition();

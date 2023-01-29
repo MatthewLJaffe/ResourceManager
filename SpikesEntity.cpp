@@ -12,7 +12,7 @@ SpikesEntity::SpikesEntity(float x, float y, float width, float height, int sort
 void SpikesEntity::update()
 {
 	std::vector<EnemyEntity*> enemies = Game::Instance().GetMainGameState()->enemies;
-	for (int i = 0; i < enemies.size(); i++)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		if (utils::boxCollision(this->pos->x, this->pos->y, width, height, enemies[i]->pos->x, enemies[i]->pos->y, enemies[i]->width, enemies[i]->height))
 		{

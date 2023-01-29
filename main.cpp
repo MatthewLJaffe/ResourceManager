@@ -19,39 +19,6 @@
 #include "Assets.hpp"
 #include "ResourceListText.hpp"
 #include "Game.hpp"
-using namespace std;
-
-/*
-struct AllocationMetrics
-{
-    uint32_t TotalAllocated = 0;
-    uint32_t TotalFreed = 0;
-
-    uint32_t CurrentUsage()
-    {
-        return TotalAllocated - TotalFreed;
-    }
-};
-static AllocationMetrics s_AllocationMetrics;
-
-static void PrintMemoryUsage()
-{
-    cout << "Memory Usage: " << s_AllocationMetrics.CurrentUsage() << " bytes\n";
-}
-
-void* operator new(size_t size)
-{
-    s_AllocationMetrics.TotalAllocated += size;
-    return malloc(size);
-}
-
-void operator delete(void* memory, size_t size)
-{
-    s_AllocationMetrics.TotalFreed += size;
-    free(memory);
-    PrintMemoryUsage();
-}
-*/
 
 void buildGraph(ifstream& file)
 {
@@ -59,7 +26,7 @@ void buildGraph(ifstream& file)
     string line;
     while (getline(file, line))
     {
-        if (line._Equal("start without"))
+        if (line == "start without")
             startWithResources = false;
         else
             ResourceManager::Instance().addResource(line, startWithResources);
@@ -76,15 +43,13 @@ int main (int argc, char* argv[])
     if (TTF_Init() > 0)
         cout << "TTF_Init has failed" << SDL_GetError() << endl;
     Assets::Instance().loadAssets();
-    if (argc != 2)
-    {
-        cout << "Invocation: " << "./ResourceManager.exe {resourceFile}" << endl;
-        return 1;
-    }
-    ifstream file(argv[1]);
+    std::string resourceFile = "Resources.txt";
+    if (argc == 2)
+        resourceFile = argv[1];
+    ifstream file(resourceFile);
     if (!file.good())
     {
-        cout << "ERROR: problem reading file " << argv[1]
+        cout << "ERROR: problem reading file " << resourceFile
             << " make sure file is in same directory as executable\n";
         return 1;
     }
@@ -96,7 +61,5 @@ int main (int argc, char* argv[])
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-    //_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-    //_CrtDumpMemoryLeaks();
     return EXIT_SUCCESS;
 }

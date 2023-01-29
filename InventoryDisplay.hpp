@@ -27,7 +27,7 @@ public:
 	void render() override;
 	void start();
 	Vector2 itemPictureOffset;
-	int selectedInventoryIdx = 0;
+	size_t selectedInventoryIdx = 0;
 	TextEntity* equippedHandgunsText;
 	TextEntity* equippedHandcannonsText;
 	int equippedHandguns = 0;

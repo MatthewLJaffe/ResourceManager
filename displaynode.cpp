@@ -7,11 +7,11 @@ OutgoingArrow::OutgoingArrow(std::string target, ArrowEntity* arrow)
 	this->arrow = arrow;
 }
 
-DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, int maxChars)
+DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, size_t maxChars)
 {
     this->sortOrder = sortOrder;
     this->scale = scale;
-    this->pos = DBG_NEW Vector2(x, y);
+    this->pos = new Vector2(x, y);
     this->tex = tex;
     currentFrame.x = 0;
     currentFrame.y = 0;
@@ -149,7 +149,6 @@ void DisplayNode::updateTransformState()
 {
     lastTransfromState = transformState;
     transformState = GameTransformer::Instance().getTransformState();
-    float scaleChange = 4.0f * transformState.scale.x / this->scale;
     this->scale = 4.0f * transformState.scale.x;
     transformState.translation /= scale;
     *this->pos -= lastTransfromState.translation * lastTransfromState.scale / transformState.scale;

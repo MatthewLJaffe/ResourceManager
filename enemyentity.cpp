@@ -152,7 +152,7 @@ void EnemyEntity::updateAnimation()
 void EnemyEntity::destroyEntity()
 {
 	vector<EnemyEntity*>& enemies = Game::Instance().GetMainGameState()->enemies;
-	for (int i = 0; i < enemies.size(); i++)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		if (enemies[i] == this)
 		{

@@ -38,9 +38,9 @@ void ParallaxEntity::update()
 void ParallaxEntity::render()
 {
 	if (!enabled) return;
-	SDL_Rect destRectLeft = { leftPos.x * scale, leftPos.y * scale, currentFrame.w * scale, currentFrame.h * scale };
-	SDL_Rect destRectRight = { rightPos.x * scale, rightPos.y * scale, currentFrame.w * scale, currentFrame.h * scale };
-	SDL_Rect destRect = { pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale };
+	SDL_Rect destRectLeft = { static_cast<int>(std::ceil(leftPos.x * scale)), utils::roundFloat(leftPos.y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
+	SDL_Rect destRectRight = { static_cast<int>(std::floor(rightPos.x * scale)), utils::roundFloat(rightPos.y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
+	SDL_Rect destRect = { utils::roundFloat(pos->x * scale), utils::roundFloat(pos->y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
 	RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 	RenderWindow::Instance().render(tex, currentFrame, destRectLeft, angle);
 	RenderWindow::Instance().render(tex, currentFrame, destRectRight, angle);

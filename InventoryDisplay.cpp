@@ -1,14 +1,6 @@
 #include "InventoryDisplay.hpp"
 
 
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-// allocations to be of _CLIENT_BLOCK type
-#else
-#define DBG_NEW new
-#endif
-
 InventorySquare::InventorySquare(std::string name, SDL_Texture* itemImg, PreviewEntity* preview)
 {
 	this->itemName = name;
@@ -30,27 +22,27 @@ InventoryDisplay::InventoryDisplay(float x, float y, float scale, SDL_Texture* t
 void InventoryDisplay::start()
 {
 	inventorySquares.push_back(InventorySquare("spikes", Assets::Instance().img_SpikesUI, 
-		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_ScrapPileTransparent, Assets::Instance().img_ScrapPileTransparent, 7, Vector2(12, -4))));
+		 new PreviewEntity(0, 0, 4, Assets::Instance().img_ScrapPileTransparent, Assets::Instance().img_ScrapPileTransparent, 7, Vector2(12, -4))));
 	inventorySquares.push_back(InventorySquare("handgun", Assets::Instance().img_GunUI, NULL));
 	inventorySquares.push_back(InventorySquare("turret", Assets::Instance().img_TurretUI, 
-		 DBG_NEW PreviewEntity(0 ,0, 4, Assets::Instance().img_TransparentTurretLeft, Assets::Instance().img_TransparentTurretRight, 7, Vector2(12 ,1))));
+		 new PreviewEntity(0 ,0, 4, Assets::Instance().img_TransparentTurretLeft, Assets::Instance().img_TransparentTurretRight, 7, Vector2(12 ,1))));
 	inventorySquares.push_back(InventorySquare("bomb", Assets::Instance().img_BombUI, 
-		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_BombPreview, Assets::Instance().img_BombPreview, 11, Vector2(6, -2))));
+		 new PreviewEntity(0, 0, 4, Assets::Instance().img_BombPreview, Assets::Instance().img_BombPreview, 11, Vector2(6, -2))));
 	inventorySquares.push_back(InventorySquare("handcannon", Assets::Instance().img_HandCannonUI, NULL));
 	inventorySquares.push_back(InventorySquare("cannon", Assets::Instance().img_CannonUI, 
-		 DBG_NEW PreviewEntity(0, 0, 4, Assets::Instance().img_CannonPreviewLeft, Assets::Instance().img_CannonPreviewRight, 7, Vector2(12, 1))));
+		 new PreviewEntity(0, 0, 4, Assets::Instance().img_CannonPreviewLeft, Assets::Instance().img_CannonPreviewRight, 7, Vector2(12, 1))));
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
-	equippedHandgunsText =  DBG_NEW  TextEntity(240, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
-	equippedHandcannonsText = DBG_NEW  TextEntity(240, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
+	equippedHandgunsText =  new  TextEntity(240, 16, 1, "x" + std::to_string(player->getHandguns()), 24, {0,0,0}, Assets::Instance().font_Body, 10, 5);
+	equippedHandcannonsText = new  TextEntity(240, 48, 1, "x" + std::to_string(player->getHandcannons()), 24, { 0,0,0 }, Assets::Instance().font_Body, 10, 5);
 	Game::Instance().AddEntity(equippedHandcannonsText, "MainGameState");
 	Game::Instance().AddEntity(equippedHandgunsText, "MainGameState");
-	Game::Instance().AddEntity( DBG_NEW  Entity(72, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
-	Game::Instance().AddEntity( DBG_NEW  Entity(72, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
+	Game::Instance().AddEntity( new  Entity(72, -4, 4, Assets::Instance().img_GunUI, 5), "MainGameState");
+	Game::Instance().AddEntity( new  Entity(72, 5, 4, Assets::Instance().img_HandCannonUI, 5), "MainGameState");
 }
 
 void InventoryDisplay::updateInventoryDisplay()
 {
-	for (int i = 0; i < inventorySquares.size(); i++)
+	for (size_t i = 0; i < inventorySquares.size(); i++)
 	{
 		if (ResourceManager::Instance().resourceMap[inventorySquares[i].itemName]->amount > 0)
 			inventorySquares[i].usable = true;
@@ -71,7 +63,7 @@ void InventoryDisplay::updateInventoryDisplay()
 void InventoryDisplay::update()
 {
 	if (!enabled) return;
-	int prevSelected = selectedInventoryIdx;
+	size_t prevSelected = selectedInventoryIdx;
 	if (InputManager::Instance().get1Down())
 	{
 		selectedInventoryIdx = 0;
@@ -117,7 +109,7 @@ void InventoryDisplay::update()
 void InventoryDisplay::render()
 {
 	if (!enabled) return;
-	for (int i = 0; i < inventorySquares.size(); i++)
+	for (size_t i = 0; i < inventorySquares.size(); i++)
 	{
 		SDL_Texture* background;
 		if (i == selectedInventoryIdx)
@@ -125,41 +117,41 @@ void InventoryDisplay::render()
 		else
 			background = Assets::Instance().img_White;
 
-		SDL_Rect destRect = { (pos->x + itemPictureOffset.x + 18 * i) * scale, (pos->y + itemPictureOffset.y) * scale, 16 * scale, 16 * scale };
+		SDL_Rect destRect = { utils::roundFloat((pos->x + itemPictureOffset.x + 18 * i) * scale), utils::roundFloat((pos->y + itemPictureOffset.y) * scale), utils::roundFloat(16 * scale),  utils::roundFloat(16 * scale) };
 		RenderWindow::Instance().render(background, currentFrame, destRect, angle);
 		if (inventorySquares[i].usable)
 			RenderWindow::Instance().render(inventorySquares[i].itemImg, currentFrame, destRect, angle);
 	}
-	SDL_Rect destRect = { pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale };
+	SDL_Rect destRect = { utils::roundFloat(pos->x * scale), utils::roundFloat(pos->y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
 	RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
 
 void InventoryDisplay::useResource(std::string name)
 {
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
-	if (name._Equal("handgun"))
+	if (name == "handgun")
 	{
 		player->incrementHandguns();
 		equippedHandgunsText->updateText("x" + std::to_string(player->getHandguns()));
 	}
-	else if (name._Equal("handcannon"))
+	else if (name == "handcannon")
 	{
 		player->incrementHandcannons();
 		equippedHandcannonsText->updateText("x" + std::to_string(player->getHandcannons()));
 	}
-	else if (name._Equal("turret"))
+	else if (name == "turret")
 	{
 		player->spawnTurret();
 	}
-	else if (name._Equal("spikes"))
+	else if (name == "spikes")
 	{
 		player->spawnSpikes();
 	}
-	else if (name._Equal("bomb"))
+	else if (name == "bomb")
 	{
 		player->spawnBomb();
 	}
-	else if (name._Equal("cannon"))
+	else if (name == "cannon")
 	{
 		player->spawnCannon();
 	}

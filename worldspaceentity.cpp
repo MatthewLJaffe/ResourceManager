@@ -11,7 +11,7 @@ void WorldSpaceEntity::render()
     Vector2 renderPos = (*pos + transformState.translation + screenCenterOffset) * scale;
     renderPos.x -= currentFrame.w * scale / 2;
     renderPos.y -= currentFrame.h * scale / 2;
-    SDL_Rect destRect = { renderPos.x, renderPos.y, currentFrame.w * scale, currentFrame.h * scale };
+    SDL_Rect destRect = { utils::roundFloat(renderPos.x), utils::roundFloat(renderPos.y), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
     RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
 

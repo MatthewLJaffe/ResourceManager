@@ -1,3 +1,4 @@
+start without
 handgun bullets[2] ore[2]
 bullets ore
 bomb ore gunpowder

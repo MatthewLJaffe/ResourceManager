@@ -58,7 +58,7 @@ void BulletEntity::updateCollision()
 	Vector2 hitboxSize = this->size;
 	if (destroy)
 		hitboxSize = this->explosionSize;
-	for (int i = 0; i < enemyList.size(); i++)
+	for (size_t i = 0; i < enemyList.size(); i++)
 	{
 		if (utils::boxCollision(pos->x, pos->y, hitboxSize.x, hitboxSize.y, enemyList[i]->pos->x, enemyList[i]->pos->y, enemyList[i]->width, enemyList[i]->height))
 		{
