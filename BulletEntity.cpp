@@ -80,7 +80,7 @@ void BulletEntity::updateAnimation()
 	if (!destroy) return;
 	Uint32 current = Game::Instance().GetGameTime();
 	float dT = (current - lastAnimUpdate) / 1000.0f;
-	int framesToUpdate = floor(dT / (1.0f / animatedFPS));
+	int framesToUpdate = static_cast<int>(floor(dT / (1.0f / animatedFPS)));
 	if (framesToUpdate > 0) {
 		currAnimIndex += framesToUpdate;
 		if (currAnimIndex >= destroyAnimation.size())

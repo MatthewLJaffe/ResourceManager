@@ -38,6 +38,6 @@ private:
 	Game();
 	~Game();
 	std::future<std::string> inputFuture;
-	bool gameRunning;
+	bool gameRunning = false;
 	std::string currState;
 };

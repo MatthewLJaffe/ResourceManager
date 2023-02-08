@@ -76,7 +76,7 @@ void EnemySpawner::spawnEnemy()
 	float maxSpawnRight = game->player->pos->x + 176 + maxSpawnDistance;
 	float maxSpawnLeft = game->player->pos->x - 176;
 	float minSpawnLeft = game->player->pos->x - 176 - maxSpawnDistance;
-	float maxSpawnSideChance = .8;
+	float maxSpawnSideChance = .8f;
 	float rightSpawnChance = abs(game->player->pos->x - game->minX) / (game->maxX - game->minX);
 	std::vector<TurretEntity*> turrets = Game::Instance().GetMainGameState()->turrets;
 	int tries = 1000;
@@ -84,7 +84,7 @@ void EnemySpawner::spawnEnemy()
 	while (tries > 0)
 	{
 		if (rightSpawnChance > maxSpawnSideChance)
-			rightSpawnChance = .8;
+			rightSpawnChance = .8f;
 		bool spawnRight = utils::randomFloat(0.0f, 1.0f) < rightSpawnChance;
 		if (spawnRight)
 		{
@@ -116,7 +116,7 @@ void EnemySpawner::spawnNextWave()
 	currWave++;
 	waveText->updateText("Wave " + std::to_string(currWave));
 	waveAmount = static_cast<int>(std::floor(waveAmount * waveIncreaseFactor));
-	float offsetX = 100 + waveAmount / 10;
+	float offsetX = 100.0f + waveAmount / 10.0f;
 	MainGameState* game = Game::Instance().GetMainGameState();
 	float maxX = game->maxX;
 	float minX = game->minX;

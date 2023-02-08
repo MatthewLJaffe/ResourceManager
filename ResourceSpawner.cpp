@@ -21,17 +21,17 @@ ResourceSpawner::ResourceSpawner(std::string resourceName, float spawnRate, floa
 	this->maxDistance = maxX;
 	if (resourceName == "ore")
 	{
-		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25, .1));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .25, maxDistance * .5, .2));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .5, maxDistance * .75, .3));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .75, maxDistance * 1, .4));
+		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25f, .1f));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .25f, maxDistance * .5f, .2f));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .5f, maxDistance * .75f, .3f));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .75f, maxDistance * 1, .4f));
 	}
 	if (resourceName == "gunpowder")
 	{
-		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25, 0));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .25, maxDistance * .5, .15));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .5, maxDistance * .75, .35));
-		spawnDistribution.push_back(DistanceChance(maxDistance * .75, maxDistance * 1, .45));
+		spawnDistribution.push_back(DistanceChance(0, maxDistance * .25f, 0));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .25f, maxDistance * .5f, .15f));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .5f, maxDistance * .75f, .35f));
+		spawnDistribution.push_back(DistanceChance(maxDistance * .75f, maxDistance * 1, .45f));
 	}
 	currResources = 0;
 	spawnElapsedTime = 0;

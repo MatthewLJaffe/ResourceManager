@@ -71,7 +71,7 @@ void handleDragInput()
     GameTransformer::Instance().pushTransformState();
     static Vector2 lastMousePos = Vector2(0, 0);
     static Vector2 dragOffset = Vector2(0, 0);
-    int mouseWheelY = InputManager::Instance().getMouseWheelY();
+    int mouseWheelY = utils::roundFloat(InputManager::Instance().getMouseWheelY());
     if (mouseWheelY == 0)
         GameTransformer::Instance().setScale(Vector2(1, 1));
     if (mouseWheelY == -1)
@@ -194,20 +194,38 @@ void Game::update()
 
 void Game::RemoveEntity(Entity* entity)
 {
-    remove(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), entity);
-    gameStateMap[currState]->entities.resize(gameStateMap[currState]->entities.size() - 1);
+    for (size_t i = 0; i < gameStateMap[currState]->entities.size(); i++)
+    {
+        if (gameStateMap[currState]->entities[i] == entity)
+        {
+            gameStateMap[currState]->entities.erase(gameStateMap[currState]->entities.begin() + i);
+            break;
+        }
+    }
 }
 
 void Game::RemoveEntity(Entity* entity, std::string gameState)
 {
-    remove(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), entity);
-    gameStateMap[gameState]->entities.resize(gameStateMap[gameState]->entities.size() - 1);
+    for (size_t i = 0; i < gameStateMap[gameState]->entities.size(); i++)
+    {
+        if (gameStateMap[gameState]->entities[i] == entity)
+        {
+            gameStateMap[gameState]->entities.erase(gameStateMap[gameState]->entities.begin() + i);
+            break;
+        }
+    }
 }
 
 void Game::RemoveAndDeleteEntity(Entity* entity)
 {
-    remove(gameStateMap[currState]->entities.begin(), gameStateMap[currState]->entities.end(), entity);
-    gameStateMap[currState]->entities.resize(gameStateMap[currState]->entities.size() - 1);
+    for (size_t i = 0; i < gameStateMap[currState]->entities.size(); i++)
+    {
+        if (gameStateMap[currState]->entities[i] == entity)
+        {
+            gameStateMap[currState]->entities.erase(gameStateMap[currState]->entities.begin() + i);
+            break;
+        }
+    }
     delete entity;
 }
 
@@ -238,7 +256,10 @@ Game& Game::Instance()
 	return game;
 }
 
-Game::Game() {}
+Game::Game() 
+{
+    gameRunning = false;
+}
 
 Game::~Game()
 {

@@ -5,12 +5,13 @@ MainGameState::MainGameState(std::string name) : GameState(name)
 	this->player = player;
 	this->minX = minX;
 	this->maxX = maxX;
-	this->healthSpawner = new HealthSpawner(2, .15, 30);
-	oreSpawner = new ResourceSpawner("ore", .1, .001, .5, 20, 40, 0, maxX);
-	gunPowderSpawner = new ResourceSpawner("gunpowder", .0125, .00075, .5, 0, 40, 90, maxX);
+	this->healthSpawner = new HealthSpawner(2, .15f, 30);
+	oreSpawner = new ResourceSpawner("ore", .1f, .001f, .5f, 20, 40, 0, maxX);
+	gunPowderSpawner = new ResourceSpawner("gunpowder", .0125f, .00075f, .5f, 0, 40, 90, maxX);
 	inventoryDisplay = new InventoryDisplay(105, 0, 4, Assets::Instance().img_InventoryUI, 5);
 	gameTime = 0;
 	lastTime = 0;
+	enemySpawner = nullptr;
 }
 
 void MainGameState::start()
@@ -99,8 +100,8 @@ Uint32 MainGameState::getGameTime()
 
 void MainGameState::gameOver(float surviveTime)
 {
-	int minutes = floor(surviveTime / 60);
-	int seconds = floor(surviveTime - 60 * static_cast<float>(minutes));
+	int minutes = static_cast<int>(floor(surviveTime / 60));
+	int seconds = static_cast<int>(floor(surviveTime - 60 * static_cast<float>(minutes)));
 	std::string secondsFormatted = std::to_string(seconds);
 	if (secondsFormatted.size() == 1)
 		secondsFormatted = "0" + secondsFormatted;

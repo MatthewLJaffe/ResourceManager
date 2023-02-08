@@ -48,7 +48,7 @@ void ScrollBar::scrollTo(float yPos)
 void ScrollBar::ResizeScrollBar(SDL_Texture* tex, int newMaxScrollY)
 {
 	this->tex = tex;
-	maxScrollY = newMaxScrollY;
+	maxScrollY = static_cast<float>(newMaxScrollY);
 	SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
 	if (this->pos->y > maxScrollY)
 		this->pos->y = maxScrollY;

@@ -38,7 +38,7 @@ private:
 	float lastHandgunUpdate = 0;
 	const float baseHangunFireRate = .25;
 	const float baseHandCannonFireRate = .25;
-	const float startHandgunFireRate = .4;
+	const float startHandgunFireRate = .4f;
 	float animatedFPS = 12.0f;
 	float health;
 	float maxHealth;

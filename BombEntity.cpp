@@ -37,7 +37,7 @@ void BombEntity::update()
 void BombEntity::updateAnimation(float dT)
 {
 	currAnimFrameTime += dT;
-	int framesToUpdate = floor(currAnimFrameTime / (1.0f / animationFPS));
+	int framesToUpdate = static_cast<int>(floor(currAnimFrameTime / (1.0f / animationFPS)));
 	if (framesToUpdate > 0)
 	{
 		currAnimIdx += framesToUpdate;

@@ -21,7 +21,7 @@ PlayerEntity::PlayerEntity(float x, float y, float scale, SDL_Texture* tex, int 
 void PlayerEntity::update()
 {
 	if (!this->enabled) return;
-	float curr = Game::Instance().GetGameTime();
+	Uint32 curr = Game::Instance().GetGameTime();
 	float dT = (curr - lastUpdate) / 1000.0f;
 	if (currDamageTickCooldown > 0)
 		currDamageTickCooldown -= dT;
@@ -146,7 +146,7 @@ void PlayerEntity::updateGunFire(float dT)
 	lastHandgunUpdate += dT;
 	float rate = baseHangunFireRate * (handgunsEquipped - 1) + startHandgunFireRate;
 	float bulletsUnrounded = rate * lastHandgunUpdate;
-	int bulletsToFire = floor(bulletsUnrounded);
+	int bulletsToFire = static_cast<int>(floor(bulletsUnrounded));
 	if (bulletsToFire > 0)
 	{
 		//remaining time maintained
@@ -171,7 +171,7 @@ void PlayerEntity::updateGunFire(float dT)
 	lastHandcannonUpdate += dT;
 	rate = baseHandCannonFireRate * handcannonsEquipped;
 	float missilesUnrounded = rate * lastHandcannonUpdate;
-	int missilesToFire = floor(missilesUnrounded);
+	int missilesToFire = static_cast<int>(floor(missilesUnrounded));
 	if (missilesToFire > 0)
 	{
 		//remaining time maintained
@@ -253,7 +253,7 @@ void PlayerEntity::spawnBomb()
 void PlayerEntity::incrementHandguns()
 {
 	if (handgunsEquipped == 0)
-		lastHandgunUpdate = Game::Instance().GetGameTime();
+		lastHandgunUpdate = 0;
 	handgunsEquipped++;
 }
 

@@ -67,7 +67,7 @@ void ResourceManager::addResource(string line, bool startWithResource)
             }
             catch (std::invalid_argument& e) 
             {
-                std::cout << "invalid amount " << amountStr << std::endl;
+                std::cout << e.what() << " invalid amount " << amountStr << std::endl;
                 amount = 1;
             }
         }
@@ -283,7 +283,7 @@ void ResourceManager::createNewListText(std::string name, Resource* resource, st
     std::string nameText = name;
     float x = 10;
     float y = 150 + float(listLines) * textHeight;
-    int nameWidth = 140;
+    int nameWidth = 155;
     int amountWidth = 60;
     SDL_Color textColor = {0, 0, 0};
     bool selected = displayMap[name]->selected;
@@ -585,7 +585,7 @@ void ResourceManager::outputGraph(string fileName)
 
 float ResourceManager::getMaxTextOffset()
 {
-    return (listLines - maxNonScrollListLines) * textHeight;
+    return static_cast<float>((listLines - maxNonScrollListLines) * textHeight);
 }
 
 void ResourceManager::addNewDisplayNode(std::string name, int amount)
@@ -728,4 +728,8 @@ ResourceManager::~ResourceManager()
     }
 }
 
-ResourceManager::ResourceManager() {}
+ResourceManager::ResourceManager() 
+{
+    scrollArea = nullptr;
+    scrollBar = nullptr;
+}

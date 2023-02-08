@@ -27,7 +27,7 @@ private:
 	float baseSpawnRate;
 	float spawnIncreaseRate;
 	float timeBetweenWaves;
-	float waveAmount;
+	int waveAmount;
 	float waveIncreaseFactor;
 	float maxSpawnDistance;
 	float minIndicatorX;
