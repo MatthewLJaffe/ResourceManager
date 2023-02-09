@@ -19,7 +19,7 @@ void ArrowEntity::render()
 	if (!enabled) return;
 	RenderWindow::Instance().setScale(scale, scale);
 	float scaleConst = 4 / scale;
-	RenderWindow::Instance().drawLine(from.x + 208 * scaleConst, from.y + 90 * scaleConst, to.x + 208 * scaleConst, to.y + 90 * scaleConst);
+	RenderWindow::Instance().drawLine(utils::roundFloat(from.x + 208 * scaleConst), utils::roundFloat(from.y + 90 * scaleConst),utils::roundFloat(to.x + 208 * scaleConst),utils::roundFloat(to.y + 90 * scaleConst));
 
 	Vector2 dir = to - from;
 	dir.normalize();

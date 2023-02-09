@@ -9,7 +9,6 @@ using namespace std;
 
 namespace utils
 {
-    float hireTimeInSeconds();
 	/// <summary>
 	/// splits string into vector of strings based on delimeter
 	/// </summary>
