@@ -2,6 +2,9 @@
 #include "Entity.hpp"
 #include "Transformable.hpp"
 
+/// <summary>
+/// entity whose position represents a world space coordinate
+/// </summary>
 class WorldSpaceEntity : public Entity, public Transformable
 {
 public:
