@@ -68,7 +68,7 @@ void ResourceManager::addResource(string line, bool startWithResource)
             catch (std::invalid_argument& e) 
             {
                 std::cout << e.what() << " invalid amount " << amountStr << std::endl;
-                amount = 1;
+                return;
             }
         }
         if (resourceMap.count(resourceStr))
@@ -88,13 +88,38 @@ void ResourceManager::addResource(string line, bool startWithResource)
 
 void ResourceManager::deleteResource(string resource)
 {
-    if (resourceMap.count(resource) == 0)
+    size_t leftBracketPos = resource.find('[');
+    size_t rightBracketPos = resource.find(']');
+    int amount = 1;
+    std::string resourceStr = resource;
+    if (leftBracketPos != std::string::npos && rightBracketPos != std::string::npos && rightBracketPos > leftBracketPos)
     {
-        std::cout << "Resource: " << resource << " does not exist in the graph" << std::endl;
+        string amountStr = resource.substr(leftBracketPos + 1, rightBracketPos - 1 - leftBracketPos);
+        resourceStr = resource.substr(0, leftBracketPos);
+        try
+        {
+            amount = std::stoi(amountStr);
+            if (amount <= 0)
+            {
+                std::cout << "Amount must be positive integer" << std::endl;
+                return;
+            }
+        }
+        catch (std::invalid_argument& e)
+        {
+            std::cout << e.what() << " invalid amount " << amountStr << std::endl;
+            return;
+        }
+    }
+    if (resourceMap.count(resourceStr) == 0)
+    {
+        std::cout << "Resource: " << resourceStr << " does not exist in the graph" << std::endl;
         return;
     }
-    if (resourceMap[resource]->amount > 0)
-        setResourceAmount(resource, resourceMap[resource]->amount - 1);
+    if (resourceMap[resourceStr]->amount <= amount)
+        setResourceAmount(resourceStr, 0);
+    else if (resourceMap[resourceStr]->amount > 0)
+        setResourceAmount(resourceStr, resourceMap[resourceStr]->amount - amount);
     displayGraph();
 }
 
@@ -159,29 +184,83 @@ void ResourceManager::unLink(std::string from, std::string to)
 
 void ResourceManager::addLink(string from, string to)
 {
+    int resourceAmount = 1;
+    size_t leftBracketPos = to.find('[');
+    size_t rightBracketPos = to.find(']');
+    string resourceStr = to;
+    if (leftBracketPos != std::string::npos && rightBracketPos != std::string::npos && rightBracketPos > leftBracketPos)
+    {
+        string amountStr = to.substr(leftBracketPos + 1, rightBracketPos - 1 - leftBracketPos);
+        resourceStr = to.substr(0, leftBracketPos);
+        try
+        {
+            resourceAmount = std::stoi(amountStr);
+            if (resourceAmount <= 0)
+            {
+                std::cout << "amount must be positive integer " << std::endl;
+                return;
+            }
+        }
+        catch (std::invalid_argument& e)
+        {
+            std::cout << e.what() << " invalid amount " << amountStr << std::endl;
+            return;
+        }
+    }
     if (resourceMap.count(from) == 0)
     {
         cout << "Resource " << from << " does not exist in graph\n";
         return;
     }
-    resourceMap[from]->requiredResources.push_back(ResourceAmount(to, 1));
-    if (resourceMap.count(to) == 0)
+    for (size_t i = 0; i < resourceMap[from]->requiredResources.size(); i++)
     {
-        resourceMap[to] = new Resource(to);
+        if (resourceMap[from]->requiredResources[i].resource == resourceStr)
+        {
+            std::cout << "Resouce " << resourceStr << " already required to make " << from << std::endl;
+            return;
+        }
+    }
+    resourceMap[from]->requiredResources.push_back(ResourceAmount(resourceStr, resourceAmount));
+    if (resourceMap.count(resourceStr) == 0)
+    {
+        resourceMap[resourceStr] = new Resource(resourceStr);
     }
     displayGraph();
 }
 
 void ResourceManager::addNode(string node)
 {
-    if (resourceMap.count(node) == 0)
+    size_t leftBracketPos = node.find('[');
+    size_t rightBracketPos = node.find(']');
+    string resourceStr = node;
+    int resourceAmount = 1;
+    if (leftBracketPos != std::string::npos && rightBracketPos != std::string::npos && rightBracketPos > leftBracketPos)
     {
-        resourceMap[node] = new Resource(node);
-        resourceMap[node]->amount = 1;
+        string amountStr = node.substr(leftBracketPos + 1, rightBracketPos - 1 - leftBracketPos);
+        resourceStr = node.substr(0, leftBracketPos);
+        try
+        {
+            resourceAmount = std::stoi(amountStr);
+            if (resourceAmount <= 0)
+            {
+                std::cout << "amount must be positive integer " << std::endl;
+                return;
+            }
+        }
+        catch (std::invalid_argument& e)
+        {
+            std::cout << e.what() << " invalid amount " << amountStr << std::endl;
+            return;
+        }
+    }
+    if (resourceMap.count(resourceStr) == 0)
+    {
+        resourceMap[resourceStr] = new Resource(resourceStr);
+        resourceMap[resourceStr]->amount = resourceAmount;
     }
     else
     {
-        setResourceAmount(node, resourceMap[node]->amount + 1);
+        setResourceAmount(resourceStr, resourceMap[resourceStr]->amount + resourceAmount);
     }
     displayGraph();
 }

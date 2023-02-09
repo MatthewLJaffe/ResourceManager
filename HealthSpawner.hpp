@@ -18,5 +18,4 @@ public:
 	//current time in seconds since last health drop spawned
 	float currSpawnTime;
 	float spawnTime = 30;
-
 };
