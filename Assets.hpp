@@ -11,11 +11,22 @@ class Assets
 public:
 	Assets(const Assets&) = delete;
 	static Assets& Instance();
+	/// <summary>
+	/// loads all of the textures and fonts used during the execution of the game
+	/// </summary>
 	void loadAssets();
+	/// <summary>
+	/// loads all textures
+	/// </summary>
 	void loadImages();
+	/// <summary>
+	/// loads all fonts
+	/// </summary>
 	void loadFonts();
+	/// <summary>
+	/// destroys all fonts
+	/// </summary>
 	void closeFonts();
-	void closeTextures();
 	SDL_Texture* img_Test;
 	SDL_Texture* img_Background;
 	SDL_Texture* img_GraphBorders;

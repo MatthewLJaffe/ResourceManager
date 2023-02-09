@@ -14,7 +14,7 @@ void SpikesEntity::update()
 	std::vector<EnemyEntity*> enemies = Game::Instance().GetMainGameState()->enemies;
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
-		if (utils::boxCollision(this->pos->x, this->pos->y, width, height, enemies[i]->pos->x, enemies[i]->pos->y, enemies[i]->width, enemies[i]->height))
+		if (utils::boxCollision(this->pos.x, this->pos.y, width, height, enemies[i]->pos.x, enemies[i]->pos.y, enemies[i]->width, enemies[i]->height))
 		{
 			if (enemies[i]->takeSpikeDamage(damage))
 			{

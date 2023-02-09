@@ -15,7 +15,7 @@ void HeartEntity::update()
 {
 	WorldSpaceEntity::update();
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
-	if (utils::boxCollision(this->pos->x, this->pos->y, this->width, this->height, player->pos->x, player->pos->y, player->width, player->height))
+	if (utils::boxCollision(this->pos.x, this->pos.y, this->width, this->height, player->pos.x, player->pos.y, player->width, player->height))
 	{
 		player->addHealth(healthAmount);
 		spawner->currHealth--;

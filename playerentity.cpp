@@ -54,19 +54,19 @@ void PlayerEntity::updatePosition(float dT)
 	{
 		velocity.x = 0;
 	}
-	*pos += velocity * dT;
+	pos += velocity * dT;
 }
 
 void PlayerEntity::updateCollision()
 {
-	if (pos->x > 1600)
-		pos->x = 1600;
-	if (pos->x < -1600)
-		pos->x = -1600;
+	if (pos.x > 1600)
+		pos.x = 1600;
+	if (pos.x < -1600)
+		pos.x = -1600;
 	std::vector<EnemyEntity*> enemies = Game::Instance().GetMainGameState()->enemies;
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
-		if (utils::boxCollision(pos->x, pos->y, width, height, enemies[i]->pos->x, enemies[i]->pos->y, enemies[i]->width, enemies[i]->height))
+		if (utils::boxCollision(pos.x, pos.y, width, height, enemies[i]->pos.x, enemies[i]->pos.y, enemies[i]->width, enemies[i]->height))
 		{
 			takeDamage(enemies[i]->damage);
 		}
@@ -99,7 +99,7 @@ void PlayerEntity::takeDamage(float amount)
 
 bool PlayerEntity::posInView(Vector2 pos)
 {
-	return abs(this->pos->x - pos.x) <= 160;
+	return abs(this->pos.x - pos.x) <= 160;
 }
 
 void PlayerEntity::updateAnimation(float dT)
@@ -153,16 +153,16 @@ void PlayerEntity::updateGunFire(float dT)
 		lastHandgunUpdate = (bulletsUnrounded - static_cast<float>(bulletsToFire)) / rate;
 		for (int i = 0; i < bulletsToFire; i++)
 		{
-			Vector2 bulletPos = Vector2(0, this->pos->y + bulletOffset.y);
+			Vector2 bulletPos = Vector2(0, this->pos.y + bulletOffset.y);
 			SDL_Texture* bulletTex;
 			if (facingRight)
 			{
-				bulletPos.x = this->pos->x + bulletOffset.x;
+				bulletPos.x = this->pos.x + bulletOffset.x;
 				bulletTex = Assets::Instance().imgs_bulletDestroyRight[0];
 			}
 			else
 			{
-				bulletPos.x = this->pos->x - bulletOffset.x;
+				bulletPos.x = this->pos.x - bulletOffset.x;
 				bulletTex = Assets::Instance().imgs_bulletDestroyLeft[0];
 			}
 			Game::Instance().AddEntity(new BulletEntity(bulletPos.x, bulletPos.y, bulletTex, 6, 5, 100, 1.5, Vector2(5,3 ), Vector2(0, 0), facingRight, Assets::Instance().imgs_bulletDestroyRight, Assets::Instance().imgs_bulletDestroyLeft, 1));
@@ -178,16 +178,16 @@ void PlayerEntity::updateGunFire(float dT)
 		lastHandcannonUpdate = (missilesUnrounded - static_cast<float>(missilesToFire)) / rate;
 		for (int i = 0; i < missilesToFire; i++)
 		{
-			Vector2 bulletPos = Vector2(0, this->pos->y + bulletOffset.y);
+			Vector2 bulletPos = Vector2(0, this->pos.y + bulletOffset.y);
 			SDL_Texture* bulletTex;
 			if (facingRight)
 			{
-				bulletPos.x = this->pos->x + bulletOffset.x;
+				bulletPos.x = this->pos.x + bulletOffset.x;
 				bulletTex = Assets::Instance().imgs_missileDestroyRight[0];
 			}
 			else
 			{
-				bulletPos.x = this->pos->x - bulletOffset.x;
+				bulletPos.x = this->pos.x - bulletOffset.x;
 				bulletTex = Assets::Instance().imgs_missileDestroyLeft[0];
 			}
 			Vector2 missileSize(7, 5);
@@ -207,7 +207,7 @@ void PlayerEntity::spawnTurret()
 		turretPosOffset.x *= -1;
 		turretImages = Assets::Instance().imgs_turretLeft;
 	}
-	Vector2 turretPos = turretPosOffset + *this->pos;
+	Vector2 turretPos = turretPosOffset + this->pos;
 	TurretEntity* turret = new TurretEntity(turretPos.x, turretPos.y, facingRight, 10, 1, 23, 19, turretImages, 20, false);
 	Game::Instance().AddEntity(turret);
 }
@@ -221,7 +221,7 @@ void PlayerEntity::spawnCannon()
 		cannonPosOffset.x *= -1;
 		cannonImages = Assets::Instance().imgs_CannonLeft;
 	}
-	Vector2 cannonPos = cannonPosOffset + *this->pos;
+	Vector2 cannonPos = cannonPosOffset + this->pos;
 	TurretEntity* turret = new TurretEntity(cannonPos.x, cannonPos.y, facingRight, 10, 1, 23, 19, cannonImages, 40, true);
 	Game::Instance().AddEntity(turret);
 }
@@ -233,7 +233,7 @@ void PlayerEntity::spawnSpikes()
 	{
 		spikesPosOffset.x *= -1;
 	}
-	Vector2 spikesPos = spikesPosOffset + *this->pos;
+	Vector2 spikesPos = spikesPosOffset + this->pos;
 	SpikesEntity* spikes = new SpikesEntity(spikesPos.x, spikesPos.y, 32, 14, 8, 5, 20);
 	Game::Instance().AddEntity(spikes);
 }
@@ -245,7 +245,7 @@ void PlayerEntity::spawnBomb()
 	{
 		bombPosOffset.x *= -1;
 	}
-	Vector2 bombPos = bombPosOffset + *pos;
+	Vector2 bombPos = bombPosOffset + pos;
 	BombEntity* bomb = new BombEntity(bombPos.x, bombPos.y, 96, 64, 10, 100);
 	Game::Instance().AddEntity(bomb);
 }

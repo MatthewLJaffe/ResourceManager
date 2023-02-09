@@ -8,6 +8,9 @@
 
 class PreviewEntity;
 
+/// <summary>
+/// encapsulation of all unique data associated with an inventory slot for a specific item
+/// </summary>
 struct InventorySquare
 {
 	InventorySquare(std::string name, SDL_Texture* itemImg, PreviewEntity* preview);
@@ -17,7 +20,9 @@ struct InventorySquare
 	PreviewEntity* preview;
 };
 
-
+/// <summary>
+/// entity responsible for showing the items the player currently has during the execution of the main game state
+/// </summary>
 class InventoryDisplay : public Entity
 {
 public:

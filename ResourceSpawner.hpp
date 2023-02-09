@@ -3,6 +3,9 @@
 #include "ResourceEntity.hpp"
 #include "Utils.hpp"
 
+/// <summary>
+/// used to determine how likely resource is to spawn at certain distance from center of the map
+/// </summary>
 struct DistanceChance
 {
 	DistanceChance(float minX, float maxX, float spawnChance);

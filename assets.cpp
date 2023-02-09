@@ -173,9 +173,4 @@ void Assets::closeFonts()
     TTF_CloseFont(font_Body);
 }
 
-void Assets::closeTextures()
-{
-
-}
-
 Assets::Assets() {}

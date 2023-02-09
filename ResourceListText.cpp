@@ -45,6 +45,6 @@ void ResourceListText::updateColor(SDL_Color color)
 void ResourceListText::render()
 {
     if (!enabled) return;
-    SDL_Rect destRect = { utils::roundFloat(pos->x * scale), utils::roundFloat((pos->y + verticalOffset) * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
+    SDL_Rect destRect = { utils::roundFloat(pos.x * scale), utils::roundFloat((pos.y + verticalOffset) * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
     RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }

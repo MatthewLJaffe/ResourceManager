@@ -76,7 +76,7 @@ void TurretEntity::fireBullet(float dT)
 			fired = true;
 			if (!cannon)
 			{
-				Vector2 bulletPos = *pos + bulletPosOffset;
+				Vector2 bulletPos = pos + bulletPosOffset;
 				SDL_Texture* bulletTex;
 				if (facingRight)
 				{
@@ -93,7 +93,7 @@ void TurretEntity::fireBullet(float dT)
 			}
 			else
 			{
-				Vector2 bulletPos = *pos + missilePosOffset;
+				Vector2 bulletPos = pos + missilePosOffset;
 				SDL_Texture* missileTex;
 				if (facingRight)
 				{

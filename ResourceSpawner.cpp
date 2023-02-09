@@ -103,7 +103,7 @@ void ResourceSpawner::spawnResource()
 		{
 			spawnX *= -1;
 		}
-		if (abs(player->pos->x - spawnX) > minPlayerDistance)
+		if (abs(player->pos.x - spawnX) > minPlayerDistance)
 		{
 			foundSpawn = true;
 		}

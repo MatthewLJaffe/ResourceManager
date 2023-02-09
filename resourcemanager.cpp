@@ -506,7 +506,7 @@ void ResourceManager::updateSelectedText()
         //text should move up by number of lines deleted
         else
         {
-            listText[i]->pos->y -= linesDeleted * textHeight;
+            listText[i]->pos.y -= linesDeleted * textHeight;
         }
     }
     int linesAdded = 0;
@@ -518,8 +518,8 @@ void ResourceManager::updateSelectedText()
         {
             listText[i]->selected = true;
             listText[i]->updateColor({ 255, 255 ,255 });
-            float y = listText[i]->pos->y;
-            float x = listText[i]->pos->x;
+            float y = listText[i]->pos.y;
+            float x = listText[i]->pos.x;
             if (linesAdded == 0 )
             {
                 scrollBar->scrollTo(y/4);
@@ -550,7 +550,7 @@ void ResourceManager::updateSelectedText()
         //text should move up by number of lines deleted
         else
         {
-            listText[i]->pos->y += linesAdded * textHeight;
+            listText[i]->pos.y += linesAdded * textHeight;
         }
     }
 }
@@ -598,7 +598,7 @@ void ResourceManager::addNewDisplayNode(std::string name, int amount)
         newPos.y = 0;
         for (auto const& pair : displayMap)
         {
-            newPos += *pair.second->pos;
+            newPos += pair.second->pos;
         }
         newPos /= -float(displayMap.size());
         Vector2 minOffset(-48, -24);
@@ -640,12 +640,12 @@ void ResourceManager::addNewDisplayNodeFrom(std::string from, std::string name)
             newPos += fromNode->points[i];
         }
         newPos /= -float(fromNode->points.size());
-        newPos += *fromNode->pos;
+        newPos += fromNode->pos;
     }
     else
     {
-        newPos.x = fromNode->pos->x + 64;
-        newPos.y = fromNode->pos->y;
+        newPos.x = fromNode->pos.x + 64;
+        newPos.y = fromNode->pos.y;
     }
     
     int tries = 0;
@@ -684,8 +684,8 @@ void ResourceManager::addDisplayNodeConnection(std::string from, std::string to)
     
     Vector2 fromOffset = Vector2(dir.x * 24, dir.y * 24);
     Vector2 toOffset= Vector2(-dir.x * 24, -dir.y * 24);
-    Vector2* arrowStart = new Vector2(fromPos.x + fromOffset.x, fromPos.y + fromOffset.y);
-    Vector2* arrowEnd = new Vector2(toPos.x + toOffset.x, toPos.y + toOffset.y);
+    Vector2 arrowStart = Vector2(fromPos.x + fromOffset.x, fromPos.y + fromOffset.y);
+    Vector2 arrowEnd = Vector2(toPos.x + toOffset.x, toPos.y + toOffset.y);
     ArrowEntity* arrow = new ArrowEntity(arrowStart, arrowEnd, 4, NULL, 2);
     fromNode->outgoingArrows[to] = arrow;
     fromNode->points.push_back(fromOffset);
@@ -697,7 +697,7 @@ bool ResourceManager::noOverlap(Vector2 pos)
 {
     for (auto const& pair : displayMap)
     {
-        if (pos.distance(*pair.second->pos) <= 64)
+        if (pos.distance(pair.second->pos) <= 64)
             return false;
     }
     return true;

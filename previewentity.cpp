@@ -28,6 +28,6 @@ void PreviewEntity::update()
 		}
 		tex = leftImg;
 	}
-	*this->pos = *player->pos + playerOffset;
+	this->pos = player->pos + playerOffset;
 	WorldSpaceEntity::update();
 }

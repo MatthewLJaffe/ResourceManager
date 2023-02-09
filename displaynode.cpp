@@ -10,8 +10,8 @@ OutgoingArrow::OutgoingArrow(std::string target, ArrowEntity* arrow)
 DisplayNode::DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, size_t maxChars)
 {
     this->sortOrder = sortOrder;
-    this->scale = scale;
-    this->pos = new Vector2(x, y);
+    this->scale = defaultScale;
+    this->pos = Vector2(x, y);
     this->tex = tex;
     currentFrame.x = 0;
     currentFrame.y = 0;
@@ -45,8 +45,8 @@ bool DisplayNode::posInCraftButton(Vector2 pos)
     pos -= viewportCenter;
     pos *= 4 / this->scale;
 
-    if (pos.x > this->pos->x + craftButtonRect.x && pos.x < this->pos->x + craftButtonRect.x + craftButtonRect.w && 
-        pos.y > this->pos->y + craftButtonRect.y && pos.y < this->pos->y + craftButtonRect.y + craftButtonRect.h)
+    if (pos.x > this->pos.x + craftButtonRect.x && pos.x < this->pos.x + craftButtonRect.x + craftButtonRect.w && 
+        pos.y > this->pos.y + craftButtonRect.y && pos.y < this->pos.y + craftButtonRect.y + craftButtonRect.h)
     {
         return true;
     }
@@ -66,7 +66,7 @@ void DisplayNode::renderTextAtVerticalOffset(SDL_Texture* textImg, float yOffset
 {
     int textW, textH;
     SDL_QueryTexture(textImg, NULL, NULL, &textW, &textH);
-    Vector2 textPos(pos->x, pos->y);
+    Vector2 textPos(pos.x, pos.y);
     textPos.x += (currentFrame.w / 2 - textW / 8);
     textPos.y += (currentFrame.h / 2 - textH / 8);
     textPos.y += yOffset;
@@ -94,7 +94,7 @@ void DisplayNode::update()
     }
     updateTransformState();
     std::vector<std::string> removedArrows;
-    for (auto& targetArrow : outgoingArrows)
+    for (auto targetArrow : outgoingArrows)
     {
         //if resource was erased remove outgoing arrow to it since it no longer exists
         if (ResourceManager::Instance().displayMap.count(targetArrow.first) == 0)
@@ -113,8 +113,8 @@ void DisplayNode::update()
         DisplayNode* target = ResourceManager::Instance().displayMap[targetArrow.first];
         Vector2 dir = target->getCenterPos() - getCenterPos();
         dir.normalize();
-        *targetArrow.second->from = getCenterPos() + dir * size / 2;
-        *targetArrow.second->to = target->getCenterPos() - dir * size / 2;
+        targetArrow.second->from = getCenterPos() + dir * size / 2;
+        targetArrow.second->to = target->getCenterPos() - dir * size / 2;
     }
 
     for (size_t i = 0; i < removedArrows.size(); i++)
@@ -130,15 +130,15 @@ void DisplayNode::render()
     if (!enabled) return;
     if (selected)
     {
-        RenderWindow::Instance().render(Assets::Instance().img_selectedCircleNode, currentFrame, {int(pos->x * scale + viewportCenter.x * 4), int(pos->y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale)}, 0);
+        RenderWindow::Instance().render(Assets::Instance().img_selectedCircleNode, currentFrame, {int(pos.x * scale + viewportCenter.x * 4), int(pos.y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale)}, 0);
     }
     else
     {
-        RenderWindow::Instance().render(tex, currentFrame, { int(pos->x * scale + viewportCenter.x * 4), int(pos->y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale) }, 0);
+        RenderWindow::Instance().render(tex, currentFrame, { int(pos.x * scale + viewportCenter.x * 4), int(pos.y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale) }, 0);
     }
     if (displayCraftButton)
     {
-        RenderWindow::Instance().render(buttonState, currentFrame, { int(pos->x * scale + viewportCenter.x * 4), int(pos->y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale) }, 0);
+        RenderWindow::Instance().render(buttonState, currentFrame, { int(pos.x * scale + viewportCenter.x * 4), int(pos.y * scale + viewportCenter.y * 4), int(currentFrame.w * scale), int(currentFrame.h * scale) }, 0);
         renderTextAtVerticalOffset(craftTextImg, 9);
     }
     renderTextAtVerticalOffset(nameTextImg, -10);
@@ -151,8 +151,8 @@ void DisplayNode::updateTransformState()
     transformState = GameTransformer::Instance().getTransformState();
     this->scale = 4.0f * transformState.scale.x;
     transformState.translation /= scale;
-    *this->pos -= lastTransfromState.translation * lastTransfromState.scale / transformState.scale;
-    *this->pos += transformState.translation;
+    this->pos -= lastTransfromState.translation * lastTransfromState.scale / transformState.scale;
+    this->pos += transformState.translation;
 }
 
 Vector2 DisplayNode::getScreenPos(Vector2 centerPos)
@@ -162,16 +162,10 @@ Vector2 DisplayNode::getScreenPos(Vector2 centerPos)
 
 Vector2 DisplayNode::getCenterPos()
 {
-    return *pos + size / 2;
+    return pos + size / 2;
 }
 
 Vector2 DisplayNode::screenSpaceSize()
 {
     return size * scale;
 }
-
-DisplayNode::~DisplayNode()
-{
-    
-}
-

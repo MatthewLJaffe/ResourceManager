@@ -18,6 +18,11 @@ public:
 	float width;
 	float height;
 	void update() override;
+	/// <summary>
+	/// determines if the position is in view of the player
+	/// </summary>
+	/// <param name="pos">pos to check for</param>
+	/// <returns>true if viewable false otherwise</returns>
 	bool posInView(Vector2 pos);
 	void spawnTurret();
 	void spawnBomb();
@@ -29,6 +34,7 @@ public:
 	int getHandcannons();
 	void addHealth(float amount);
 private:
+	//time of last update in milliseconds game time
 	Uint32 lastUpdate;
 	int handgunsEquipped = 1;
 	int handcannonsEquipped = 0;

@@ -16,6 +16,9 @@ private:
 	float width;
 	float height;
 	std::string resourceName;
+	/// <summary>
+	/// checks for overlap with player
+	/// </summary>
 	void detectCollision();
 	ResourceSpawner* resourceSpawner;
 };

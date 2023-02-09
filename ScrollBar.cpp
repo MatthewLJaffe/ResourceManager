@@ -18,7 +18,7 @@ void ScrollBar::update()
 	if (!InputManager::Instance().getMouseDown()) {
 		scrollBarPressed = false;
 	}
-	if (InputManager::Instance().getMousePressed() && utils::inRect(mousePos.x, mousePos.y, pos->x * scale, pos->y * scale, currentFrame.w * scale, currentFrame.h * scale))
+	if (InputManager::Instance().getMousePressed() && utils::inRect(mousePos.x, mousePos.y, pos.x * scale, pos.y * scale, currentFrame.w * scale, currentFrame.h * scale))
 	{
 		scrollBarPressed = true;
 	}
@@ -27,7 +27,7 @@ void ScrollBar::update()
 	if (pressedLastFrame)
 	{
 		float yOffset = (mousePos.y - lastMousePos.y)/4;
-		scrollTo(pos->y + yOffset);
+		scrollTo(pos.y + yOffset);
 	}
 	lastMousePos = mousePos;
 }
@@ -35,14 +35,14 @@ void ScrollBar::update()
 void ScrollBar::scrollTo(float yPos)
 {
 	if (!enabled) return;
-	pos->y = yPos;
-	if (pos->y > maxScrollY)
-		pos->y = maxScrollY;
-	if (pos->y < minScrollY)
-		pos->y = minScrollY;
+	pos.y = yPos;
+	if (pos.y > maxScrollY)
+		pos.y = maxScrollY;
+	if (pos.y < minScrollY)
+		pos.y = minScrollY;
 	//scroll text by computing offset
 	ResourceListText::verticalOffset =
-		-utils::lerp(0, ResourceManager::Instance().getMaxTextOffset(), (pos->y - minScrollY) / (maxScrollY - minScrollY));
+		-utils::lerp(0, ResourceManager::Instance().getMaxTextOffset(), (pos.y - minScrollY) / (maxScrollY - minScrollY));
 }
 
 void ScrollBar::ResizeScrollBar(SDL_Texture* tex, int newMaxScrollY)
@@ -50,6 +50,6 @@ void ScrollBar::ResizeScrollBar(SDL_Texture* tex, int newMaxScrollY)
 	this->tex = tex;
 	maxScrollY = static_cast<float>(newMaxScrollY);
 	SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
-	if (this->pos->y > maxScrollY)
-		this->pos->y = maxScrollY;
+	if (this->pos.y > maxScrollY)
+		this->pos.y = maxScrollY;
 }

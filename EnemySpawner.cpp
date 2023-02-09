@@ -30,7 +30,7 @@ EnemySpawner::EnemySpawner(float baseSpawnRate, float spawnIncreaseRate, int bas
 void EnemySpawner::update()
 {
 	float spawnFactor = 1;
-	float playerDistance = abs(Game::Instance().GetMainGameState()->player->pos->x);
+	float playerDistance = abs(Game::Instance().GetMainGameState()->player->pos.x);
 	for (size_t i = 0; i < distanceSpawnRateDistribution.size(); i++)
 	{
 		if (playerDistance > distanceSpawnRateDistribution[i].minDistance && playerDistance <= distanceSpawnRateDistribution[i].maxDistance)
@@ -58,7 +58,7 @@ void EnemySpawner::update()
 	{
 		spawnNextWave();
 	}
-	nextWaveIndicator->pos->x = utils::lerp(minIndicatorX, maxIndicatorX, waveElapsedTime / timeBetweenWaves);
+	nextWaveIndicator->pos.x = utils::lerp(minIndicatorX, maxIndicatorX, waveElapsedTime / timeBetweenWaves);
 	prevTime = current;
 }
 
@@ -72,12 +72,12 @@ void EnemySpawner::spawnEnemy(float minX, float maxX)
 void EnemySpawner::spawnEnemy()
 {
 	MainGameState* game = Game::Instance().GetMainGameState();
-	float minSpawnRight = game->player->pos->x + 176;
-	float maxSpawnRight = game->player->pos->x + 176 + maxSpawnDistance;
-	float maxSpawnLeft = game->player->pos->x - 176;
-	float minSpawnLeft = game->player->pos->x - 176 - maxSpawnDistance;
+	float minSpawnRight = game->player->pos.x + 176;
+	float maxSpawnRight = game->player->pos.x + 176 + maxSpawnDistance;
+	float maxSpawnLeft = game->player->pos.x - 176;
+	float minSpawnLeft = game->player->pos.x - 176 - maxSpawnDistance;
 	float maxSpawnSideChance = .8f;
-	float rightSpawnChance = abs(game->player->pos->x - game->minX) / (game->maxX - game->minX);
+	float rightSpawnChance = abs(game->player->pos.x - game->minX) / (game->maxX - game->minX);
 	std::vector<TurretEntity*> turrets = Game::Instance().GetMainGameState()->turrets;
 	int tries = 1000;
 	float spawnX = 0;
@@ -95,7 +95,7 @@ void EnemySpawner::spawnEnemy()
 		bool obstruction = false;
 		for (size_t i = 0; i < turrets.size(); i++)
 		{
-			if (abs(turrets[i]->pos->x - spawnX) < turrets[i]->width)
+			if (abs(turrets[i]->pos.x - spawnX) < turrets[i]->width)
 			{
 				obstruction = true;
 				break;

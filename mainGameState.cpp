@@ -67,7 +67,7 @@ std::string MainGameState::execute()
 	enemySpawner->update();
 	healthSpawner->update();
 	GameTransformer::Instance().popTransformState();
-	Vector2 translatePos = Vector2(player->pos->x * -1, 0);
+	Vector2 translatePos = Vector2(player->pos.x * -1, 0);
 	if (translatePos.x > maxX - 160)
 		translatePos.x = maxX - 160;
 	if (translatePos.x < minX + 160)

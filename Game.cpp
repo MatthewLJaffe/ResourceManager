@@ -1,5 +1,5 @@
 #include "Game.hpp"
-
+#include <conio.h>
 
 static std::string getInput()
 {
@@ -7,6 +7,7 @@ static std::string getInput()
     getline(std::cin, answer);
     return answer;
 }
+
 
 void processCommand(std::string line, bool& gameRunning)
 {
@@ -93,7 +94,7 @@ void handleDragInput()
         Vector2 dragDir = InputManager::Instance().getMousePos() - lastMousePos;
         if (selected != NULL)
         {
-            *selected->pos += dragDir / selected->scale;
+            selected->pos += dragDir / selected->scale;
         }
         else
             dragOffset += dragDir;
@@ -180,7 +181,6 @@ void Game::update()
         RenderWindow::Instance().display();
         GameTransformer::Instance().resetGameTransformations();
         InputManager::Instance().resetSingleFrameEvents();
-        
         if (inputFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         {
             line = inputFuture.get();
@@ -238,7 +238,7 @@ void Game::AddEntity(Entity* entity)
 void Game::AddEntity(Entity* entity, std::string gameState)
 {
     gameStateMap[gameState]->entities.push_back(entity);
-     std::stable_sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
+    std::stable_sort(gameStateMap[gameState]->entities.begin(), gameStateMap[gameState]->entities.end(), compareEntities);
 }
 
 void Game::ResetGame()
@@ -246,7 +246,7 @@ void Game::ResetGame()
     delete gameStateMap["MainGameState"];
     gameStateMap["MainGameState"] = new MainGameState("MainGameState");
     gameStateMap["MainGameState"]->start();
-     std::stable_sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
+    std::stable_sort(gameStateMap["MainGameState"]->entities.begin(), gameStateMap["MainGameState"]->entities.end(), compareEntities);
     ResourceManager::Instance().resetResources();
 }
 

@@ -18,6 +18,9 @@ class EnemyEntity;
 class PlayerEntity;
 class TurretEntity;
 
+/// <summary>
+/// the state where the game is played
+/// </summary>
 class MainGameState : public GameState
 {
 public:
@@ -27,11 +30,21 @@ public:
 	std::string execute() override;
 	void onActivate() override;
 	void onDeactivate() override;
+	/// <summary>
+	/// returns the time in miliseconds since the start of the game only updates when in the main game state
+	/// </summary>
+	/// <returns></returns>
 	Uint32 getGameTime();
+	/// <summary>
+	/// function that ends the current game
+	/// </summary>
+	/// <param name="survivalTime">used to display the amount of time survived on the game over screen</param>
 	void gameOver(float survivalTime);
 	bool exitGame = false;
+	/// <summary>
+	/// the next game state to execute next frame
+	/// </summary>
 	std::string nextState = "MainGameState";
-	int maxLength = 200;
 	PlayerEntity* player;
 	ResourceSpawner* oreSpawner;
 	ResourceSpawner* gunPowderSpawner;
@@ -44,7 +57,6 @@ public:
 	std::vector<Entity*> gameOverMenuEntities;
 	float minX = -1600;
 	float maxX = 1600;
-
 
 private:
 	Uint32 gameTime = 0;

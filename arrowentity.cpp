@@ -1,12 +1,12 @@
 #include "ArrowEntity.hpp"
 
-ArrowEntity::ArrowEntity(Vector2* from, Vector2* to, float scale, SDL_Texture* tex, int sortOrder)
+ArrowEntity::ArrowEntity(Vector2 from, Vector2 to, float scale, SDL_Texture* tex, int sortOrder)
 {
 	this->from = from;
 	this->to = to;
 	this->scale = scale;
 	this->tex = tex;
-	this->pos = new Vector2(0, 0);
+	this->pos = Vector2(0, 0);
 	this->sortOrder = sortOrder;
 	currentFrame.x = 0;
 	currentFrame.y = 0;
@@ -19,9 +19,9 @@ void ArrowEntity::render()
 	if (!enabled) return;
 	RenderWindow::Instance().setScale(scale, scale);
 	float scaleConst = 4 / scale;
-	RenderWindow::Instance().drawLine(from->x + 208 * scaleConst, from->y + 90 * scaleConst, to->x + 208 * scaleConst, to->y + 90 * scaleConst);
+	RenderWindow::Instance().drawLine(from.x + 208 * scaleConst, from.y + 90 * scaleConst, to.x + 208 * scaleConst, to.y + 90 * scaleConst);
 
-	Vector2 dir = *to - *from;
+	Vector2 dir = to - from;
 	dir.normalize();
 	Vector2 right(1, 0);
 	angle = double(right.angleBetween(dir));
@@ -45,8 +45,8 @@ void ArrowEntity::render()
 		tex = Assets::Instance().img_ArrowTopRight;
 	SDL_QueryTexture(this->tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
 	Vector2 arrowPos;
-	arrowPos.x = to->x + 208 * scaleConst - currentFrame.w / 2;
-	arrowPos.y = to->y + 90 * scaleConst - currentFrame.h / 2;
+	arrowPos.x = to.x + 208 * scaleConst - currentFrame.w / 2;
+	arrowPos.y = to.y + 90 * scaleConst - currentFrame.h / 2;
 	arrowPos -= dir * currentFrame.w / 2;
 	RenderWindow::Instance().render(tex, currentFrame, { int(arrowPos.x), int(arrowPos.y), int(currentFrame.w), int(currentFrame.h) }, 0);
 	RenderWindow::Instance().setScale(1, 1);
@@ -62,10 +62,4 @@ void ArrowEntity::updateTransformState()
 {
 	transformState = GameTransformer::Instance().getTransformState();
 	this->scale = 4.0f * transformState.scale.x;
-}
-
-ArrowEntity::~ArrowEntity()
-{
-	delete from;
-	delete to;
 }

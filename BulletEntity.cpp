@@ -47,7 +47,7 @@ void BulletEntity::updatePosition()
 {
 	Uint32 current = Game::Instance().GetGameTime();
 	float dT = (current - lastPosUpdate) / 1000.0f;
-	*this->pos += velocity * dT;
+	this->pos += velocity * dT;
 	lastPosUpdate = current;
 }
 
@@ -60,7 +60,7 @@ void BulletEntity::updateCollision()
 		hitboxSize = this->explosionSize;
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
-		if (utils::boxCollision(pos->x, pos->y, hitboxSize.x, hitboxSize.y, enemyList[i]->pos->x, enemyList[i]->pos->y, enemyList[i]->width, enemyList[i]->height))
+		if (utils::boxCollision(pos.x, pos.y, hitboxSize.x, hitboxSize.y, enemyList[i]->pos.x, enemyList[i]->pos.y, enemyList[i]->width, enemyList[i]->height))
 		{
 			enemyList[i]->takeDamage(damage);
 			enemiesDamageable--;

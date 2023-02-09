@@ -8,10 +8,25 @@ public:
 	static InputManager& Instance();
 	InputManager(InputManager&) = delete;
 	void handleInput(SDL_Event event);
+	/// <summary>
+	/// returns position of mouse in screenspace coordinates
+	/// </summary>
 	Vector2 getMousePos();
+	/// <summary>
+	/// returns true if the mouse is being held down false otherwise
+	/// </summary>
 	bool getMouseDown();
+	/// <summary>
+	/// returns direction the mouse wheel has been scrolled
+	/// </summary>
 	float getMouseWheelY();
+	/// <summary>
+	/// returns true the frame that the left mouse is pressed down and false otherwise
+	/// </summary>
 	bool getMousePressed();
+	/// <summary>
+	/// returns true the frame that left the mouse is released and false otherwise
+	/// </summary>
 	bool getMouseReleased();
 	bool getIPressed();
 	bool getADown();
@@ -29,7 +44,7 @@ public:
 private:
 	InputManager();
 	~InputManager();
-	int mouseWheelY;
+	int mouseWheelY = -1;
 	Vector2* mousePos;
 	bool mouseDown = false;
 	bool mousePressed = false;

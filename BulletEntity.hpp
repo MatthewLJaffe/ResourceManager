@@ -15,11 +15,14 @@ public:
 	float speed;
 	Uint32 lastPosUpdate;
 	Uint32 lastAnimUpdate;
+	//the time when the bullet was instantiated measured in milliseconds since the game started
 	Uint32 startTime;
 	Vector2 velocity;
 	float animatedFPS = 12;
+	//how long in seconds the bullet can travel before being destroyed
 	float travelTime;
 	size_t currAnimIndex;
+	//how many enemies can be damaged by the bullet before it is destroyed
 	int enemiesDamageable;
 	void update() override;
 	void updatePosition();

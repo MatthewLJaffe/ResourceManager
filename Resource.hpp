@@ -8,7 +8,9 @@
 
 struct ResourceAmount
 {
+	//current amount of resource collected
 	int amount;
+	//name of resource
 	std::string resource;
 	ResourceAmount(std::string resource, int amount);
 	ResourceAmount();

@@ -117,12 +117,12 @@ void InventoryDisplay::render()
 		else
 			background = Assets::Instance().img_White;
 
-		SDL_Rect destRect = { utils::roundFloat((pos->x + itemPictureOffset.x + 18 * i) * scale), utils::roundFloat((pos->y + itemPictureOffset.y) * scale), utils::roundFloat(16 * scale),  utils::roundFloat(16 * scale) };
+		SDL_Rect destRect = { utils::roundFloat((pos.x + itemPictureOffset.x + 18 * i) * scale), utils::roundFloat((pos.y + itemPictureOffset.y) * scale), utils::roundFloat(16 * scale),  utils::roundFloat(16 * scale) };
 		RenderWindow::Instance().render(background, currentFrame, destRect, angle);
 		if (inventorySquares[i].usable)
 			RenderWindow::Instance().render(inventorySquares[i].itemImg, currentFrame, destRect, angle);
 	}
-	SDL_Rect destRect = { utils::roundFloat(pos->x * scale), utils::roundFloat(pos->y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
+	SDL_Rect destRect = { utils::roundFloat(pos.x * scale), utils::roundFloat(pos.y * scale), utils::roundFloat(currentFrame.w * scale), utils::roundFloat(currentFrame.h * scale) };
 	RenderWindow::Instance().render(tex, currentFrame, destRect, angle);
 }
 

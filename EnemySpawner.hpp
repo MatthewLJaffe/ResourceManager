@@ -4,6 +4,9 @@
 #include "Utils.hpp"
 #include "PlayerEntity.hpp"
 
+/// <summary>
+/// structure encapsulating how frequently enemies should be spawned based on horizontal distance of player from spawn
+/// </summary>
 struct DistanceSpawnFactor
 {
 	DistanceSpawnFactor(float minX, float maxX, float spawnMultiplier);
@@ -22,13 +25,20 @@ private:
 	void spawnEnemy();
 	Entity* nextWaveIndicator;
 	TextEntity* waveText;
+	/// <summary>
+	/// spawns enemy at random positoin between minX and maxX
+	/// </summary>
 	void spawnEnemy(float minX, float maxX);
 	void spawnNextWave();
 	float baseSpawnRate;
+	//how much to increase the spawn rate every second of game time
 	float spawnIncreaseRate;
 	float timeBetweenWaves;
+	//number of enemies to spawn this wave
 	int waveAmount;
+	//scales waveAmount each wave
 	float waveIncreaseFactor;
+	//max distance off screen enemies spawn
 	float maxSpawnDistance;
 	float minIndicatorX;
 	float maxIndicatorX;

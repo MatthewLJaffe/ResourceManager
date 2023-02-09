@@ -43,12 +43,12 @@ void EnemyEntity::updatePosition()
 	if (attacking) return;
 	PlayerEntity* player = Game::Instance().GetMainGameState()->player;
 	float dT = (Game::Instance().GetGameTime() - lastUpdate) / 1000.0f;
-	if (player->pos->x - pos->x > this->width/2)
+	if (player->pos.x - pos.x > this->width/2)
 	{
 		facingRight = true;
 		velocity.x = walkSpeed;
 	}
-	else if (pos->x - player->pos->x > this->width/2)
+	else if (pos.x - player->pos.x > this->width/2)
 	{
 		facingRight = false;
 		velocity.x = -walkSpeed;
@@ -60,7 +60,7 @@ void EnemyEntity::updatePosition()
 		lastAnimUpdate = Game::Instance().GetGameTime();
 		velocity.x = 0;
 	}
-	*pos += velocity * dT;
+	pos += velocity * dT;
 }
 
 void EnemyEntity::updateAnimation()
@@ -188,7 +188,7 @@ void EnemyEntity::damageTurret()
 	std::vector<TurretEntity*> turrets = Game::Instance().GetMainGameState()->turrets;
 	for (size_t i = 0; i < turrets.size(); i++)
 	{
-		if (abs(turrets[i]->pos->x - pos->x) <= this->width / 2 + turrets[i]->width / 2)
+		if (abs(turrets[i]->pos.x - pos.x) <= this->width / 2 + turrets[i]->width / 2)
 		{
 			turrets[i]->takeDamage(damage);
 		}
@@ -201,7 +201,7 @@ void EnemyEntity::checkForAttack()
 	std::vector<TurretEntity*> turrets = Game::Instance().GetMainGameState()->turrets;
 	for (size_t i = 0; i < turrets.size(); i++)
 	{
-		if (abs(turrets[i]->pos->x - pos->x) < this->width / 2 + turrets[i]->width / 2)
+		if (abs(turrets[i]->pos.x - pos.x) < this->width / 2 + turrets[i]->width / 2)
 		{
 			attacking = true;
 			currAnimIdx = 0;

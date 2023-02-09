@@ -7,6 +7,9 @@
 
 class DisplayNode;
 
+/// <summary>
+/// encapsulation of an arrow entity and the target resource it is pointing to
+/// </summary>
 struct OutgoingArrow
 {
 	OutgoingArrow(std::string target, ArrowEntity* arrow);
@@ -17,18 +20,35 @@ struct OutgoingArrow
 class DisplayNode : public Entity, public Transformable
 {
 public:
-	bool active = true;
-	const float defaultScale = 4;
+	// the scale of the entity before any zooming in our out
+	const float defaultScale = 2;
+	//center of the display graph 
 	Vector2 viewportCenter = Vector2(208, 90);
 	Vector2 size = Vector2(47, 47);
+
+	/// <summary>
+	/// returns the position of the topleft corner of the display node
+	/// </summary>
 	Vector2 getScreenPos(Vector2 viewportPos);
+
+	/// <summary>
+	/// size of display node in pixels
+	/// </summary>
+	/// 
 	Vector2 screenSpaceSize();
+
+	/// <summary>
+	/// 
+	/// </summary>
 	void renderTextAtVerticalOffset(SDL_Texture* textImg, float yOffset);
+
+	/// <summary>
+	/// sets text displaying the amount of the item currently obtained
+	/// </summary>
 	void setDisplayAmount(int newAmount);
 	bool posInCraftButton(Vector2 pos);
 	bool displayCraftButton = false;
 	DisplayNode(float x, float y, float scale, SDL_Texture* tex, int sortOrder, std::string name, int displayAmount, size_t maxChars);
-	~DisplayNode();
 	std::map<std::string, ArrowEntity*> outgoingArrows;
 	std::vector<Vector2> points;
 	std::string name;

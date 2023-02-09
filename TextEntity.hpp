@@ -12,6 +12,10 @@ class TextEntity : public Entity
 {
 public:
 	TextEntity(float x, float y, float scale, std::string message, int fontSize, SDL_Color color, TTF_Font* font, size_t maxChars, int sortOrder);
+	/// <summary>
+	/// sets the text to render
+	/// </summary>
+	/// <param name="message">new text to be rendered by text entity</param>
 	void updateText(std::string message);
 	TTF_Font* font;
 	size_t maxChars;

@@ -4,14 +4,15 @@
 #include "Vector2.hpp"
 #include "Assets.hpp"
 
-class ArrowEntity : public Transformable, public Entity
+class ArrowEntity : public Entity, public Transformable
 {
 public:
-	Vector2* from;
-	Vector2* to;
-	ArrowEntity(Vector2* from, Vector2* to, float scale, SDL_Texture* tex, int sortOrder);
+	//starting position of the arrow
+	Vector2 from;
+	//ending position of the arrow
+	Vector2 to;
+	ArrowEntity(Vector2 from, Vector2 to, float scale, SDL_Texture* tex, int sortOrder);
 	void render() override;
 	void update() override;
 	void updateTransformState() override;
-	~ArrowEntity();
 };

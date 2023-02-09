@@ -8,6 +8,11 @@ class EnemyEntity : public WorldSpaceEntity
 public:
 	EnemyEntity(float x, float y, float scale, SDL_Texture* tex, int sortOrder, float health, float width, float height);
 	void update() override;
+	/// <summary>
+	/// applies spike damage if damage cooldown is up
+	/// </summary>
+	/// <param name="amount">the amount of damage to take</param>
+	/// <returns>true if spike damage was taken false otherwise</returns>
 	bool takeSpikeDamage(float amount);
 	void takeDamage(float amount);
 	float width;
@@ -17,6 +22,9 @@ public:
 	float damage;
 
 private:
+	/// <summary>
+	/// checks if any attackable entities are in range
+	/// </summary>
 	void checkForAttack();
 	void updatePosition();
 	void updateAnimation();
@@ -34,8 +42,10 @@ private:
 	float health;
 	const float damageEffectTime = .2f;
 	float currDamageEffectTime = .2f;
-	float spikeDamageCooldown;
-	float currSpikeDamageTime;
+	//spike damage cooldown in seconds
+	float spikeDamageCooldown = 1;
+	//how long in seconds before spike damage can be taken
+	float currSpikeDamageTime = 0;
 	float walkSpeed = 25.0f;
 	Vector2 velocity;
 	size_t currAnimIdx = 0;
