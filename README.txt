@@ -1,3 +1,9 @@
+This project is a Resource Managment game inspried by the Guildhall Portfolio assignment created by Matthew Jaffe
+This project was finished January 28th 2023 
+
+All relevant code files are included in the same directory in this directory. Dependencies are included
+in the src directory, and required assets such as the ttf fonts and pngs are included in the assets directory.
+
 All dependcies are locally included in this directory. 
 To compile and run the program you must select x86 as the target platform in visual studio.
 
