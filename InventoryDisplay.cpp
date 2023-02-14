@@ -44,6 +44,8 @@ void InventoryDisplay::updateInventoryDisplay()
 {
 	for (size_t i = 0; i < inventorySquares.size(); i++)
 	{
+		if (ResourceManager::Instance().resourceMap.count(inventorySquares[i].itemName) == 0)
+			continue;
 		if (ResourceManager::Instance().resourceMap[inventorySquares[i].itemName]->amount > 0)
 			inventorySquares[i].usable = true;
 		else

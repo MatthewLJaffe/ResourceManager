@@ -43,7 +43,7 @@ int main (int argc, char* argv[])
     if (TTF_Init() > 0)
         cout << "TTF_Init has failed" << SDL_GetError() << endl;
     Assets::Instance().loadAssets();
-    std::string resourceFile = "Resources.txt";
+    std::string resourceFile = "resources.txt";
     if (argc == 2)
         resourceFile = argv[1];
     ifstream file(resourceFile);
