@@ -299,7 +299,6 @@ void ResourceManager::craftResource(std::string resourceName)
     displayGraph();
 }
 
-//TODO only rebuild display for delete
 void ResourceManager::displayGraph()
 {
     //rebuild display from backend graph
@@ -477,7 +476,6 @@ bool ResourceManager::isImmediatelyCraftable(Resource& resource)
     return true;
 }
 
-//TODO this algorithm is slow make it not slow
 //a resource is craftable if all of its required resources exist in the resource map or can be crafted
 bool ResourceManager::isCraftable(Resource& resource, std::map<string, TraversalInfo>& traversalMap)
 {

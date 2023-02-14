@@ -25,7 +25,6 @@ Resource nodes can also be individually dragged around to be displayed in the pr
 You can selected a node to see what resources are required to craft it in the Resource list.
 The crafting menu can be zoomed in or out with the mouse wheel.
 
-
 Resource Manager:
 This project was inspired by the SMU Guildhall Resource Management portfolio assignment.
 By default this program will read in the text file resources.txt which it uses to build the directed resource graph.
